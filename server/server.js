@@ -57,6 +57,8 @@ passport.deserializeUser(({id}, done) => {
 });
 
 // routes
+let userRoute = require('./routes/user');
+app.use('/user', userRoute(express, bcrypt, passport, User));
 
 // 404 route
 app.get('/404', (req, res) => {
