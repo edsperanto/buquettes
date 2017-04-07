@@ -19,7 +19,46 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+// database
+const RedisStore = require('connect-redis')(session);
+const sequelize = require('sequelize');
+const db = require('./models');
+const {User} = db;
+
+// session settings
+app.use(session({
+	store: new RedisStore(),
+	secret: 'keyboard cat',
+	resave: false,
+	saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// passport settings
+passport.use(new LocalStrategy(
+	function(username, password, done) {
+		User.findOne({where: {username: username}}).then(user => {
+			if(user === null) {
+				done(null, false, {message: 'bad username'});
+			}else{
+				bcrypt.compare(password, user.password).then(res => {
+					if(res) done(null, user);
+					else done(null, false, {message: 'bad password'});
+				});
+			}
+		}).catch(err => console.log('error: ', err));
+	}
+));
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser(({id}, done) => {
+	User.findOne({where: {id}})
+		.then(user => done(null, user));
+});
+
 // routes
+let userRoute = require('./routes/user');
+app.use('/user', userRoute(express, bcrypt, passport, User));
 
 // 404 route
 app.get('/404', (req, res) => {
