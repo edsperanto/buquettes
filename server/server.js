@@ -1,3 +1,4 @@
+const https = require('https');
 // express
 const express = require('express');
 const app = express();
@@ -10,8 +11,12 @@ const cookieParser = require('cookie-parser');
 const github = require('octonode');
 
 //GITHUB Auth
+const env = require('dotenv').config();
 const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
+
+console.log('client_ID', CLIENT_ID);
+
 const client = github.client();
 
 app.use(bodyParser.json());
@@ -68,15 +73,31 @@ passport.deserializeUser(({id}, done) => {
 
 // routes
 let userRoute = require('./routes/user');
+let targetURL_Email = `https://github.com/login/oauth/authorize?scope=user:repo&client_id=${CLIENT_ID}`;
+let postURL = `https://github.com/login/oauth/access_token`;
+
 app.use('/user', userRoute(express, bcrypt, passport, User));
 
-client.get('/users/edsperanto', ( err, status, body, headers ) => {
-  console.log(body); //json object
+client.get('/', ( err, status, body, headers ) => {
+   console.log(body); //json object
+   getEmail(targetURL_Email)
+    .then((email) => {
+      console.log('username email: ', email);
+      res.send('you got mail');
+    })
+    .catch(err => {
+      res.send(err);
+    });
+ 
 });
 
 app.get('/callback', (req, res) => {
+  session_code = 
+ https.post(postURL, {client_id: CLIENT_ID, client_secret: CLIENT_SECRET, code: session_code})
 
 });
+
+
 // 404 route
 app.get('/404', (req, res) => {
 	res.send('404 Not Found');
@@ -85,6 +106,23 @@ app.use((req, res, next) => {
 	res.redirect('/404');
 	next();
 });
+
+function getEmail(clientURL) {
+  return new Promise((resolve, reject) => {
+    console.log('i ran')
+    https.get(clientURL, res => {
+      let rawData = '';
+      res.on('data', (chunk) => {
+        rawData += chunk;
+        console.log('rawData: ', rawData)
+      });
+      res.on('end', () => {
+        resolve(rawData);
+      });
+    })
+    .on('error', err => reject(err));
+  });
+}
 
 // start express server
 if(!module.parent) {
