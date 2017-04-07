@@ -7,10 +7,19 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const github = require('octonode');
+
+//GITHUB Auth
+const { CLIENT_ID } = process.env;
+const { CLIENT_SECRET } = process.env;
+const client = github.client();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
+
+
 
 // session & passport
 const session = require('express-session');
@@ -56,10 +65,18 @@ passport.deserializeUser(({id}, done) => {
 		.then(user => done(null, user));
 });
 
+
 // routes
 let userRoute = require('./routes/user');
 app.use('/user', userRoute(express, bcrypt, passport, User));
 
+client.get('/users/edsperanto', ( err, status, body, headers ) => {
+  console.log(body); //json object
+});
+
+app.get('/callback', (req, res) => {
+
+});
 // 404 route
 app.get('/404', (req, res) => {
 	res.send('404 Not Found');
@@ -72,6 +89,6 @@ app.use((req, res, next) => {
 // start express server
 if(!module.parent) {
 	app.listen(PORT, _ => {
-		console.log(`Server listening at port ${PORT}`);
+		console.log(`You and Port: ${PORT} are connected like soulmates`);
 	});
 }
