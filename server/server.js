@@ -21,7 +21,6 @@ const saltRounds = 10;
 
 // database
 const RedisStore = require('connect-redis')(session);
-const sequelize = require('sequelize');
 const db = require('./models');
 const {User} = db;
 
@@ -58,7 +57,8 @@ passport.deserializeUser(({id}, done) => {
 
 // routes
 let userRoute = require('./routes/user');
-app.use('/user', userRoute(express, bcrypt, passport, User));
+app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
+const sequelize = require('sequelize');
 
 // 404 route
 app.get('/404', (req, res) => {
