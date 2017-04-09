@@ -1,22 +1,10 @@
-const successJSON = {"success": true};
-const failJSON = {"success": false};
+const {hashIncomingPassword} = require('../helper');
 
 module.exports = function(express, bcrypt, saltRounds, passport, User) {
 
 	const router = express.Router();
-
-	function hashIncomingPassword(req, res, next) {
-		if(req.body) {
-			if(req.body.password) {
-				bcrypt.genSalt(saltRounds, function(err, salt) {
-					bcrypt.hash(req.body.password, salt, function(err, hash) {
-						req.body.password = hash;
-						next();
-					});
-				});
-			}else next();
-		}else next();
-	}
+	const successJSON = {"success": true};
+	const failJSON = {"success": false};
 
 	router.get('/current', (req, res) => {
 		res.send(req.user.dataValues.username);
@@ -47,7 +35,6 @@ module.exports = function(express, bcrypt, saltRounds, passport, User) {
 	});
 
 	router.put('/update', (req, res) => {
-		console.log('UPDATING!!!!');
 		User.findOne({where: {id: req.body.id}})
 			.then(user => {
 				if(!user) throw new Error();
