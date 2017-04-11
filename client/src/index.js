@@ -2,9 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom';
+
 
 import reducers from './reducers';
 import App from './containers/App';
+import Login from './sandLab/basicExample.js';
 import './index.css';
 
 let store = createStore(
@@ -12,6 +19,9 @@ let store = createStore(
 );
 
 ReactDOM.render(
+
+
+
   <Provider store={store}>
     <App />
   </Provider>,
