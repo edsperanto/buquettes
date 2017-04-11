@@ -21,9 +21,13 @@ let store = createStore(
 ReactDOM.render(
 
 
+  <Router>
+    <div>
+      <li><Link to ='/'> Home</Link></li>
+        <li><Link to ='/Login'> Login</Link></li>
+        <Route exact path ='/' component={App}/>
+    </div>
+  </Router>,
 
-  <Provider store={store}>
-    <App />
-  </Provider>,
   document.getElementById('root')
 );
