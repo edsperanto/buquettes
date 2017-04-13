@@ -1,23 +1,22 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('GitHubOAuths', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING,
-				allowNull: false,
-				validate: {
-					is: /[a-z0-9_]+/i
-				}
+      token: {
+        type: Sequelize.STRING
       },
-      password: {
-        type: Sequelize.STRING,
-				allowNull: false
+      user_id: {
+        type: Sequelize.INTEGER,
+				reference: {
+					model: 'Users',
+					key: 'id'
+				}
       },
       createdAt: {
         allowNull: false,
@@ -30,6 +29,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('GitHubOAuths');
   }
 };
