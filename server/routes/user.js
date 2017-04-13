@@ -1,36 +1,79 @@
-const {hashIncomingPassword} = require('../helper');
 
-module.exports = function(express, bcrypt, saltRounds, passport, User) {
+module.exports = function(dependencies) {
 
+	// extract dependencies
+	const {
+		express, 
+		bcrypt, 
+		saltRounds, 
+		passport, 
+		User,
+		successJSON,
+		failJSON,
+	} = dependencies;
 	const router = express.Router();
-	const successJSON = {"success": true};
-	const failJSON = {"success": false};
+
+	// load helper functions
+	const {
+		hashIncomingPassword,
+		userRouteValidations,
+	} = require('../helper')(dependencies);
 
 	router.get('/current', (req, res) => {
-		res.send(req.user.dataValues.username);
+		res.send(req.user);
+		// res.send(req.user.dataValues.username);
 	});
 
 	router.post('/login', passport.authenticate('local', {
 		successRedirect: '/user/login/success',
-		failureRedirect: '/user/login/fail'
+		failureRedirect: '/user/login/fail',
 	}));
 
 	router.get('/login/success', (req, res) => {
-		res.json({"success": true});
+		let {username, email, first_name, last_name} = req.user.dataValues;
+		res.json(Object.assign(successJSON, {
+			"currentUser": {
+				username,
+				email,
+				first_name,
+				last_name,
+			}
+		}));
 	});
 
 	router.get('/login/fail', (req, res) => {
-		res.json({"success": false});
+		console.log(req.user);
+		res.json(failJSON('incorrect username or password'));
 	});
 
+	// hash all incoming passwords here to
+	// avoid hashing before login route
+	// because login route hashes password as well
 	router.use(hashIncomingPassword);
 
 	router.post('/new', (req, res) => {
+		let {username, password, email, first_name, last_name} = req.body;
 		User.create({
-			username: req.body.username,
-			password: req.body.password
-		}).then(_ => {
-			res.redirect('/login');
+			username,
+			password,
+			email,
+			first_name,
+			last_name,
+			active: true,
+		}).then(user => {
+			let {username, email, first_name, last_name} = user;
+			let successMsg = Object.assign(successJSON, {
+				"redirect": "/login",
+				"newUser": {
+					username,
+					email,
+					first_name,
+					last_name,
+				},
+			});
+			res.send(successMsg);
+		}).catch(err => {
+			res.json(failJSON(err.message));
 		});
 	});
 
@@ -42,20 +85,20 @@ module.exports = function(express, bcrypt, saltRounds, passport, User) {
 				return User.update({
 						username: user.username, 
 						password: password || user.password, 
-						token: token || user.token
+						token: token || user.token,
 				}, {where: {id}});
 			})
 			.then(_ => res.json(successJSON))
-			.catch(_ => res.json(failJSON));
+			.catch(_ => res.json(failJSON('update failed')));
 	});
 
 	router.delete('/', (req, res) => {
 		User.destroy({where: {
 			id: req.body.id,
-			username: req.body.username
+			username: req.body.username,
 		}})
 			.then(_ => res.json(successJSON))
-			.catch(_ => res.json(failJSON));
+			.catch(_ => res.json(failJSON('delete failed')));
 	});
 
 	return router;

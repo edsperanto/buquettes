@@ -1,7 +1,7 @@
 // express
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // request handlers
 const bodyParser = require('body-parser');
@@ -55,10 +55,22 @@ passport.deserializeUser(({id}, done) => {
 		.then(user => done(null, user));
 });
 
+// standard response
+const successJSON = {"success": true};
+const failJSON = (msg) => ({"success": false, "error": msg});
+
 // routes
-let userRoute = require('./routes/user');
-app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
-const sequelize = require('sequelize');
+const userRoute = require('./routes/user');
+const userRouteDependencies = {
+	express, 
+	bcrypt, 
+	saltRounds, 
+	passport, 
+	User,
+	successJSON,
+	failJSON,
+};
+app.use('/user', userRoute(userRouteDependencies));
 
 // 404 route
 app.get('/404', (req, res) => {
