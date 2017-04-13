@@ -1,4 +1,5 @@
 const https = require('https');
+const request = require('request');
 // express
 const express = require('express');
 const app = express();
@@ -8,16 +9,18 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const qs = require('querystring');
 const github = require('octonode');
 
 //GITHUB Auth
 const env = require('dotenv').config();
-const { CLIENT_ID } = process.env;
-const { CLIENT_SECRET } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, TOKEN } = process.env;
+// const { CLIENT_SECRET } = process.env;
 
-console.log('client_ID', CLIENT_ID);
+// console.log('client_ID', CLIENT_ID);
 
 const client = github.client();
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -73,28 +76,41 @@ passport.deserializeUser(({id}, done) => {
 
 // routes
 let userRoute = require('./routes/user');
-let targetURL_Email = `https://github.com/login/oauth/authorize?scope=user:repo&client_id=${CLIENT_ID}`;
-let postURL = `https://github.com/login/oauth/access_token`;
+let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
+// let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
 
 app.use('/user', userRoute(express, bcrypt, passport, User));
 
-client.get('/', ( err, status, body, headers ) => {
-   console.log(body); //json object
-   getEmail(targetURL_Email)
-    .then((email) => {
-      console.log('username email: ', email);
-      res.send('you got mail');
-    })
-    .catch(err => {
-      res.send(err);
-    });
- 
-});
+app.get('/callback', ( req, res ) => {
+          /* USING OCTONODE - SEEMS MORE SIMPLE SHOULD FIGURE OUT LATER client.get( ('/user/:username'){*/
+          //   let scopes = {
+          //   'add_scopes':['user', 'repo', 'gist'],
+          //   'note': 'admin script'
+          // };
 
-app.get('/callback', (req, res) => {
-  session_code = 
- https.post(postURL, {client_id: CLIENT_ID, client_secret: CLIENT_SECRET, code: session_code})
+          // github.auth.config({
+          //   username: 'stevencable',
+          //   password: 'steven'
+          // }).login(scopes, function (err, id, token) {
+          //   console.log('id and token: ', id, token);
+          // });
+          // });
+  
+  let body = {
+    client_id: CLIENT_ID, 
+    client_secret: CLIENT_SECRET, 
+    code: req.query.code
+  };
 
+  request.post(
+  { 
+    url: `https://github.com/login/oauth/access_token?${qs.stringify(body)}`
+    }, function(error, responseHeader, responseBody){
+      console.log('responseBody: ', responseBody); //example: access_toke=40characters&scope=whateverWeSet&token_type=typically'bearer'
+      let accessT = responseBody.substr(13,40) //save in database as access_token. may want to save scope as well!!
+      console.log('accessT: ', accessT);
+    res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
+  });
 });
 
 
@@ -107,22 +123,22 @@ app.use((req, res, next) => {
 	next();
 });
 
-function getEmail(clientURL) {
-  return new Promise((resolve, reject) => {
-    console.log('i ran')
-    https.get(clientURL, res => {
-      let rawData = '';
-      res.on('data', (chunk) => {
-        rawData += chunk;
-        console.log('rawData: ', rawData)
-      });
-      res.on('end', () => {
-        resolve(rawData);
-      });
-    })
-    .on('error', err => reject(err));
-  });
-}
+// function getRepo(clientURL) {
+//   return new Promise((resolve, reject) => {
+//     // console.log('i ran')
+//     https.get(clientURL, res => {
+//       let rawData = '';
+//       res.on('data', (chunk) => {
+//         rawData += chunk;
+//         console.log('rawData: ', rawData)
+//       });
+//       res.on('end', () => {
+//         resolve(rawData);
+//       });
+//     })
+//     .on('error', err => reject(err));
+//   });
+// }
 
 // start express server
 if(!module.parent) {

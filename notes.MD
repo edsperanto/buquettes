@@ -27,4 +27,7 @@ Third Party Applications often need to fetch current user's repos and organizati
 > Uses web wrap tools for Javascript we will use NodeJS with `octonode` and require it in our server.js. 
 - More on the octonode library and it's methods can be found here:
 > https://github.com/pksunkara/octonode
+and here:
+> https://www.npmjs.com/package/octonode
+>authentication: https://www.npmjs.com/package/octonode#authetication
   
