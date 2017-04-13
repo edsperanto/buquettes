@@ -38,7 +38,6 @@ const saltRounds = 10;
 
 // database
 const RedisStore = require('connect-redis')(session);
-const sequelize = require('sequelize');
 const db = require('./models');
 const {User} = db;
 
@@ -79,7 +78,7 @@ let userRoute = require('./routes/user');
 let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
 // let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
 
-app.use('/user', userRoute(express, bcrypt, passport, User));
+app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
 
 app.get('/callback', ( req, res ) => {
           /* USING OCTONODE - SEEMS MORE SIMPLE SHOULD FIGURE OUT LATER client.get( ('/user/:username'){*/
