@@ -18,6 +18,9 @@ module.exports = function(dependencies) {
 		hashIncomingPassword,
 		userRouteValidations,
 	} = require('../helper')(dependencies);
+	const {
+		usernameOrEmail
+	} = userRouteValidations;
 
 	router.get('/current', (req, res) => {
 		res.send(req.user);
@@ -72,33 +75,42 @@ module.exports = function(dependencies) {
 				},
 			});
 			res.send(successMsg);
-		}).catch(err => {
-			res.json(failJSON(err.message));
-		});
+		}).catch(err => res.json(failJSON(err.message)));
 	});
 
 	router.put('/update', (req, res) => {
-		User.findOne({where: {id: req.body.id}})
+		let {
+			username,
+			email,
+			password,
+			newEmail,
+			newPassword,
+			first_name,
+			last_name,
+		} = req.body;
+		usernameOrEmail(username, email, password)
 			.then(user => {
-				if(!user) throw new Error();
-				let {id, password, token} = req.body;
 				return User.update({
-						username: user.username, 
-						password: password || user.password, 
-						token: token || user.token,
-				}, {where: {id}});
+					email: newEmail || user.email,
+					password: newPassword || user.password,
+					first_name: first_name || user.first_name,
+					last_name: last_name || user.last_name,
+				}, {where: {id: user.id}});
 			})
 			.then(_ => res.json(successJSON))
-			.catch(_ => res.json(failJSON('update failed')));
+			.catch(err => res.json(failJSON(err.message)));
 	});
 
 	router.delete('/', (req, res) => {
-		User.destroy({where: {
-			id: req.body.id,
-			username: req.body.username,
-		}})
+		let {username, email, password} = req.body;
+		usernameOrEmail(username, email, password)
+			.then(user => {
+				return User.update({
+					active: false,
+				}, {where: {id: user.id}});
+			})
 			.then(_ => res.json(successJSON))
-			.catch(_ => res.json(failJSON('delete failed')));
+			.catch(err => res.json(failJSON(err.message)));
 	});
 
 	return router;
