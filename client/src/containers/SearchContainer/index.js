@@ -8,16 +8,32 @@ import SearchButton from '../../components/SearchButton';
 class SearchContainer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      query: ''
+    }
   }
 
-  sendData = (event) => {
+  handleChange = ( event ) => {
+    this.setState(
+    {
+      query: event.target.value
+    }
+    )
+    console.log(this.state);
+  }
+
+
+
+  sendData = ( event ) => {
     console.log('hello');
   }
 
   render(){
     return (
       <div className="search-container">
-        <SearchInput />
+        <SearchInput
+          handleChange={this.handleChange}
+        />
         <SearchButton
           sendData={this.sendData}
         />
