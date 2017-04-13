@@ -9,13 +9,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+				allowNull: false,
+				validate: {
+					is: /[a-z0-9_]+/i
+				}
       },
       password: {
-        type: Sequelize.STRING
-      },
-      token: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+				allowNull: false
       },
       createdAt: {
         allowNull: false,
