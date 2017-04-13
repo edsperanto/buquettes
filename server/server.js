@@ -15,13 +15,8 @@ const github = require('octonode');
 //GITHUB Auth
 const env = require('dotenv').config();
 const { CLIENT_ID, CLIENT_SECRET, TOKEN } = process.env;
-// const { CLIENT_SECRET } = process.env;
 
-// console.log('client_ID', CLIENT_ID);
-
-const client = github.client();
-
-
+// const client = github.client();  *keep for later*
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
@@ -81,20 +76,7 @@ let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client
 app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
 
 app.get('/callback', ( req, res ) => {
-          /* USING OCTONODE - SEEMS MORE SIMPLE SHOULD FIGURE OUT LATER client.get( ('/user/:username'){*/
-          //   let scopes = {
-          //   'add_scopes':['user', 'repo', 'gist'],
-          //   'note': 'admin script'
-          // };
-
-          // github.auth.config({
-          //   username: 'stevencable',
-          //   password: 'steven'
-          // }).login(scopes, function (err, id, token) {
-          //   console.log('id and token: ', id, token);
-          // });
-          // });
-  
+          
   let body = {
     client_id: CLIENT_ID, 
     client_secret: CLIENT_SECRET, 
@@ -107,7 +89,6 @@ app.get('/callback', ( req, res ) => {
     }, function(error, responseHeader, responseBody){
       console.log('responseBody: ', responseBody); //example: access_toke=40characters&scope=whateverWeSet&token_type=typically'bearer'
       let accessT = responseBody.substr(13,40) //save in database as access_token. may want to save scope as well!!
-      console.log('accessT: ', accessT);
     res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
   });
 });
@@ -121,23 +102,6 @@ app.use((req, res, next) => {
 	res.redirect('/404');
 	next();
 });
-
-// function getRepo(clientURL) {
-//   return new Promise((resolve, reject) => {
-//     // console.log('i ran')
-//     https.get(clientURL, res => {
-//       let rawData = '';
-//       res.on('data', (chunk) => {
-//         rawData += chunk;
-//         console.log('rawData: ', rawData)
-//       });
-//       res.on('end', () => {
-//         resolve(rawData);
-//       });
-//     })
-//     .on('error', err => reject(err));
-//   });
-// }
 
 // start express server
 if(!module.parent) {
