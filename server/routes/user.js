@@ -1,15 +1,9 @@
-
 module.exports = function(dependencies) {
 
 	// extract dependencies
 	const {
-		express, 
-		bcrypt, 
-		saltRounds, 
-		passport, 
-		User,
-		successJSON,
-		failJSON,
+		express, bcrypt, saltRounds, passport, 
+		User, successJSON, failJSON,
 	} = dependencies;
 	const router = express.Router();
 
@@ -27,14 +21,8 @@ module.exports = function(dependencies) {
 	router.get('/current', (req, res) => {
 		let {username, email, first_name, last_name} = req.user;
 		res.send(Object.assign(successJSON, {
-			"currentUser": {
-				username,
-				email,
-				first_name,
-				last_name,
-			}
+			"currentUser": {username, email, first_name, last_name}
 		}));
-		// res.send(req.user.dataValues.username);
 	});
 
 	router.post('/login', 
@@ -47,14 +35,8 @@ module.exports = function(dependencies) {
 
 	router.get('/login/success', (req, res) => {
 		let {username, email, first_name, last_name} = req.user.dataValues;
-		console.log('LOGIN SUCCESS!!!!!!!');
 		res.json(Object.assign(successJSON, {
-			"currentUser": {
-				username,
-				email,
-				first_name,
-				last_name,
-			}
+			"currentUser": {username, email, first_name, last_name}
 		}));
 	});
 
@@ -65,32 +47,22 @@ module.exports = function(dependencies) {
 	// hash all incoming passwords here to
 	// avoid hashing before login route
 	// because login route hashes password as well
-	router.use(hashIncomingPassword);
+	// router.use(hashIncomingPassword);
 
-	router.post('/new', (req, res) => {
+	router.post('/new', hashIncomingPassword, (req, res) => {
 		let {username, password, email, first_name, last_name} = req.body;
 		checkExistingUsernameOrEmail(username, email, password)
 			.then(_ => {
 				return User.create({
-					username,
-					email,
-					password,
-					email,
-					first_name,
-					last_name,
-					active: true,
+					username, email, password, email,
+					first_name, last_name, active: true,
 				});
 			})
 			.then(user => {
 				let {username, email, first_name, last_name} = user;
 				let successMsg = Object.assign(successJSON, {
 					"redirect": "/login",
-					"newUser": {
-						username,
-						email,
-						first_name,
-						last_name,
-					}
+					"newUser": {username, email, first_name, last_name}
 				});
 				res.send(successMsg);
 			})
@@ -99,13 +71,8 @@ module.exports = function(dependencies) {
 
 	router.put('/update', (req, res) => {
 		let {
-			username,
-			email,
-			password,
-			newEmail,
-			newPassword,
-			first_name,
-			last_name,
+			username, email, password, newEmail,
+			newPassword, first_name, last_name,
 		} = req.body;
 		idFromUsernameOrEmail(username, email, password)
 			.then(user => {
@@ -123,10 +90,10 @@ module.exports = function(dependencies) {
 	router.delete('/', (req, res) => {
 		let {username, email, password} = req.body;
 		idFromUsernameOrEmail(username, email, password)
-			.then(user => {
+			.then(id => {
 				return User.update({
 					active: false,
-				}, {where: {id: user.id}});
+				}, {where: {id}});
 			})
 			.then(_ => res.json(successJSON))
 			.catch(err => res.json(failJSON(err.message)));

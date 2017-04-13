@@ -37,7 +37,7 @@ app.use(passport.session());
 // passport settings
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		User.findOne({where: {username: username}}).then(user => {
+		User.findOne({where: {username}}).then(user => {
 			if(user === null) {
 				done(null, false, {message: 'bad username'});
 			}else{
@@ -62,13 +62,8 @@ const failJSON = (msg) => ({"success": false, "error": msg});
 // routes
 const userRoute = require('./routes/user');
 const userRouteDependencies = {
-	express, 
-	bcrypt, 
-	saltRounds, 
-	passport, 
-	User,
-	successJSON,
-	failJSON,
+	express, bcrypt, saltRounds, passport, 
+	User, successJSON, failJSON,
 };
 app.use('/user', userRoute(userRouteDependencies));
 
