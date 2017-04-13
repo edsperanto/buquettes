@@ -10,8 +10,10 @@ import {
 
 
 import reducers from './reducers';
-import {App} from './containers/App';
-import {Login} from './sandLab/basicExample.js';
+import { App } from './containers/App';
+import { Login } from './sandLab/basicExample.js';
+import SearchContainer from './containers/SearchContainer';
+
 import './index.css';
 
 let store = createStore(
@@ -25,9 +27,13 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <div>
+      <ul>
         <li><Link to ='/'> Home</Link></li>
-          <li><Link to ='/Login'> Login</Link></li>
-          <Route exact path ='/' component={App}/>
+        <li><Link to ='/login'> Login</Link></li>
+        <li><Link to ='/search'>Search</Link></li>
+      </ul>
+          <Route exact path ='/' component={SearchContainer} />
+          <Route path ="/search" component={SearchContainer} />
       </div>
     </Router>
   </Provider>
