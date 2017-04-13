@@ -22,16 +22,14 @@ ReactDOM.render(
 
 <div className= "App">
 
-  <Router>
-    <div>
-      <li><Link to ='/'> Home</Link></li>
-        <li><Link to ='/Login'> Login</Link></li>
-        <Route exact path ='/' component={App}/>
-    </div>
-  </Router>
-
   <Provider store={store}>
-        <App />
+    <Router>
+      <div>
+        <li><Link to ='/'> Home</Link></li>
+          <li><Link to ='/Login'> Login</Link></li>
+          <Route exact path ='/' component={App}/>
+      </div>
+    </Router>
   </Provider>
 </div>,
   document.getElementById('root')
