@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import { getFiles } from '../../actions';
+import SearchInput from '../../components/SearchInput';
+import SearchButton from '../../components/SearchButton';
 
 class SearchContainer extends Component {
   constructor(props) {
     super(props);
   }
 
-  render(){
-    console.log(this.props);
-    return (
-      <div className="search-box">
-        <h1>SEARCH</h1>
-        <input type="text"></input>
-        <input type="submit"></input>
-      </div>
+  sendData = (event) => {
+    console.log('hello');
+  }
 
+  render(){
+    return (
+      <div className="search-container">
+        <SearchInput />
+        <SearchButton
+          sendData={this.sendData}
+        />
+      </div>
     )
   }
 }
