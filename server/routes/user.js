@@ -19,21 +19,35 @@ module.exports = function(dependencies) {
 		userRouteValidations,
 	} = require('../helper')(dependencies);
 	const {
-		usernameOrEmail
+		idFromUsernameOrEmail,
+		checkExistingUsernameOrEmail,
+		usernameFromEmail,
 	} = userRouteValidations;
 
 	router.get('/current', (req, res) => {
-		res.send(req.user);
+		let {username, email, first_name, last_name} = req.user;
+		res.send(Object.assign(successJSON, {
+			"currentUser": {
+				username,
+				email,
+				first_name,
+				last_name,
+			}
+		}));
 		// res.send(req.user.dataValues.username);
 	});
 
-	router.post('/login', passport.authenticate('local', {
-		successRedirect: '/user/login/success',
-		failureRedirect: '/user/login/fail',
-	}));
+	router.post('/login', 
+		usernameFromEmail, 
+		passport.authenticate('local', {
+			successRedirect: '/user/login/success',
+			failureRedirect: '/user/login/fail',
+		}
+	));
 
 	router.get('/login/success', (req, res) => {
 		let {username, email, first_name, last_name} = req.user.dataValues;
+		console.log('LOGIN SUCCESS!!!!!!!');
 		res.json(Object.assign(successJSON, {
 			"currentUser": {
 				username,
@@ -45,7 +59,6 @@ module.exports = function(dependencies) {
 	});
 
 	router.get('/login/fail', (req, res) => {
-		console.log(req.user);
 		res.json(failJSON('incorrect username or password'));
 	});
 
@@ -56,26 +69,32 @@ module.exports = function(dependencies) {
 
 	router.post('/new', (req, res) => {
 		let {username, password, email, first_name, last_name} = req.body;
-		User.create({
-			username,
-			password,
-			email,
-			first_name,
-			last_name,
-			active: true,
-		}).then(user => {
-			let {username, email, first_name, last_name} = user;
-			let successMsg = Object.assign(successJSON, {
-				"redirect": "/login",
-				"newUser": {
+		checkExistingUsernameOrEmail(username, email, password)
+			.then(_ => {
+				return User.create({
 					username,
+					email,
+					password,
 					email,
 					first_name,
 					last_name,
-				},
-			});
-			res.send(successMsg);
-		}).catch(err => res.json(failJSON(err.message)));
+					active: true,
+				});
+			})
+			.then(user => {
+				let {username, email, first_name, last_name} = user;
+				let successMsg = Object.assign(successJSON, {
+					"redirect": "/login",
+					"newUser": {
+						username,
+						email,
+						first_name,
+						last_name,
+					}
+				});
+				res.send(successMsg);
+			})
+			.catch(err => res.json(failJSON(err.message)));
 	});
 
 	router.put('/update', (req, res) => {
@@ -88,7 +107,7 @@ module.exports = function(dependencies) {
 			first_name,
 			last_name,
 		} = req.body;
-		usernameOrEmail(username, email, password)
+		idFromUsernameOrEmail(username, email, password)
 			.then(user => {
 				return User.update({
 					email: newEmail || user.email,
@@ -103,7 +122,7 @@ module.exports = function(dependencies) {
 
 	router.delete('/', (req, res) => {
 		let {username, email, password} = req.body;
-		usernameOrEmail(username, email, password)
+		idFromUsernameOrEmail(username, email, password)
 			.then(user => {
 				return User.update({
 					active: false,
