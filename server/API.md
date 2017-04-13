@@ -50,15 +50,6 @@ All responses will be in JSON format. All successful requests will be answered w
 
 ## Routes Overview
 
-### Aggregate Data
-
-| **HTTP Method** | **URL** | **Response** | **Action** |
-|---|---|---|---|---|
-| `GET` | `/locations` | `{"locations": [array]}` | Get list of all warehouse locations. |
-| `GET` | `/coffees` | `{"coffees": [array]}` | Get list of all coffee types. |
-| `GET` | `/orders` | `{"orders": [array]}` | Get list of all customer orders. |
-| `GET` | `/customers` | `{"customers": [array]}` | Get list of all customer information. |
-
 ### User Data
 
 Location data requests are obtained via the `/location` route.
