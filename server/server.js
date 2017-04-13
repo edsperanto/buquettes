@@ -1,3 +1,5 @@
+const https = require('https');
+const request = require('request');
 // express
 const express = require('express');
 const app = express();
@@ -7,10 +9,20 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const qs = require('querystring');
+const github = require('octonode');
+
+//GITHUB Auth
+const env = require('dotenv').config();
+const { CLIENT_ID, CLIENT_SECRET, TOKEN } = process.env;
+
+// const client = github.client();  *keep for later*
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
+
+
 
 // session & passport
 const session = require('express-session');
@@ -55,10 +67,32 @@ passport.deserializeUser(({id}, done) => {
 		.then(user => done(null, user));
 });
 
+
 // routes
 let userRoute = require('./routes/user');
+let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
+// let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
+
 app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
-const sequelize = require('sequelize');
+
+app.get('/callback', ( req, res ) => {
+          
+  let body = {
+    client_id: CLIENT_ID, 
+    client_secret: CLIENT_SECRET, 
+    code: req.query.code
+  };
+
+  request.post(
+  { 
+    url: `https://github.com/login/oauth/access_token?${qs.stringify(body)}`
+    }, function(error, responseHeader, responseBody){
+      console.log('responseBody: ', responseBody); //example: access_toke=40characters&scope=whateverWeSet&token_type=typically'bearer'
+      let accessT = responseBody.substr(13,40) //save in database as access_token. may want to save scope as well!!
+    res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
+  });
+});
+
 
 // 404 route
 app.get('/404', (req, res) => {
@@ -72,6 +106,6 @@ app.use((req, res, next) => {
 // start express server
 if(!module.parent) {
 	app.listen(PORT, _ => {
-		console.log(`Server listening at port ${PORT}`);
+		console.log(`You and Port: ${PORT} are connected like soulmates`);
 	});
 }
