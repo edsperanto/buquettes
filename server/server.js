@@ -1,20 +1,15 @@
-const https = require('https');
-const request = require('request');
 // express
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 // request handlers
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
-const qs = require('querystring');
-const github = require('octonode');
 
-//GITHUB Auth
-const env = require('dotenv').config();
-const { CLIENT_ID, CLIENT_SECRET, TOKEN } = process.env;
+
+
 
 // const client = github.client();  *keep for later*
 app.use(bodyParser.json());
@@ -72,34 +67,17 @@ passport.deserializeUser(({id}, done) => {
 const successJSON = {"success": true};
 const failJSON = (msg) => ({"success": false, "error": msg});
 
-// routes
+// middleware routes
 const userRoute = require('./routes/user');
 const userRouteDependencies = {
 	express, bcrypt, saltRounds, passport, 
 	User, successJSON, failJSON,
 };
+const oauth2Route = require('./routes/oauth2');
+
+
 app.use('/user', userRoute(userRouteDependencies));
-
-let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
-// let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
-
-app.get('/callback', ( req, res ) => {
-          
-  let body = {
-    client_id: CLIENT_ID, 
-    client_secret: CLIENT_SECRET, 
-    code: req.query.code
-  };
-
-  request.post(
-  { 
-    url: `https://github.com/login/oauth/access_token?${qs.stringify(body)}`
-    }, function(error, responseHeader, responseBody){
-      console.log('responseBody: ', responseBody); //example: access_token=40characters&scope=whateverWeSet&token_type=typically'bearer'
-      let accessT = responseBody.substr(13,40) //save in database as access_token. may want to save scope as well!!
-    res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
-  });
-});
+app.use('/oauth2', oauth2Route);
 
 // 404 route
 app.get('/404', (req, res) => {

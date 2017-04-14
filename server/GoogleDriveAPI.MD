@@ -4,7 +4,7 @@
 
 ### Some FYI first:
 
-**Note** With the Drive platform, you'll use a model based on file IDs rather than a traditional directory hierarchy. See the following links for more on [Working with Folders][working-with-folders] and [Managing File Metadata][managing-file-metadata] 
+**Note** With the Drive platform, you'll use a model based on file IDs rather than a traditional directory hierarchy. See the following links for more on [Working with Folders][working-with-folders] and [Managing File Metadata][managing-file-metadata] **see `file.list` and `search for files` below also**
 
 ## Quickstarting
 
