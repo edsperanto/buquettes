@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "Buquettes",
-    "password": null,
+    "password": "insert_password",
     "database": "buquettes",
     "host": "127.0.0.1",
     "dialect": "postgres",
