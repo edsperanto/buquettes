@@ -8,16 +8,11 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 
-
-
-
 // const client = github.client();  *keep for later*
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
-
-
 
 // session & passport
 const session = require('express-session');
@@ -74,7 +69,6 @@ const userRouteDependencies = {
 	User, successJSON, failJSON,
 };
 const oauth2Route = require('./routes/oauth2');
-
 
 app.use('/user', userRoute(userRouteDependencies));
 app.use('/oauth2', oauth2Route);

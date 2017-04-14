@@ -3,7 +3,7 @@ const router = express.Router();
 
 const githubRoute = require('./github');
 
-//middleware routing
+//middleware routing for each API here:
 router.use('/github', githubRoute);
 
 module.exports = router;
