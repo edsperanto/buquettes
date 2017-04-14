@@ -1,8 +1,12 @@
-export const GET_FILES = 'GET_FILES';
+export const ADD_FILE = 'ADD_FILE';
 
-export function getFiles(files) {
+export function addFile(id, source, name, createdAt, lastModified) {
   return {
-    type: GET_FILES,
-    files
-  }
+    type: ADD_FILE,
+    id,
+    source,
+    name,
+    createdAt,
+    lastModified
+  };
 }

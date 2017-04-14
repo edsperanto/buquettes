@@ -32,7 +32,7 @@ ReactDOM.render(
         <li><Link to ='/login'> Login</Link></li>
         <li><Link to ='/search'>Search</Link></li>
       </ul>
-          <Route exact path ='/' component={SearchContainer} />
+          <Route exact path ='/' component={App} />
           <Route path ="/search" component={SearchContainer} />
       </div>
     </Router>
