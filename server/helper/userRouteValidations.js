@@ -8,12 +8,16 @@ module.exports = function(dependencies) {
 	function idFromUsernameOrEmail(username, email, password) {
 		const errMsg = {"message": "incorrect username/email or password"};
 		return new Promise((resolve, reject) => {
-			let p1 = User.find({where: {username}});
-			let p2 = User.find({where: {email}});
+			let p1 = User.findOne({where: {username}});
+			let p2 = User.findOne({where: {email}});
 			Promise.all([p1, p2])
-				.then(([r1, r2]) => ({
-					id: (r1 || r2).id,
-					res: bcrypt.compare(password, (r1 || r2).password)
+				.then(([r1, r2]) => new Promise((resolve, reject) => {
+					let {password: hash, id, username} = (r1 || r2).dataValues;
+					bcrypt.compare(password, hash)
+						.then(res => {
+							if(res) resolve({id, res});
+							else reject(errMsg);
+						});
 				}))
 				.then(({id, res}) => {
 					if(res) resolve(id);
