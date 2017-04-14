@@ -18,9 +18,11 @@ module.exports = function(dependencies) {
 		usernameFromEmail,
 	} = userRouteValidations;
 
+	router.use(hashIncomingPassword);
+
 	router.get('/current', (req, res) => {
 		let {username, email, first_name, last_name} = req.user;
-		res.send(Object.assign(successJSON, {
+		res.send(Object.assign({}, successJSON, {
 			"currentUser": {username, email, first_name, last_name}
 		}));
 	});
@@ -35,7 +37,7 @@ module.exports = function(dependencies) {
 
 	router.get('/login/success', (req, res) => {
 		let {username, email, first_name, last_name} = req.user.dataValues;
-		res.json(Object.assign(successJSON, {
+		res.json(Object.assign({}, successJSON, {
 			"currentUser": {username, email, first_name, last_name}
 		}));
 	});
@@ -44,12 +46,7 @@ module.exports = function(dependencies) {
 		res.json(failJSON('incorrect username or password'));
 	});
 
-	// hash all incoming passwords here to
-	// avoid hashing before login route
-	// because login route hashes password as well
-	// router.use(hashIncomingPassword);
-
-	router.post('/new', hashIncomingPassword, (req, res) => {
+	router.post('/new', (req, res) => {
 		let {username, password, email, first_name, last_name} = req.body;
 		checkExistingUsernameOrEmail(username, email, password)
 			.then(_ => {
@@ -60,11 +57,10 @@ module.exports = function(dependencies) {
 			})
 			.then(user => {
 				let {username, email, first_name, last_name} = user;
-				let successMsg = Object.assign(successJSON, {
+				res.send(Object.assign({}, successJSON, {
 					"redirect": "/login",
 					"newUser": {username, email, first_name, last_name}
-				});
-				res.send(successMsg);
+				}));
 			})
 			.catch(err => res.json(failJSON(err.message)));
 	});
@@ -75,6 +71,7 @@ module.exports = function(dependencies) {
 			newPassword, first_name, last_name,
 		} = req.body;
 		idFromUsernameOrEmail(username, email, password)
+			.then(id => User.findOne({where: {id}}))
 			.then(user => {
 				return User.update({
 					email: newEmail || user.email,

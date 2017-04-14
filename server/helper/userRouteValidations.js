@@ -5,53 +5,32 @@ module.exports = function(dependencies) {
 		User, failJSON, bcrypt
 	} = dependencies;
 
-	function getIdThruUsername(username) {
-		return new Promise((resolve, reject) => {
-			User.find({where: {username}})
-				.then(user => {
-					if(user) resolve(user);
-					else resolve(user);
-				});
-		});
-	}
-
-	function getIdThruEmail(email) {
-		return new Promise((resolve, reject) => {
-			User.find({where: {email}})
-				.then(user => {
-					if(user) resolve(user);
-					else resolve(user);
-				});
-		});
-	}
-
 	function idFromUsernameOrEmail(username, email, password) {
+		const errMsg = {"message": "incorrect username/email or password"};
 		return new Promise((resolve, reject) => {
-			let p1 = getIdThruUsername(username);
-			let p2 = getIdThruEmail(email);
-			let userId;
-			Promise.race([p1, p2])
-				// .then(id => User.findOne({where: {id, password}}))
-				.then(user => {
-					userId = user.id;
-					return bcrypt.compare(password, user.password)
+			let p1 = User.find({where: {username}});
+			let p2 = User.find({where: {email}});
+			Promise.all([p1, p2])
+				.then(([r1, r2]) => ({
+					id: (r1 || r2).id,
+					res: bcrypt.compare(password, (r1 || r2).password)
+				}))
+				.then(({id, res}) => {
+					if(res) resolve(id);
+					else reject(errMsg);
 				})
-				.then(res => {
-					if(res) resolve(userId);
-					else reject({"message": "incorrect username/email or password"});
-				});
+				.catch(_ => reject(errMsg));
 		});
 	}
 
 	function checkExistingUsernameOrEmail(username, email, password) {
 		return new Promise((resolve, reject) => {
-			let p1 = getIdThruUsername(username);
-			let p2 = getIdThruEmail(email);
+			let p1 = User.find({where: {username}});
+			let p2 = User.find({where: {email}});
 			Promise.all([p1, p2])
-				.then(([id1, id2]) => {
-					if(id1) reject({"message": "username taken"});
-					else if(id2) reject({"message": "email already used"});
-					else resolve('OK');
+				.then(([r1, r2]) => {
+					if(!r1 && !r2) resolve('OK');
+					else reject({"message": (r1)?"username taken":"email already used"});
 				});
 		});
 	}

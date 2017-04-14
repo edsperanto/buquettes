@@ -1,15 +1,19 @@
 module.exports = (dependencies) => {
 	let {bcrypt, saltRounds} = dependencies;
 	return function hashIncomingPassword(req, res, next) {
-		if(req.body) {
-			if(req.body.password) {
-				bcrypt.genSalt(saltRounds, function(err, salt) {
-					bcrypt.hash(req.body.password, salt, function(err, hash) {
-						req.body.password = hash;
-						next();
-					});
+		function hashThis(thing) {
+			bcrypt.genSalt(saltRounds, function(err, salt) {
+				bcrypt.hash(req.body[thing], salt, function(err, hash) {
+					req.body[thing] = hash;
+					next();
 				});
-			}else next();
-		}else next();
+			});
+		}
+		let {originalUrl: url, method, body: {newPassword}} = req;
+		if(url === '/user/new' && method === 'POST') 
+			hashThis('password');
+		else if(url === '/user/update' && method === 'PUT' && newPassword) 
+			hashThis('newPassword');
+		else next();
 	}
 }
