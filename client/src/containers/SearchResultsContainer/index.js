@@ -12,7 +12,7 @@ class SearchResultsContainer extends Component {
       <div className="search-results">
         {
           this.props.files.files.filter( file => {
-            return file.name.indexOf(this.props.query) !== -1;
+            return file.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1;
           }).map( file => {
             return (
               <File
