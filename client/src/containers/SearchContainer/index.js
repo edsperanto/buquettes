@@ -51,13 +51,12 @@ class SearchContainer extends Component {
         query: event.target.value
       }
     )
-      console.log(this.state.query);
   }
 
   filterResults = ( event ) => {
-    this.props.files.map( file => {
-      return event.target.value;
-    })
+    this.props.files.files.filter( file => {
+      return file.name == this.state.query;
+    });
   }
 
   sendData = ( event ) => {
@@ -86,7 +85,8 @@ class SearchContainer extends Component {
           sendData={this.sendData}
         />
         <SearchResultsContainer
-
+          query={this.state.query}
+          filterResults={this.filterResults}
         />
       </div>
     )

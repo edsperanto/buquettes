@@ -6,15 +6,14 @@ import File from '../../components/File';
 
 
 class SearchResultsContainer extends Component {
-  constructor(props) {
-    super(props);
-  }
+
   render(){
     return(
       <div className="search-results">
-        Results:
         {
-          this.props.files.files.map( file => {
+          this.props.files.files.filter( file => {
+            return file.name == this.props.query;
+          }).map( file => {
             return (
               <File
                 id={file.id}
@@ -23,9 +22,8 @@ class SearchResultsContainer extends Component {
                 createdAt={file.createdAt}
                 lastModified={file.lastModified}
               />
-
             )
-        })
+          })
 
         }
       </div>
