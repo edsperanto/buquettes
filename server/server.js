@@ -87,7 +87,7 @@ app.get('/callback', ( req, res ) => {
   { 
     url: `https://github.com/login/oauth/access_token?${qs.stringify(body)}`
     }, function(error, responseHeader, responseBody){
-      console.log('responseBody: ', responseBody); //example: access_toke=40characters&scope=whateverWeSet&token_type=typically'bearer'
+      console.log('responseBody: ', responseBody); //example: access_token=40characters&scope=whateverWeSet&token_type=typically'bearer'
       let accessT = responseBody.substr(13,40) //save in database as access_token. may want to save scope as well!!
     res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
   });
