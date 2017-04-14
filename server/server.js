@@ -3,7 +3,7 @@ const request = require('request');
 // express
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // request handlers
 const bodyParser = require('body-parser');
@@ -49,7 +49,8 @@ app.use(passport.session());
 // passport settings
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		User.findOne({where: {username: username}}).then(user => {
+		console.log('USERNAME: ', username);
+		User.findOne({where: {username}}).then(user => {
 			if(user === null) {
 				done(null, false, {message: 'bad username'});
 			}else{
@@ -67,13 +68,20 @@ passport.deserializeUser(({id}, done) => {
 		.then(user => done(null, user));
 });
 
+// standard response
+const successJSON = {"success": true};
+const failJSON = (msg) => ({"success": false, "error": msg});
 
 // routes
-let userRoute = require('./routes/user');
+const userRoute = require('./routes/user');
+const userRouteDependencies = {
+	express, bcrypt, saltRounds, passport, 
+	User, successJSON, failJSON,
+};
+app.use('/user', userRoute(userRouteDependencies));
+
 let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
 // let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
-
-app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
 
 app.get('/callback', ( req, res ) => {
           
@@ -92,7 +100,6 @@ app.get('/callback', ( req, res ) => {
     res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
   });
 });
-
 
 // 404 route
 app.get('/404', (req, res) => {
