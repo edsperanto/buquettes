@@ -10,28 +10,28 @@ let files = [
   {
     id: 1,
     source: "github",
-    name: "Hey Caity",
+    name: "file1",
     createdAt: "April. 22, 2017",
     lastModified: "April 24, 2022"
   },
   {
     id: 2,
     source: "git",
-    name: "Hey Josh",
+    name: "file2",
     createdAt: "April. 23, 2017",
     lastModified: "April 25, 2022"
   },
   {
     id: 3,
     source: "github",
-    name: "How are you",
+    name: "fileHow are you",
     createdAt: "April. 24, 2017",
     lastModified: "April 26, 2022"
   },
   {
     id: 4,
     source: "gdrive",
-    name: "I'm great how about you",
+    name: "I'm great how about you.png",
     createdAt: "April. 25, 2017",
     lastModified: "April 27, 2022"
   }
@@ -51,13 +51,13 @@ class SearchContainer extends Component {
         query: event.target.value
       }
     )
+      console.log(this.state.query);
   }
 
   filterResults = ( event ) => {
     this.props.files.map( file => {
       return event.target.value;
     })
-    console.log(this.props);
   }
 
   sendData = ( event ) => {
@@ -66,7 +66,6 @@ class SearchContainer extends Component {
 
   componentWillMount() {
     files.map( file => {
-      console.log( 'file', file);
       return this.props.addFile(
         file.id,
         file.source,
@@ -78,7 +77,6 @@ class SearchContainer extends Component {
   }
 
   render(){
-    console.log('props', this.props.files);
     return (
       <div className="search-container">
         <SearchInput
@@ -88,9 +86,7 @@ class SearchContainer extends Component {
           sendData={this.sendData}
         />
         <SearchResultsContainer
-          // show 0 files on default
-          // run filter based on searchinput
-          filterResults={this.filterResults}
+
         />
       </div>
     )

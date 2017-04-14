@@ -7,7 +7,7 @@ const File = ( { id, source, name, createdAt, lastModified } ) => (
       <li>{name}</li>
       <li>{createdAt}</li>
       <li>{lastModified}</li>
-    <ul>
+    </ul>
   </div>
 );
 

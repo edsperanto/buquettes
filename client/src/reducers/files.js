@@ -7,7 +7,6 @@ const initialState = {
 function files(state = initialState, action) {
   switch( action.type ){
     case ADD_FILE:
-    console.log('in reducer', action);
     return Object.assign({}, state, {
       files: [
         ...state.files,

@@ -2,16 +2,32 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { addFile } from '../../actions';
+import File from '../../components/File';
 
 
 class SearchResultsContainer extends Component {
   constructor(props) {
     super(props);
   }
-  render( filterResults ){
+  render(){
     return(
       <div className="search-results">
-      Results:
+        Results:
+        {
+          this.props.files.files.map( file => {
+            return (
+              <File
+                id={file.id}
+                source={file.source}
+                name={file.name}
+                createdAt={file.createdAt}
+                lastModified={file.lastModified}
+              />
+
+            )
+        })
+
+        }
       </div>
       )
   }
@@ -20,7 +36,7 @@ class SearchResultsContainer extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      cards: state.cards
+      files: state.files
     }
   };
 
