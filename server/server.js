@@ -80,6 +80,12 @@ const userRouteDependencies = {
 };
 app.use('/user', userRoute(userRouteDependencies));
 
+const gdriveRoute = require('./routes/gdrive');
+const gdriveRouteDependencies = {
+	express, successJSON, failJSON
+}
+app.use('/oauth2/gdrive', gdriveRoute(gdriveRouteDependencies));
+
 let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
 // let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
 
