@@ -16,7 +16,7 @@ let files = [
   },
   {
     id: 2,
-    source: "git",
+    source: "github",
     name: "file2",
     createdAt: "April. 23, 2017",
     lastModified: "April 25, 2022"
