@@ -1,3 +1,6 @@
-module.exports = {
-	hashIncomingPassword: require('./hashIncomingPassword')
+module.exports = function(dependencies) {
+	return {
+		hashIncomingPassword: require('./hashIncomingPassword')(dependencies),
+		userRouteValidations: require('./userRouteValidations')(dependencies),
+	}
 }

@@ -1,61 +1,99 @@
-const {hashIncomingPassword} = require('../helper');
+module.exports = (dependencies) => {
 
-module.exports = function(express, bcrypt, saltRounds, passport, User) {
-
+	// extract dependencies
+	const {
+		express, bcrypt, saltRounds, passport, 
+		User, successJSON, failJSON,
+	} = dependencies;
 	const router = express.Router();
-	const successJSON = {"success": true};
-	const failJSON = {"success": false};
 
-	router.get('/current', (req, res) => {
-		res.send(req.user.dataValues.username);
-	});
-
-	router.post('/login', passport.authenticate('local', {
-		successRedirect: '/user/login/success',
-		failureRedirect: '/user/login/fail'
-	}));
-
-	router.get('/login/success', (req, res) => {
-		res.json({"success": true});
-	});
-
-	router.get('/login/fail', (req, res) => {
-		res.json({"success": false});
-	});
+	// load helper functions
+	const {
+		hashIncomingPassword,
+		userRouteValidations,
+	} = require('../helper')(dependencies);
+	const {
+		idFromUsernameOrEmail,
+		checkExistingUsernameOrEmail,
+		usernameFromEmail,
+	} = userRouteValidations;
 
 	router.use(hashIncomingPassword);
 
+	router.get('/current', (req, res) => {
+		let {username, email, first_name, last_name} = req.user;
+		res.send(Object.assign({}, successJSON, {
+			"currentUser": {username, email, first_name, last_name}
+		}));
+	});
+
+	router.post('/login', 
+		usernameFromEmail, 
+		passport.authenticate('local', {
+			successRedirect: '/user/login/success',
+			failureRedirect: '/user/login/fail',
+		}
+	));
+
+	router.get('/login/success', (req, res) => {
+		let {username, email, first_name, last_name} = req.user.dataValues;
+		res.json(Object.assign({}, successJSON, {
+			"currentUser": {username, email, first_name, last_name}
+		}));
+	});
+
+	router.get('/login/fail', (req, res) => {
+		res.json(failJSON('incorrect username or password'));
+	});
+
 	router.post('/new', (req, res) => {
-		User.create({
-			username: req.body.username,
-			password: req.body.password
-		}).then(_ => {
-			res.redirect('/login');
-		});
+		let {username, password, email, first_name, last_name} = req.body;
+		checkExistingUsernameOrEmail(username, email, password)
+			.then(_ => {
+				return User.create({
+					username, email, password, email,
+					first_name, last_name, active: true,
+				});
+			})
+			.then(user => {
+				let {username, email, first_name, last_name} = user;
+				res.send(Object.assign({}, successJSON, {
+					"redirect": "/login",
+					"newUser": {username, email, first_name, last_name}
+				}));
+			})
+			.catch(err => res.json(failJSON(err.message)));
 	});
 
 	router.put('/update', (req, res) => {
-		User.findOne({where: {id: req.body.id}})
+		let {
+			username, email, password, newEmail,
+			newPassword, first_name, last_name,
+		} = req.body;
+		idFromUsernameOrEmail(username, email, password)
+			.then(id => User.findOne({where: {id}}))
 			.then(user => {
-				if(!user) throw new Error();
-				let {id, password, token} = req.body;
 				return User.update({
-						username: user.username, 
-						password: password || user.password, 
-						token: token || user.token
-				}, {where: {id}});
+					email: newEmail || user.email,
+					password: newPassword || user.password,
+					first_name: first_name || user.first_name,
+					last_name: last_name || user.last_name,
+				}, {where: {id: user.id}});
 			})
 			.then(_ => res.json(successJSON))
-			.catch(_ => res.json(failJSON));
+			.catch(err => res.json(failJSON(err.message)));
 	});
 
 	router.delete('/', (req, res) => {
-		User.destroy({where: {
-			id: req.body.id,
-			username: req.body.username
-		}})
+		let {username, email, password} = req.body;
+		idFromUsernameOrEmail(username, email, password)
+			.then(id => {
+				return User.update({
+					active: false,
+				}, {where: {id}});
+			})
 			.then(_ => res.json(successJSON))
-			.catch(_ => res.json(failJSON));
+			.catch(err => res.json(failJSON(err.message)));
 	});
 
 	return router;

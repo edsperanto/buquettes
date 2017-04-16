@@ -1,28 +1,20 @@
-const https = require('https');
-const request = require('request');
 // express
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
 
 // request handlers
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const request = require('request');
 const qs = require('querystring');
-const github = require('octonode');
-
-//GITHUB Auth
-const env = require('dotenv').config();
-const { CLIENT_ID, CLIENT_SECRET, TOKEN } = process.env;
 
 // const client = github.client();  *keep for later*
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
-
-
 
 // session & passport
 const session = require('express-session');
@@ -34,7 +26,7 @@ const saltRounds = 10;
 // database
 const RedisStore = require('connect-redis')(session);
 const db = require('./models');
-const {User} = db;
+const {User, GitHubOAuth, GoogleDriveOAuth} = db;
 
 // session settings
 app.use(session({
@@ -49,7 +41,8 @@ app.use(passport.session());
 // passport settings
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		User.findOne({where: {username: username}}).then(user => {
+		console.log('USERNAME: ', username);
+		User.findOne({where: {username}}).then(user => {
 			if(user === null) {
 				done(null, false, {message: 'bad username'});
 			}else{
@@ -67,32 +60,27 @@ passport.deserializeUser(({id}, done) => {
 		.then(user => done(null, user));
 });
 
+// standard response
+const successJSON = {"success": true};
+const failJSON = (msg) => ({"success": false, "error": msg});
 
-// routes
-let userRoute = require('./routes/user');
-let targetURL_Repo = `https://github.com/login/oauth/authorize?scope=repo&client_id=${CLIENT_ID}`;
-// let postURL = `https://github.com/login/oauth/access_token?${qs.stringify(body)}`;
+// middleware routes
+const userRoute = require('./routes/user');
+const userRouteDependencies = {
+	express, bcrypt, saltRounds, passport, 
+	User, successJSON, failJSON,
+};
+const oauth2Route = require('./routes/oauth2');
 
-app.use('/user', userRoute(express, bcrypt, saltRounds, passport, User));
-
-app.get('/callback', ( req, res ) => {
-          
-  let body = {
-    client_id: CLIENT_ID, 
-    client_secret: CLIENT_SECRET, 
-    code: req.query.code
-  };
-
-  request.post(
-  { 
-    url: `https://github.com/login/oauth/access_token?${qs.stringify(body)}`
-    }, function(error, responseHeader, responseBody){
-      console.log('responseBody: ', responseBody); //example: access_toke=40characters&scope=whateverWeSet&token_type=typically'bearer'
-      let accessT = responseBody.substr(13,40) //save in database as access_token. may want to save scope as well!!
-    res.send(`your token has been grabbed BRUH!`); //REDIRECT BACK TO APP LOGIN OR WHATEVER
-  });
-});
-
+const gdriveRoute = require('./routes/gdrive');
+const gdriveRouteDependencies = {
+	express, successJSON, failJSON
+};
+const oauth2RouteDependencies = {
+	express, request, qs, GitHubOAuth, GoogleDriveOAuth, successJSON, failJSON
+}
+app.use('/user', userRoute(userRouteDependencies));
+app.use('/oauth2', oauth2Route(oauth2RouteDependencies));
 
 // 404 route
 app.get('/404', (req, res) => {
