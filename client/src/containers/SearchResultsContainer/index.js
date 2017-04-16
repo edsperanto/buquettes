@@ -64,8 +64,11 @@ handleCheckbox = ( event ) => {
         </div>
         {
           this.props.files.files.filter( file => {
-            // check which sources are true and compare file sources to each of the true sources
-
+            for( let i = 0; i < this.state.sources.length; i++ ){
+              if(file.source === this.state.sources[i]){
+                return file;
+              };
+            }
           }).filter( file => {
             if( this.props.query === ""){
               return;
