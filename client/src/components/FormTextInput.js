@@ -9,7 +9,7 @@ const FormTextInput = ({ type, label, name, id, onChange, state }) => {
         name={name}
         id={id}
         onChange={onChange}
-        state={state}
+        className={state}
       />
     </label>
   )
