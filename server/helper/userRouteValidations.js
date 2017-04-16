@@ -1,9 +1,7 @@
 module.exports = function(dependencies) {
 
 	// extract dependencies
-	const {
-		User, failJSON, bcrypt
-	} = dependencies;
+	const {User, failJSON, bcrypt} = dependencies;
 
 	function idFromUsernameOrEmail(username, email, password) {
 		const errMsg = {"message": "incorrect username/email or password"};

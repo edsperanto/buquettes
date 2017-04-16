@@ -8,17 +8,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+       username: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       token: {
         type: Sequelize.STRING,
 				allowNull: false
       },
-      user_id: {
+      /*user_id: {
         type: Sequelize.INTEGER,
 				allowNull: false,
 				reference: {
 					model: 'Users',
 					key: 'id'
 				}
+      },*/
+       scope: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

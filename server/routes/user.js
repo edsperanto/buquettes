@@ -1,4 +1,4 @@
-module.exports = function(dependencies) {
+module.exports = (dependencies) => {
 
 	// extract dependencies
 	const {
