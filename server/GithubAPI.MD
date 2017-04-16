@@ -1,5 +1,7 @@
-#GITHUB API References:
-##Getting Started: 
+# GITHUB API References:
+
+## Getting Started: 
+
 https://developer.github.com/guides/getting-started/
 
 - Uses OAuth tokens to accomodate 2 factor authentication
@@ -9,25 +11,31 @@ https://developer.github.com/guides/getting-started/
 
 - Make sure to have a clear idea of what permissions our App will require. We should only request necessary scopes so we don't scare the intended user with too many permission requests. To see list of Github Scopes go here: https://developer.github.com/v3/oauth/#scopes
 
-- If we use OAuth, _private_ repos will **only** be returned **if** OAuth token contains the correct repo scope.
+- Using OAuth2, _private_ repos will **only** be returned **if** OAuth token contains the correct repo scope.
   - we can also filter repos by their `type` parameter.
   - From Github: filter by type..."In this way, we can fetch only directly-owned repositories, organization repositories, or repositories the user collaborates on via a team" 
 
 For further reading on Basic Authentication:
 - https://developer.github.com/guides/basics-of-authentication/
 
-##**~We still need to Register our Application with Github once we come up with a name!~**
+--------------------------------------------------------
 
-##Discover User Resources: 
+## **We still need to Register our Application with Github once we come up with a name!**
+
+--------------------------------------------------------
+
+## Discover User Resources: 
 https://developer.github.com/guides/discovering-resources-for-a-user/
 
 Third Party Applications often need to fetch current user's repos and organizations and this is how to reliably discover those resources.
 
-- Libraries in Use: **NodeJS** -> _Octonode_,
-> Uses web wrap tools for Javascript we will use NodeJS with `octonode` and require it in our server.js. 
+- Libraries in Use: **NodeJS** -> ~_Octonode_~, **Request**
+> Uses web wrap tools and packages (like request) for Javascript ~we will use NodeJS with `octonode` and require it in our server.js.~ 
 - More on the octonode library and it's methods can be found here:
 > https://github.com/pksunkara/octonode
 and here:
 > https://www.npmjs.com/package/octonode
 >authentication: https://www.npmjs.com/package/octonode#authetication
+- Request documentation for simplified http calls can be found here:
+> https://www.npmjs.com/package/request
   
