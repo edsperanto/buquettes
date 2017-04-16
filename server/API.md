@@ -55,7 +55,7 @@ All responses will be in JSON format. All successful requests will be answered w
 Location data requests are obtained via the `/location` route.
 
 | **HTTP Method** | **URL** | **Request** | **Action** |
-|---|---|---|---|---|
+|---|---|---|---|
 | `POST` | `/user/login` | username/email, password | User authentication. |
 | `POST` | `/user/new` | username, password, email, first\_name, last\_name | New user creation. |
 | `PUT` | `/user/update` | username/email, password, \<newEmail\>, \<newPassword\>, \<first\_name\>, \<last\_name\> | User info update. |
