@@ -1,7 +1,7 @@
 // express
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
 
 // request handlers
 const bodyParser = require('body-parser');
@@ -9,8 +9,6 @@ const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const request = require('request');
 const qs = require('querystring');
-
-// const client = github.client();  *keep for later*
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
@@ -39,21 +37,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // passport settings
-passport.use(new LocalStrategy(
-	function(username, password, done) {
-		console.log('USERNAME: ', username);
-		User.findOne({where: {username}}).then(user => {
-			if(user === null) {
-				done(null, false, {message: 'bad username'});
-			}else{
-				bcrypt.compare(password, user.password).then(res => {
-					if(res) done(null, user);
-					else done(null, false, {message: 'bad password'});
-				});
-			}
-		}).catch(err => console.log('error: ', err));
-	}
-));
+passport.use(new LocalStrategy((username, password, done) => {
+	User.findOne({where: {username}}).then(user => {
+		if(user === null) {
+			done(null, false, {message: 'bad username'});
+		}else{
+			bcrypt.compare(password, user.password).then(res => {
+				if(res) done(null, user);
+				else done(null, false, {message: 'bad password'});
+			});
+		}
+	}).catch(err => console.log('error: ', err));
+}));
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser(({id}, done) => {
 	User.findOne({where: {id}})
@@ -64,22 +59,26 @@ passport.deserializeUser(({id}, done) => {
 const successJSON = {"success": true};
 const failJSON = (msg) => ({"success": false, "error": msg});
 
-// middleware routes
+// load helper functions
+const helperDependencies = {
+	bcrypt, saltRounds, User, successJSON, failJSON
+};
+const helper = require('./helper')(helperDependencies);
+
+// user routes
 const userRoute = require('./routes/user');
 const userRouteDependencies = {
-	express, bcrypt, saltRounds, passport, 
-	User, successJSON, failJSON,
+	express, bcrypt, saltRounds, passport, User, helper
 };
-const oauth2Route = require('./routes/oauth2');
-
-const gdriveRoute = require('./routes/gdrive');
-const gdriveRouteDependencies = {
-	express, successJSON, failJSON
-}
-const oauth2RouteDependencies = {
-	express, request, qs, GitHubOAuth, GoogleDriveOAuth, successJSON, failJSON
-}
 app.use('/user', userRoute(userRouteDependencies));
+
+// oauth2 route
+const credentials = require('./.credentials');
+const oauth2Route = require('./routes/oauth2');
+const oauth2RouteDependencies = {
+	express, request, qs, helper, credentials, 
+	User, GitHubOAuth, GoogleDriveOAuth,
+}
 app.use('/oauth2', oauth2Route(oauth2RouteDependencies));
 
 // 404 route

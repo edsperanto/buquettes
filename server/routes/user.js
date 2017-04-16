@@ -3,15 +3,15 @@ module.exports = (dependencies) => {
 	// extract dependencies
 	const {
 		express, bcrypt, saltRounds, passport, 
-		User, successJSON, failJSON,
+		User, helper
 	} = dependencies;
 	const router = express.Router();
 
 	// load helper functions
 	const {
-		hashIncomingPassword,
-		userRouteValidations,
-	} = require('../helper')(dependencies);
+		hashIncomingPassword, userRouteValidations,
+		successJSON, failJSON
+	} = helper;
 	const {
 		idFromUsernameOrEmail,
 		checkExistingUsernameOrEmail,
@@ -21,10 +21,14 @@ module.exports = (dependencies) => {
 	router.use(hashIncomingPassword);
 
 	router.get('/current', (req, res) => {
-		let {username, email, first_name, last_name} = req.user;
-		res.send(Object.assign({}, successJSON, {
-			"currentUser": {username, email, first_name, last_name}
-		}));
+		if(req.user) {
+			let {username, email, first_name, last_name} = req.user;
+			res.send(Object.assign({}, successJSON, {
+				"currentUser": {username, email, first_name, last_name}
+			}));
+		}else{
+			res.send(failJSON('no user currently logged in'));
+		}
 	});
 
 	router.post('/login', 
