@@ -16,7 +16,7 @@ let files = [
   },
   {
     id: 2,
-    source: "git",
+    source: "github",
     name: "file2",
     createdAt: "April. 23, 2017",
     lastModified: "April 25, 2022"
@@ -30,7 +30,7 @@ let files = [
   },
   {
     id: 4,
-    source: "gdrive",
+    source: "googledrive",
     name: "I'm great how about you.png",
     createdAt: "April. 25, 2017",
     lastModified: "April 27, 2022"
