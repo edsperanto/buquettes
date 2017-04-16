@@ -1,7 +1,7 @@
 // express
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
 
 // request handlers
 const bodyParser = require('body-parser');
@@ -75,7 +75,7 @@ const oauth2Route = require('./routes/oauth2');
 const gdriveRoute = require('./routes/gdrive');
 const gdriveRouteDependencies = {
 	express, successJSON, failJSON
-}
+};
 const oauth2RouteDependencies = {
 	express, request, qs, GitHubOAuth, GoogleDriveOAuth, successJSON, failJSON
 }

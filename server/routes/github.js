@@ -24,25 +24,60 @@ module.exports = (dependencies) => {
 			code: req.query.code
 		};
 
+    // let myReq = (url) => Promise((resolve, reject) => {
+    //   request.post({url}, (err, head, body) => resolve(body));
+    // });
+
+    // new myReq('https://')
+
 		let userPromise = new Promise(( resolve, reject ) => {
 			request.post(
 				{ 
 				url: `https://github.com/login/oauth/access_token?${qs.stringify(body)}`
 				}, 
 				function(error, responseHeader, responseBody){
-						console.log('WHATIS THIS', req.body);
-						console.log('DOES THIS WORK', responseBody.body); //example: access_token=40characters&scope=whateverWeSet&token_type=typically'bearer'
+				     //example: access_token=40characters&scope=whateverWeSet&token_type=typically'bearer'
 						let accessT = responseBody.substr(13,40); //save in database as access_token. may want to save scope as well!!
 						console.log('accessToken', accessT);
 						console.log('promiseRan!');
 						resolve(accessT);    
-					})
+					});
 			});
 
 			userPromise.then((token) => {
-				
+        console.log('promise token: ', token);
+        let userURL = `https://api.github.com/user?access_token=${token}`;
+        console.log('userURL?: ', userURL);
+				return new Promise ((resolve, reject) => {
+          request.get(
+            {
+              url: userURL,
+              headers: {
+                'User-Agent': 'Buquettes'
+              }
+            },function(err, header, body){
+              console.log('new promise body: ', JSON.parse(body));
+              let parsedBody = JSON.parse(body)
+              let username = parsedBody.login;
+              console.log('username: ', username);
+              //add information to database
+              GitHubOAuth.create(
+                {
+                  token: token,
+                  username: username,
+                  scope: 'repo'
+                });
 
-			})
+              resolve(parsedBody);
+            })
+  			})
+        .then((userBody) => {
+          // let fileArray = [];
+          // fileArray.map(user)
+
+            res.send(userBody);
+        })
+        
 
 				// res.redirect(`https://api.github.com/user?access_token=${accessT}`);
 				// let scope = responseBody.
@@ -55,8 +90,8 @@ module.exports = (dependencies) => {
 				//   })
 			// res.send('we done here'); //REDIRECT BACK TO APP LOGIN OR WHATEVER
 		});
-	// });
+  });
 
 	return router;
 
-}
+};
