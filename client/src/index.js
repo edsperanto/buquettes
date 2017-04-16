@@ -10,9 +10,10 @@ import {
 
 
 import reducers from './reducers';
-import { App } from './containers/App';
+import App from './containers/App';
 import { Login } from './sandLab/basicExample.js';
 import SearchContainer from './containers/SearchContainer';
+import MainContainer from './components/mainContainer.js';
 
 import './index.css';
 
@@ -28,12 +29,14 @@ ReactDOM.render(
     <Router>
       <div>
       <ul>
-        <li><Link to ='/'> Home</Link></li>
-        <li><Link to ='/login'> Login</Link></li>
-        <li><Link to ='/search'>Search</Link></li>
+        <li><Link to="/"> Home</Link></li>
+        <li><Link to='/login'> Login</Link></li>
+        <li><Link to='/search'>Search</Link></li>
+        <li><Link to='/main'>Main</Link></li>
       </ul>
-          <Route exact path ='/' component={App} />
+          <Route exact path ="/" component={App} />
           <Route path ="/search" component={SearchContainer} />
+          <Route path ="/main" component={MainContainer} />
       </div>
     </Router>
   </Provider>
