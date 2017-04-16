@@ -23,7 +23,7 @@ module.exports = (dependencies) => {
 	router.get('/current', (req, res) => {
 		if(req.user) {
 			let {username, email, first_name, last_name} = req.user;
-			res.send(Object.assign({}, successJSON, {
+			res.json(Object.assign({}, successJSON, {
 				"currentUser": {username, email, first_name, last_name}
 			}));
 		}else{

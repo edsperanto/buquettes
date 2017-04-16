@@ -60,26 +60,22 @@ const successJSON = {"success": true};
 const failJSON = (msg) => ({"success": false, "error": msg});
 
 // load helper functions
-const helperDependencies = {
-	bcrypt, saltRounds, User, successJSON, failJSON
-};
-const helper = require('./helper')(helperDependencies);
+const helperDep = {bcrypt, saltRounds, User, successJSON, failJSON};
+const helper = require('./helper')(helperDep);
 
 // user routes
 const userRoute = require('./routes/user');
-const userRouteDependencies = {
-	express, bcrypt, saltRounds, passport, User, helper
-};
-app.use('/user', userRoute(userRouteDependencies));
+const userRouteDep = {express, bcrypt, saltRounds, passport, User, helper};
+app.use('/user', userRoute(userRouteDep));
 
 // oauth2 route
 const credentials = require('./.credentials');
 const oauth2Route = require('./routes/oauth2');
-const oauth2RouteDependencies = {
+const oauth2RouteDep = {
 	express, request, qs, helper, credentials, 
 	User, GitHubOAuth, GoogleDriveOAuth,
 }
-app.use('/oauth2', oauth2Route(oauth2RouteDependencies));
+app.use('/oauth2', oauth2Route(oauth2RouteDep));
 
 // 404 route
 app.get('/404', (req, res) => {

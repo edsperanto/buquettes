@@ -25,7 +25,8 @@ module.exports = (dependencies) => {
 		scope: ['https://www.googleapis.com/auth/drive.readonly']
 	});
 
-	router.get('/', /*isAuthenticated,*/ (req, res) => {
+	// gdrive routes
+	router.get('/', isAuthenticated, (req, res) => {
 		if(req.user) {
 			GoogleDriveOAuth.findAll({
 				username: req.user.username,
@@ -34,7 +35,7 @@ module.exports = (dependencies) => {
 		}
 	});
 
-	router.get('/new', (req, res) => res.redirect(oauthUrl));
+	router.get('/new', isAuthenticated, (_, res) => res.redirect(oauthUrl));
 
 	router.get('/redirect', (req, res) => {
 		if(req.query.error) res.json(failJSON('access denied by user'));
@@ -44,6 +45,7 @@ module.exports = (dependencies) => {
 			oauth2Client.getToken(req.query.code, (err, token) => {
 				if(err) return res.json(failJSON('error retrieving access token'));
 				storeToken(oauth2Client.credentials = token);
+				oauth2Client.setCredentials(token);
 			});
 		}
 		function storeToken(token) {
