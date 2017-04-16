@@ -5,10 +5,10 @@ class RegisterContainer extends Component {
     super(props);
     this.state = {
       username: '',
+      password: '',
       email: '',
       first_name: '',
-      last_name: '',
-      password: ''
+      last_name: ''
     }
   }
 
@@ -22,7 +22,7 @@ class RegisterContainer extends Component {
 
   handleSubmit = ( event ) => {
     event.preventDefault();
-    let endpoint = '';
+    let endpoint = 'http://localhost:9000/user/new';
     let q = '';
 
     for (name in this.state){
@@ -40,45 +40,55 @@ class RegisterContainer extends Component {
       <div className="register">
         <h2>Create a new account</h2>
         <form action="#">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            onChange={this.handleChange}
-          />
+          <label>
+            Username
+            <input
+              type="text"
+              name="username"
+              id="username"
+              onChange={this.handleChange}
+            />
+          </label>
 
-          <label for="email">Email</label>
-          <input
-            type="text"
-            name="email"
-            id="email"
-            onChange={this.handleChange}
-          />
+          <label>
+            Email
+            <input
+              type="text"
+              name="email"
+              id="email"
+              onChange={this.handleChange}
+            />
+          </label>
 
-          <label for="first_name">First Name</label>
-          <input
-            type="text"
-            name="first_name"
-            id="first_name"
-            onChange={this.handleChange}
-          />
+          <label>
+            Password
+            <input
+              type="password"
+              name="password"
+              id="password"
+              onChange={this.handleChange}
+            />
+          </label>
 
-          <label for="last_name">Last Name</label>
-          <input
-            type="text"
-            name="last_name"
-            id="last_name"
-            onChange={this.handleChange}
-          />
+          <label>
+            First Name
+            <input
+              type="text"
+              name="first_name"
+              id="first_name"
+              onChange={this.handleChange}
+            />
+          </label>
 
-          <label for="password">Password</label>
-          <input
-            type="text"
-            name="password"
-            id="password"
-            onChange={this.handleChange}
-          />
+          <label>
+            Last Name
+            <input
+              type="text"
+              name="last_name"
+              id="last_name"
+              onChange={this.handleChange}
+            />
+          </label>
 
           <input
             type="submit"
