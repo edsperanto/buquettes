@@ -9,24 +9,25 @@ import Autosuggest from 'react-autosuggest';
 //list used to populate autosuggest
 const languages = [
   {
-    text: 'Apple'
+    name: 'Apple'
   },
   {
-    text: 'Banana'
+    name: 'Banana'
   },
   {
-    text: 'Cherry'
+    name: 'Cherry'
   },
   {
-    text: 'Grapefruit'
+    name: 'Grapefruit'
   },
   {
-    text: 'Lemon'
+    name: 'Lemon'
   }
 ];
 
 //Autosuggest calculates suggestions for any given input vale
 const getSuggestions = (value) => {
+  console.log( 'value', value )
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
 
@@ -40,7 +41,7 @@ const getSuggestions = (value) => {
 const getSuggestionValue = suggestion => suggestion.name;
 
 //..render suggestions
-const renderSuggestion = suggestion => (
+const renderSuggestion = (suggestion) => (
   <div>
     {suggestion.name}
   </div>
@@ -55,7 +56,7 @@ class App extends Component {
 //onChange handler that will update the value
   this.state = {
     value: '',
-    suggestion: []
+    suggestions: []
   };
 
   }
@@ -96,9 +97,16 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <h2>Searh </h2>
+
         </div>
 
-
+         <Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        inputProps={inputProps}/>
 
 
       </div>

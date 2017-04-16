@@ -10,7 +10,7 @@ import {
 
 
 import reducers from './reducers';
-import { App } from './containers/App';
+import App from './containers/App';
 import { Login } from './sandLab/basicExample.js';
 import SearchContainer from './containers/SearchContainer';
 import MainContainer from './components/mainContainer.js';
