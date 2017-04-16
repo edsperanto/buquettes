@@ -12,7 +12,7 @@ class RegisterContainer extends Component {
     }
   }
 
-  handleChange = (event) => {
+  handleChange = ( event ) => {
     this.setState(
       {
         [event.target.name]: event.target.value
@@ -20,9 +20,25 @@ class RegisterContainer extends Component {
     )
   }
 
+  handleSubmit = ( event ) => {
+    event.preventDefault();
+    let endpoint = '';
+    let q = '';
+
+    for (name in this.state){
+       q +=  encodeURIComponent(name) + "=" + encodeURIComponent(this.state[name]) + "&";
+    }
+
+    let http = new XMLHttpRequest();
+    http.open("POST", endpoint);
+    http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    http.send(q);
+  }
+
   render() {
     return (
       <div className="register">
+        <h2>Create a new account</h2>
         <form action="#">
           <label for="username">Username</label>
           <input
@@ -62,6 +78,12 @@ class RegisterContainer extends Component {
             name="password"
             id="password"
             onChange={this.handleChange}
+          />
+
+          <input
+            type="submit"
+            value="Register"
+            onClick={this.handleSubmit}
           />
         </form>
       </div>
