@@ -3,64 +3,59 @@ import { connect } from 'react-redux';
 
 import { addFile } from '../../actions';
 import File from '../../components/File';
+import SearchFilter from '../../components/SearchFilter';
 
 
 class SearchResultsContainer extends Component {
-
-constructor(props) {
-  super(props);
-  this.state = {
-    sources : ['github', 'googledrive']
+  constructor(props) {
+    super(props);
+    this.sources = ['github', 'googledrive']
+    this.state = {
+      sources : []
+    }
   }
-}
 
-handleCheckbox = ( event ) => {
-  if( event.target.checked === false){
-    let newState = this.state.sources;
-    let i = newState.indexOf(event.target.name);
-    newState.splice(i, 1);
+  handleCheckbox = ( event ) => {
+
+    if( event.target.checked === false){
+      let newState = this.state.sources;
+      let i = newState.indexOf(event.target.name);
+      newState.splice(i, 1);
+      this.setState(
+        {
+          sources: newState
+        }
+      )
+    }
+
+    if( event.target.checked === true){
+      let newState = this.state.sources;
+      newState.push(event.target.name);
+      this.setState(
+        {
+          sources: newState
+        }
+      );
+    }
+  }
+
+  componentWillMount() {
+    let initialState = this.sources.slice();
     this.setState(
       {
-        sources: newState
+        sources: initialState
       }
     )
   }
 
-  if( event.target.checked === true){
-    let newState = this.state.sources;
-    newState.push(event.target.name);
-    this.setState(
-      {
-        sources: newState
-      }
-    );
-  }
-}
   render(){
     return(
       <div className="search-results">
-        <p>{this.state.sources}</p>
         <div>
-          <ul>
-            <li>
-              <label>Github</label>
-              <input
-                type="checkbox"
-                defaultChecked="on"
-                name="github"
-                onClick={this.handleCheckbox}
-              />
-            </li>
-            <li>
-              <label>Google Drive</label>
-              <input
-                type="checkbox"
-                defaultChecked="on"
-                name="googledrive"
-                onClick={this.handleCheckbox}
-              />
-            </li>
-          </ul>
+          <SearchFilter
+            sources={this.sources}
+            handleCheckbox={this.handleCheckbox}
+          />
         </div>
         {
           this.props.files.files.filter( file => {
@@ -89,8 +84,8 @@ handleCheckbox = ( event ) => {
         }
       </div>
       )
+    }
   }
-}
 
 
 const mapStateToProps = (state) => {
