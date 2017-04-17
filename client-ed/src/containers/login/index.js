@@ -35,7 +35,6 @@ class Login extends Component {
 				<form action="/user/login" method="post" onSubmit={this.submit}>
 					<div className="error" style={this.props.loginForm.error ?
 						({}) : ({display: "none"})}>
-	border
 						{this.props.loginForm.error}
 					</div>
 					<div>
