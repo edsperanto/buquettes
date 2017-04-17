@@ -9,7 +9,9 @@ const LoginBtn = (props) => {
 					<Link to="/profile">
 						<div>{"Welcome, " + props.currentUser.first_name}</div>
 					</Link>
-					<div onClick={props.handleLogout}>{"(logout)"}</div>
+					<Link to="/">
+						<div onClick={props.handleLogout}>{"(logout)"}</div>
+					</Link>
 				</div>
 			</div>
 		);

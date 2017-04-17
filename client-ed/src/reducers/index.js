@@ -4,6 +4,7 @@ import {
 	UPDATE_LOGIN_PSWD,
 	UPDATE_LOGIN_ERR,
 	UPDATE_CURR,
+	LOGOUT_CURR,
 } from '../actions';
 
 const initialState = {
@@ -62,6 +63,12 @@ function users(state = initialState, action) {
 					first_name: action.first_name,
 					last_name: action.last_name,
 					authenticated: true,
+				}
+			});
+		case LOGOUT_CURR:
+			return Object.assign({}, state, {
+				currentUser: {
+					authenticated: false
 				}
 			});
 		default:

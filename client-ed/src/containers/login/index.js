@@ -33,7 +33,7 @@ class Login extends Component {
 			<div id="login">
 				<h1>Login</h1>
 				<form action="/user/login" method="post" onSubmit={this.submit}>
-					<div id="error" style={this.props.loginForm.error ?
+					<div className="error" style={this.props.loginForm.error ?
 						({}) : ({display: "none"})}>
 	border
 						{this.props.loginForm.error}

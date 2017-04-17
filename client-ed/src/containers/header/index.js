@@ -1,15 +1,17 @@
 import React, {Component} from 'react';
-
 import './index.css';
 
 import {connect} from 'react-redux';
-
 import {Link} from 'react-router-dom';
-
+import {logoutCurr} from '../../actions';
 import LoginBtn from '../../components/loginBtn';
 
 class Header extends Component {
 	handleLogout = e => {
+		const xhr = new XMLHttpRequest();
+		xhr.open('GET', '/user/logout', true);
+		xhr.send();
+		this.props.onLogoutCurr({authenticated: false});
 	}
 	render() {
 		return (
@@ -31,12 +33,13 @@ class Header extends Component {
 function mapStateToProps(state) {
 	return {
 		currentUser: state.currentUser,
+		history: state.history,
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-
+		onLogoutCurr: curr => dispatch(logoutCurr(curr))
 	}
 }
 

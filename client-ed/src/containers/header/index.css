@@ -15,12 +15,12 @@
 	background-color: orange;
 }
 
-.menu-btn {
+#header .menu-btn {
 	color: white;
 	margin-left: 2rem;
 }
 
-.menu-btn div div {
+#header .menu-btn div div {
 	display: inline-block;
 	margin-right: 0.5rem;
 }
