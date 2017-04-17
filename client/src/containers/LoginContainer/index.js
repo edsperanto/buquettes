@@ -6,6 +6,10 @@ import FormSubmit from '../../components/FormSubmit';
 class LoginContainer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      username: '',
+      password: ''
+    }
   }
 
   handleChange = ( event ) => {
@@ -22,11 +26,14 @@ class LoginContainer extends Component {
     let q = '';
 
     for (name in this.state){
-       q +=  encodeURIComponent(name) + "=" + encodeURIComponent(this.state[name]) + "&";
+      q +=  encodeURIComponent(name) + "=" + encodeURIComponent(this.state[name]) + "&";
     }
-
+    function httpListener(){
+      console.log('response', this.responseText);
+    }
     let http = new XMLHttpRequest();
     http.open("POST", endpoint);
+    http.addEventListener('load', httpListener);
     http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     http.send(q);
   }
@@ -36,16 +43,18 @@ class LoginContainer extends Component {
       <div className="login-container">
         <form action="#">
           <FormTextInput
-            name={"Username/Email"}
-            id={"user"}
-            onChange{this.onChange}
+            label={"Username/Email"}
+            id={"username"}
+            name={"username"}
+            onChange={this.handleChange}
             state={"default"}
           />
           <FormTextInput
-            name={"Password"}
+            label={"Password"}
             id={"password"}
+            name={"password"}
             type={"password"}
-            onChange{this.onChange}
+            onChange={this.handleChange}
             state={"default"}
           />
           <FormSubmit
@@ -58,3 +67,5 @@ class LoginContainer extends Component {
     )
   }
 }
+
+export default LoginContainer;
