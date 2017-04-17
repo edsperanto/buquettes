@@ -12,7 +12,16 @@ class Login extends Component {
 
 	submit = (e) => {
 		e.preventDefault();
-		console.log(this.props.loginForm);
+		const {usr, pswd} = this.props.loginForm;
+		const xhr = new XMLHttpRequest();
+		xhr.addEventListener('load', e => {
+			console.log(JSON.parse(xhr.responseText));
+			this.props.history.push('/', null);
+		});
+		xhr.open('POST', '/user/login', true);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.send(JSON.stringify((usr.indexOf('@') > -1) ?
+			({email: usr, password: pswd}) : ({username: usr, password: pswd})));
 	}
 
 	render() {
