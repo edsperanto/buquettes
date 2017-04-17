@@ -10,7 +10,12 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+				User.hasMany(models.GoogleDriveOAuth, {
+					foreignKey: 'user_id'
+				});
+				User.hasMany(models.GitHubOAuth, {
+					foreignKey: 'user_id'
+				});
       }
     }
   });
