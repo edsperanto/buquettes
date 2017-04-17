@@ -2,6 +2,7 @@ import {
 	LOGIN,
 	UPDATE_LOGIN_USR,
 	UPDATE_LOGIN_PSWD,
+	UPDATE_LOGIN_ERR,
 } from '../actions';
 
 const initialState = {
@@ -40,6 +41,16 @@ function users(state = initialState, action) {
 					}
 				)
 			});
+		case UPDATE_LOGIN_ERR:
+			return Object.assign({}, state, {
+				loginForm: Object.assign(
+					{},
+					state.loginForm,
+					{
+						error: action.err
+					}
+				)
+			})
 		default:
 			return state;
 	}

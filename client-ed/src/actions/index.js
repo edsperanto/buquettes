@@ -1,6 +1,7 @@
 export const LOGIN = 'LOGIN';
 export const UPDATE_LOGIN_USR = 'UPDATE_LOGIN_USR';
 export const UPDATE_LOGIN_PSWD = 'UPDATE_LOGIN_PSWD';
+export const UPDATE_LOGIN_ERR = 'UPDATE_LOGIN_ERR';
 
 export function login(username, email, first_name, last_name) {
 	return {
@@ -23,5 +24,12 @@ export function updatePswd(pswd) {
 	return {
 		type: UPDATE_LOGIN_PSWD,
 		pswd
+	}
+}
+
+export function updateErr(err) {
+	return {
+		type: UPDATE_LOGIN_ERR,
+		err
 	}
 }
