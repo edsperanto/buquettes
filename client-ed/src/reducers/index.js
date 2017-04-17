@@ -3,10 +3,13 @@ import {
 	UPDATE_LOGIN_USR,
 	UPDATE_LOGIN_PSWD,
 	UPDATE_LOGIN_ERR,
+	UPDATE_CURR,
 } from '../actions';
 
 const initialState = {
-	currentUser: {},
+	currentUser: {
+		authenticated: false
+	},
 	loginForm: {},
 };
 
@@ -50,7 +53,17 @@ function users(state = initialState, action) {
 						error: action.err
 					}
 				)
-			})
+			});
+		case UPDATE_CURR:
+			return Object.assign({}, state, {
+				currentUser: {
+					username: action.username,
+					email: action.email,
+					first_name: action.first_name,
+					last_name: action.last_name,
+					authenticated: true,
+				}
+			});
 		default:
 			return state;
 	}

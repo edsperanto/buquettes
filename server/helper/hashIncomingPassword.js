@@ -1,8 +1,6 @@
 module.exports = (dependencies) => {
 	let {bcrypt, saltRounds} = dependencies;
 	return function hashIncomingPassword(req, res, next) {
-		const {username, email, password} = req.body;
-		console.log(username, email, password);
 		function hashThis(thing) {
 			bcrypt.genSalt(saltRounds, function(err, salt) {
 				bcrypt.hash(req.body[thing], salt, function(err, hash) {

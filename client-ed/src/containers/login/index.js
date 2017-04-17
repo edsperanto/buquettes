@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './index.css';
 
 import {connect} from 'react-redux';
-import {updateUsr, updatePswd, updateErr} from '../../actions';
+import {updateUsr, updatePswd, updateErr, updateCurr} from '../../actions';
 
 class Login extends Component {
 
@@ -10,14 +10,17 @@ class Login extends Component {
 
 	handlePswd = e => this.props.onUpdatePswd(e.target.value);
 
-	submit = (e) => {
+	submit = e => {
 		e.preventDefault();
 		const {usr, pswd} = this.props.loginForm;
 		const xhr = new XMLHttpRequest();
 		xhr.addEventListener('load', e => {
-			let {success, error} = JSON.parse(xhr.responseText);
+			let {success, error, currentUser} = JSON.parse(xhr.responseText);
 			this.props.onUpdateErr(error);
-			if(success) this.props.history.push('/', null);
+			if(success) {
+				this.props.onUpdateCurr(currentUser);
+				this.props.history.push('/', null);
+			}
 		});
 		xhr.open('POST', '/user/login', true);
 		xhr.setRequestHeader('Content-Type', 'application/json');
@@ -32,6 +35,7 @@ class Login extends Component {
 				<form action="/user/login" method="post" onSubmit={this.submit}>
 					<div id="error" style={this.props.loginForm.error ?
 						({}) : ({display: "none"})}>
+	border
 						{this.props.loginForm.error}
 					</div>
 					<div>
@@ -63,6 +67,7 @@ function mapDispatchToProps(dispatch) {
 		onUpdateUsr: usr => dispatch(updateUsr(usr)),
 		onUpdatePswd: pswd => dispatch(updatePswd(pswd)),
 		onUpdateErr: err => dispatch(updateErr(err)),
+		onUpdateCurr: curr => dispatch(updateCurr(curr)),
 	}
 }
 

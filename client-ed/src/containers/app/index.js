@@ -5,6 +5,7 @@ import './index.css';
 import Header from '../header';
 import Home from '../home';
 import Login from '../login';
+import Profile from '../profile';
 
 import {connect} from 'react-redux';
 
@@ -22,6 +23,7 @@ class App extends Component {
 						<Header />
 						<Route exact path="/" component={Home} />
 						<Route path="/login" component={Login} />
+						<Route path="/profile" component={Profile} />
 					</div>
 				</Router>
       </div>

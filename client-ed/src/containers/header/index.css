@@ -19,3 +19,8 @@
 	color: white;
 	margin-left: 2rem;
 }
+
+.menu-btn div div {
+	display: inline-block;
+	margin-right: 0.5rem;
+}

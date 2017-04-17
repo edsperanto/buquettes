@@ -6,7 +6,11 @@ import {connect} from 'react-redux';
 
 import {Link} from 'react-router-dom';
 
+import LoginBtn from '../../components/loginBtn';
+
 class Header extends Component {
+	handleLogout = e => {
+	}
 	render() {
 		return (
 			<div id="header">
@@ -14,9 +18,10 @@ class Header extends Component {
 					<div id="title"><b>Buquettes</b></div>
 				</Link>
 				<div id="menu">
-					<Link to="/login">
-						<div className="menu-btn">Login</div>
-					</Link>
+					<LoginBtn 
+						currentUser={this.props.currentUser} 
+						handleLogout={this.handleLogout}
+					/>
 				</div>
 			</div>
 		);
@@ -25,7 +30,7 @@ class Header extends Component {
 
 function mapStateToProps(state) {
 	return {
-
+		currentUser: state.currentUser,
 	}
 }
 
