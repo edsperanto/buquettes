@@ -1,0 +1,21 @@
+#header {
+	width: 100%;
+	height: 2rem;
+	line-height: 2rem;
+	background-color: black;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+#title {
+	color: black;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	background-color: orange;
+}
+
+.menu-btn {
+	color: white;
+	margin-left: 2rem;
+}
