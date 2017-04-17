@@ -10,10 +10,10 @@ import {
 
 
 import reducers from './reducers';
-import App from './containers/App';
-import { Login } from './sandLab/basicExample.js';
+import { App } from './containers/App';
 import SearchContainer from './containers/SearchContainer';
-import MainContainer from './components/mainContainer.js';
+import RegisterContainer from './containers/RegisterContainer';
+import LoginContainer from './containers/LoginContainer';
 
 import './index.css';
 
@@ -22,24 +22,23 @@ let store = createStore(
 );
 
 ReactDOM.render(
-
-<div className= "App">
-
-  <Provider store={store}>
-    <Router>
-      <div>
-      <ul>
-        <li><Link to="/"> Home</Link></li>
-        <li><Link to='/login'> Login</Link></li>
-        <li><Link to='/search'>Search</Link></li>
-        <li><Link to='/main'>Main</Link></li>
-      </ul>
-          <Route exact path ="/" component={App} />
-          <Route path ="/search" component={SearchContainer} />
-          <Route path ="/main" component={MainContainer} />
-      </div>
-    </Router>
-  </Provider>
-</div>,
+  <div className="main">
+    <Provider store={store}>
+      <Router>
+        <div>
+        <ul>
+          <li><Link to="/"> Home</Link></li>
+          <li><Link to="/login"> Login</Link></li>
+          <li><Link to="/register">Register</Link></li>
+          <li><Link to="/search">Search</Link></li>
+        </ul>
+            <Route exact path="/" component={App} />
+            <Route path="/search" component={SearchContainer} />
+            <Route path="/register" component={RegisterContainer} />
+            <Route path="/login" component={LoginContainer} />
+        </div>
+      </Router>
+    </Provider>
+  </div>,
   document.getElementById('root')
 );
