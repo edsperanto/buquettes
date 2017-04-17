@@ -25,6 +25,9 @@ class Header extends Component {
 						handleLogout={this.handleLogout}
 					/>
 				</div>
+				<Link to="/signup">
+					<div className="menu-btn">Signup</div>
+				</Link>
 			</div>
 		);
 	}

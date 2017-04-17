@@ -5,12 +5,19 @@ import {
 	UPDATE_LOGIN_ERR,
 	UPDATE_CURR,
 	LOGOUT_CURR,
+	NEW_USERNAME,
+	NEW_EMAIL,
+	NEW_PASSWORD,
+	NEW_FIRST_NAME,
+	NEW_LAST_NAME,
+	NEW_ERR,
 } from '../actions';
 
 const initialState = {
 	currentUser: {
 		authenticated: false
 	},
+	signupForm: {},
 	loginForm: {},
 };
 
@@ -70,6 +77,66 @@ function users(state = initialState, action) {
 				currentUser: {
 					authenticated: false
 				}
+			});
+		case NEW_USERNAME:
+			return Object.assign({}, state, {
+				signupForm: Object.assign(
+					{}, 
+					state.signupForm, 
+					{
+						username: action.username
+					}
+				)
+			});
+		case NEW_EMAIL:
+			return Object.assign({}, state, {
+				signupForm: Object.assign(
+					{}, 
+					state.signupForm, 
+					{
+						email: action.email
+					}
+				)
+			});
+		case NEW_PASSWORD:
+			return Object.assign({}, state, {
+				signupForm: Object.assign(
+					{}, 
+					state.signupForm, 
+					{
+						password: action.password
+					}
+				)
+			});
+		case NEW_FIRST_NAME:
+			return Object.assign({}, state, {
+				signupForm: Object.assign(
+					{}, 
+					state.signupForm, 
+					{
+						first_name: action.firstName
+					}
+				)
+			});
+		case NEW_LAST_NAME:
+			return Object.assign({}, state, {
+				signupForm: Object.assign(
+					{}, 
+					state.signupForm, 
+					{
+						last_name: action.lastName
+					}
+				)
+			});
+		case NEW_ERR:
+			return Object.assign({}, state, {
+				signupForm: Object.assign(
+					{}, 
+					state.signupForm, 
+					{
+						error: action.err
+					}
+				)
 			});
 		default:
 			return state;

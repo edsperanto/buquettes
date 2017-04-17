@@ -7,7 +7,7 @@ class Home extends Component {
 	render() {
 		return (
 			<div id="home">
-				<h1>Welcome to <i>Buquettes</i></h1>
+				<h1>Welcome to <i>fabulous <b>Buquettes</b></i></h1>
 			</div>
 		);
 	}
