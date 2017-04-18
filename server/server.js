@@ -1,6 +1,7 @@
 // express
 const express = require('express');
 const app = express();
+const expressWs = require('express-ws')(app);
 const PORT = process.env.PORT || 9000;
 
 // request handlers

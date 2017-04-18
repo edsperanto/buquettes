@@ -31,6 +31,11 @@ module.exports = (dependencies) => {
 		}
 	});
 
+	router.get('/logout', (req, res) => {
+		req.logout();
+		res.json(successJSON);
+	});
+
 	router.post('/login', 
 		usernameFromEmail, 
 		passport.authenticate('local', {

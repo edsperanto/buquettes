@@ -54,6 +54,9 @@ module.exports = (dependencies) => {
 				credentials: JSON.stringify(token),
 				token: req.query.code,
 			}).then(_ => res.json(successJSON));
+			oauth2Client.setCredentials({
+				access_token
+			})
 		}
 	});
 	
