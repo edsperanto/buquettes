@@ -45,7 +45,7 @@ module.exports = (dependencies) => {
 						}
 					},
 					function(err, header, body){
-						let parsedBody = JSON.parse(body)
+						let parsedBody = JSON.parse(body);
 						let username = parsedBody.login;
 						GitHubOAuth.create(
 							{
@@ -55,12 +55,12 @@ module.exports = (dependencies) => {
 							});
 
 						resolve(parsedBody);
-					})				
+					});				
 			})
 			.then((userBody) => {
 				console.log("userbody.repo ", userBody.repos_url);
 				res.send(userBody);
-			})
+			});
 		});
   });
 
@@ -81,7 +81,7 @@ module.exports = (dependencies) => {
   	// let searchURL = `https://api.github.com/search/repositories?q=${repoName}%20+fork:true+user:${username}` ;
   	// res.redirect(searchURL);
   	let {query} = req.body;
-  	let searchURL = `https://api.github.com/search/users?q=edsperanto` ;
+  	let searchURL = `https://api.github.com/search/users?q=stevencable` ;
   	request.get(
 			{
 				url: searchURL,
@@ -90,23 +90,74 @@ module.exports = (dependencies) => {
 				}
 			},
 			function(err, header, body){
-				let parsedBody = JSON.parse(body)
+				let parsedBody = JSON.parse(body);
+				let repoURL = parsedBody.items[0].repos_url;
+				GitHubOAuth.findOne(
+				{
+					where: {
+						username: "stevencable"
+					}
+				})
+				.then((chunk) => {
+					console.log('is this my database?: ', chunk)
+					let access = `?${chunk.token}`;
+					
+				})
+				// let repoWithAccess = repoURL.concat(access);
+				// console.log('repoURL: ', repoURL)
+				request.get(
+					{
+						url:	repoURL,
+							headers: {
+								'User-Agent': 'Buquettes'
+							}				
+				 	},
+						function(err, header, body){
+							// console.log('what is this body: ', body)
+							let parsedRepos = JSON.parse(body);
+							let count = 0;
+							parsedRepos.map((repo) => {
+							// console.log('parsedRepos.publicShit: ', repo.fork);
+							let isNotRepo = repo.path;
+								if(isNotRepo){
+									// console.log('this is a directory or file', repo.name);
+								}
+								if(!isNotRepo){
+									count++
+									// console.log("This must be a repo", repo.name);
+									let slicedURL = repo.contents_url.split('{')[0]
+									// console.log('sliced:: ', slicedURL);
+									request.get(
+										{
+											url: slicedURL,
+											headers: {
+												'User-Agent': 'Buquettes'
+											}		
+										},
+										function(err, header, body){
+											// console.log('inner body?: ', body);
+											let repo = JSON.parse(body);
+											if(repo.type === 'dir' ){
+												let dir = repo;
+												// console.log('this is a directory: ', dir.name)
 
-				console.log("parsedBody: ", parsedBody);
-				// body.map((parsedBody) => {
-						request.get(
-							{
-								url: parsedBody.repos_url,
-								headers: {
-									'User-Agent': 'Buquettes'
-								}		
-							},
-							function(err, header, body){
+											}
+											if(repo.type === 'file' ){
+												let file = repo;
+												// console.log('this is a file ', file.name)
+												
+											}
+										}
+									);
+								}
+								console.log(count)
+								// parsedRepos.map((repo) => {
+								// });
 								
-							}
-						)
-					//}); 
-			}
+							})
+						}
+				);
+			} 
 		);
 		res.send('searchin bruh');
   })
