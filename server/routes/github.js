@@ -55,40 +55,60 @@ module.exports = (dependencies) => {
 							});
 
 						resolve(parsedBody);
-					})
-				
+					})				
 			})
 			.then((userBody) => {
+				console.log("userbody.repo ", userBody.repos_url);
 				res.send(userBody);
 			})
 		});
   });
 
-  let xhr = new XMLHttpRequest();
-  let params = JSON.stringify({query: "whatevs"});
-  xhr.addEventListener('load', e => {
-
-  });
-  xhr.open('POST', '/oauth2/github/search');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(params);
-
-  router.post('/search', (req, res) => {
-  	let {query} = req.body;
-  	let searchURL = `https://api.github.com/search/repositories?q=angular-instafeed%20+fork:true+user:edsperanto+code:${query}` ;
-  	request.get(
-			{url: searchURL},
-			function(err, header, body){
-				body.map() 
-			}
-		);
-  });
+  // router.post('/search', (req, res) => {
+  // 	let {query} = req.body;
+  // 	let searchURL = `https://api.github.com/search/repositories?q=angular-instafeed%20+fork:true+user:edsperanto` ;
+  // 	request.get(
+		// 	{url: searchURL},
+		// 	function(err, header, body){
+		// 		body.map() 
+		// 	}
+		// );
+  // });
 
   router.get('/search', ( req, res ) => {
-  	let repoName = 'angular-instafeed';
-  	let username = 'edsperanto';
-  	let searchURL = `https://api.github.com/search/repositories?q=${repoName}%20+fork:true+user:${username}+code:${query}` ;
-  	res.redirect(searchURL);
+  	// let repoName = 'angular-instafeed';
+  	// let username = 'edsperanto';
+  	// let searchURL = `https://api.github.com/search/repositories?q=${repoName}%20+fork:true+user:${username}` ;
+  	// res.redirect(searchURL);
+  	let {query} = req.body;
+  	let searchURL = `https://api.github.com/search/users?q=edsperanto` ;
+  	request.get(
+			{
+				url: searchURL,
+				headers: {
+					'User-Agent': 'Buquettes'
+				}
+			},
+			function(err, header, body){
+				let parsedBody = JSON.parse(body)
+
+				console.log("parsedBody: ", parsedBody);
+				// body.map((parsedBody) => {
+						request.get(
+							{
+								url: parsedBody.repos_url,
+								headers: {
+									'User-Agent': 'Buquettes'
+								}		
+							},
+							function(err, header, body){
+								
+							}
+						)
+					//}); 
+			}
+		);
+		res.send('searchin bruh');
   })
 
 	return router;
