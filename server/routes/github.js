@@ -51,7 +51,8 @@ module.exports = (dependencies) => {
 							{
 								token: token,
 								username: username,
-								scope: 'repo'
+								scope: 'repo',
+								user_id: req.user.id
 							});
 
 						resolve(parsedBody);
@@ -92,64 +93,75 @@ module.exports = (dependencies) => {
 			function(err, header, body){
 				let parsedBody = JSON.parse(body);
 				let repoURL = parsedBody.items[0].repos_url;
+				console.log('req user: ', req.user.id)
 				GitHubOAuth.findOne(
 				{
 					where: {
-						username: "stevencable"
+						user_id: req.user.id
 					}
 				})
 				.then((chunk) => {
-					console.log('is this my database?: ', chunk)
-					let access = `?${chunk.token}`;
+					let access = `?access_token=${chunk.token}`;
+					console.log('is this my database?: ', access)
+					let repoWithAccess = repoURL.concat(access);
+					console.log('repoURL: ', repoWithAccess)
 					
-				})
-				// let repoWithAccess = repoURL.concat(access);
-				// console.log('repoURL: ', repoURL)
-				request.get(
-					{
-						url:	repoURL,
-							headers: {
-								'User-Agent': 'Buquettes'
-							}				
-				 	},
-						function(err, header, body){
-							// console.log('what is this body: ', body)
-							let parsedRepos = JSON.parse(body);
-							let count = 0;
-							parsedRepos.map((repo) => {
-							// console.log('parsedRepos.publicShit: ', repo.fork);
-							let isNotRepo = repo.path;
-								if(isNotRepo){
-									// console.log('this is a directory or file', repo.name);
-								}
-								if(!isNotRepo){
-									count++
-									// console.log("This must be a repo", repo.name);
-									let slicedURL = repo.contents_url.split('{')[0]
-									// console.log('sliced:: ', slicedURL);
-									request.get(
-										{
-											url: slicedURL,
-											headers: {
-												'User-Agent': 'Buquettes'
-											}		
-										},
-										function(err, header, body){
-											// console.log('inner body?: ', body);
-											let repo = JSON.parse(body);
-											if(repo.type === 'dir' ){
-												let dir = repo;
-												// console.log('this is a directory: ', dir.name)
+					request.get(
+						{
+							url:	repoWithAccess,
+								headers: {
+									'User-Agent': 'Buquettes'
+								}				
+					 	},
+							function(err, header, body){
+								// console.log('what is this body: ', body)
+								let parsedRepos = JSON.parse(body);
+								let count = 0;
+								parsedRepos.map((repo) => {
+								//console.log('parsedRepos.publicShit: ', repo.fork);
+								let isNotRepo = repo.path;
+									if(isNotRepo){
+										// console.log('this is a directory or file', repo.name);
+									}
+									if(!isNotRepo){
+										count++
+										//console.log("This must be a repo", repo.name);
+										let slicedURL = repo.contents_url.split('{')[0]
+										//console.log('sliced:: ', slicedURL);
+										let slicedURLWithAccess = slicedURL.concat(access);
+										request.get(
+											{
+												url: slicedURLWithAccess,
+												headers: {
+													'User-Agent': 'Buquettes'
+												}		
+											},
+											function(err, header, body){
+												//console.log('inner body?: ', body);
+												let repo = JSON.parse(body);
+												//console.log('repoooo: ', repo);
 
+												repo.map((repo) => {
+													if(repo.type == 'dir' ){
+														let dir = repo;
+
+														console.log('this is a directory: ', dir.name)
+														console.log('store this html link: ', dir.html_url)
+
+													}
+
+													if(repo.type === 'file' ){
+														let file = repo;
+														console.log('this is a file ', file.name)
+														console.log('store this html link: ', file.html_url)
+
+													}
+													
+												})
 											}
-											if(repo.type === 'file' ){
-												let file = repo;
-												// console.log('this is a file ', file.name)
-												
-											}
-										}
-									);
-								}
+										);
+									}
+								})
 								console.log(count)
 								// parsedRepos.map((repo) => {
 								// });
