@@ -1,51 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
-
-
-import reducers from './reducers';
-import { App } from './containers/App';
-import SearchContainer from './containers/SearchContainer';
-import RegisterContainer from './containers/RegisterContainer';
-import LoginContainer from './containers/LoginContainer';
-import Header from './containers/Header';
-import Home from './containers/Home';
-import Profile from './containers//Profile';
-import SignUp from './containers/SignUp';
-
+import App from './containers/App';
 import './index.css';
+
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import reducers from './reducers';
 
 let store = createStore(
   reducers
 );
 
 ReactDOM.render(
-  <div className="main">
-    <Provider store={store}>
-      <Router>
-        <div>
-        <ul>
-          <li><Link to="/"> Home</Link></li>
-          <li><Link to="/login"> Login</Link></li>
-          <li><Link to="/register">Register</Link></li>
-          <li><Link to="/search">Search</Link></li>
-        </ul>
-            <Route exact path="/" component={Home} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/signup" component={SignUp} />
-            <Route exact path="/" component={App} />
-            <Route path="/search" component={SearchContainer} />
-            <Route path="/register" component={RegisterContainer} />
-            <Route path="/login" component={LoginContainer} />
-        </div>
-      </Router>
-    </Provider>
-  </div>,
+	<Provider store={store}>
+		<App />
+	</Provider>,
   document.getElementById('root')
 );

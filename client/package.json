@@ -1,15 +1,13 @@
 {
-  "name": "client",
+  "name": "client-ed",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "electron": "^1.6.2",
-    "react": "^15.4.2",
-    "react-autosuggest": "^9.0.0",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.3",
-    "react-router": "^4.0.0",
-    "react-router-dom": "^4.0.0",
+    "electron": "^1.6.5",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.4",
+    "react-router-dom": "^4.1.1",
     "redux": "^3.6.0"
   },
   "devDependencies": {
@@ -22,5 +20,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "electron": "electron ."
-  }
+  },
+  "proxy": "http://localhost:9000"
 }

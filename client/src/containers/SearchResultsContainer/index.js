@@ -58,7 +58,29 @@ class SearchResultsContainer extends Component {
           />
         </div>
         {
-
+          this.props.files.files.filter( file => {
+            for( let i = 0; i < this.state.sources.length; i++ ){
+              if(file.source === this.state.sources[i]){
+                return file;
+              };
+            }
+          }).filter( file => {
+            if( this.props.query === ""){
+              return;
+            }else{
+              return file.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1;
+            }
+          }).map( file => {
+            return (
+              <File
+                id={file.id}
+                source={file.source}
+                name={file.name}
+                createdAt={file.createdAt}
+                lastModified={file.lastModified}
+              />
+            )
+          })
         }
       </div>
       )
@@ -74,7 +96,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAddFile: (id, source, name, createdAt, lastModified) => {
+    addFile: (id, source, name, createdAt, lastModified) => {
       dispatch(addFile(
         id,
         source,

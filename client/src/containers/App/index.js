@@ -1,49 +1,53 @@
 import React, { Component } from 'react';
 
-import Header from '../Header';
-import Home from '../Home';
-import Login from '../LoginContainer';
-import Profile from '../Profile';
-import SignUp from '../SignUp';
+import './index.css';
 
-import {connect} from 'react-redux';
+import HeaderContainer from '../HeaderContainer';
+import HomeContainer from '../HomeContainer';
+import LoginContainer from '../LoginContainer';
+import ProfileContainer from '../ProfileContainer';
+import SignUpContainer from '../SignUpContainer';
+import SearchContainer from '../SearchContainer'
+
+import { connect } from 'react-redux';
 
 import {
-  BrowserRouter as Router,
-  Route
+	BrowserRouter as Router,
+	Route
 } from 'react-router-dom';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router>
-          <div className="route-container">
-            <Header />
-            <Route exact path="/" component={Home} />
-            <Route path="/login" component={Login} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/signup" component={SignUp} />
-          </div>
-        </Router>
+				<Router>
+					<div className="route-container">
+						<HeaderContainer/>
+						<Route exact path="/" component={HomeContainer} />
+						<Route path="/login" component={LoginContainer} />
+						<Route path="/profile" component={ProfileContainer} />
+            <Route path="/signup" component={SignUpContainer} />
+            <Route path="/search" component={SearchContainer} />
+					</div>
+				</Router>
       </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {
+	return {
 
-  }
+	}
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
+	return {
 
-  }
+	}
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(App);

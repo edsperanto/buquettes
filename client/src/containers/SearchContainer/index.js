@@ -55,7 +55,7 @@ class SearchContainer extends Component {
 
   filterResults = ( event ) => {
     this.props.files.files.filter( file => {
-      return file.name == this.state.query;
+      return file.name === this.state.query;
     });
   }
 
@@ -65,7 +65,7 @@ class SearchContainer extends Component {
 
   componentWillMount() {
     files.map( file => {
-      return this.props.addFile(
+      return this.props.onAddFile(
         file.id,
         file.source,
         file.name,
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addFile: (id, source, name, createdAt, lastModified) => {
+    onAddFile: (id, source, name, createdAt, lastModified) => {
       dispatch(addFile(
         id,
         source,
