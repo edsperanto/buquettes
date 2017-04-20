@@ -17,7 +17,7 @@ module.exports = dependencies => {
 	router.use(isAuthenticated);
 
 	// set credentials automatically
-	router.get((req, res, next) => {
+	router.use((req, res, next) => {
 		if(req.user) {
 			BoxOAuth.findAll({
 				username: req.user.username,
@@ -43,15 +43,20 @@ module.exports = dependencies => {
 							}
 						}
 						request(options, (err, header, body) => {
+							let newToken = JSON.parse(body);
 							BoxOAuth.update(
-								JSON.parse(body),
+								{token: body},
 								{where: {token: JSON.stringify(entry)}}
-							).then(_ => next());
+							).then(_ => {
+								next();
+							});
 						});
 					}else{
 						next();
 					}
 				});
+		}else{
+			next();
 		}
 	});
 
