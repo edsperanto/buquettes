@@ -29,7 +29,7 @@ class App extends Component {
 						<Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
             <Route path="/search" component={SearchContainer} />
-            <Route path="/service" component={ServicesContainer} />
+            <Route path="/services" component={ServicesContainer} />
 					</div>
 				</Router>
       </div>

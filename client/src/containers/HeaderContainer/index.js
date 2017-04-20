@@ -31,6 +31,9 @@ class HeaderContainer extends Component {
         <Link to="/search">
           <div className="menu-btn">Search</div>
         </Link>
+        <Link to="/services">
+          <div className="menu-btn">Services</div>
+        </Link>
 			</div>
 		);
 	}
