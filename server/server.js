@@ -25,7 +25,7 @@ const saltRounds = 10;
 // database
 const RedisStore = require('connect-redis')(session);
 const db = require('./models');
-const {User, GitHubOAuth, GoogleDriveOAuth} = db;
+const {User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth} = db;
 
 // session settings
 app.use(session({
@@ -74,7 +74,7 @@ const credentials = require('./.credentials');
 const oauth2Route = require('./routes/oauth2');
 const oauth2RouteDep = {
 	express, request, qs, helper, credentials, 
-	User, GitHubOAuth, GoogleDriveOAuth,
+	User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth,
 }
 app.use('/oauth2', oauth2Route(oauth2RouteDep));
 

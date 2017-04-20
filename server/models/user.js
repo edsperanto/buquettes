@@ -16,6 +16,9 @@ module.exports = function(sequelize, DataTypes) {
 				User.hasMany(models.GitHubOAuth, {
 					foreignKey: 'user_id'
 				});
+				User.hasMany(models.BoxOAuth, {
+					foreignKey: 'user_id'
+				});
       }
     }
   });

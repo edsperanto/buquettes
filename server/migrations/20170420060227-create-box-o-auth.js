@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('GoogleDriveOAuths', {
+    return queryInterface.createTable('BoxOAuths', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,20 +9,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       token: {
-        type: Sequelize.STRING,
-				allowNull: false
+        type: Sequelize.STRING
       },
-			credentials: {
-				type: Sequelize.TEXT,
-				allowNull: false
-			},
       user_id: {
-        type: Sequelize.INTEGER,
-				allowNull: false,
-				reference: {
-					model: 'Users',
-					key: 'id'
-				}
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +25,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('GoogleDriveOAuths');
+    return queryInterface.dropTable('BoxOAuths');
   }
 };
