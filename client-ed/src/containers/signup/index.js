@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
 	newUsername, newEmail, newPassword,
 	newFirstName, newLastName, newErr
@@ -69,7 +69,7 @@ class SignUp extends Component {
 
 function mapStateToProps(state) {
 	return {
-		signupForm: state.signupForm
+		signupForm: state.users.signupForm
 	}
 }
 

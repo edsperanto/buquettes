@@ -5,9 +5,11 @@ import './index.css';
 
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
-import users from './reducers';
+import reducers from './reducers';
 
-let store = createStore(users);
+let store = createStore(
+  reducers
+);
 
 ReactDOM.render(
 	<Provider store={store}>

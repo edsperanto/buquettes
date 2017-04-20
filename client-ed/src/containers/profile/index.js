@@ -21,7 +21,7 @@ class Profile extends Component {
 
 function mapStateToProps(state) {
 	return {
-		currentUser: state.currentUser,
+		currentUser: state.users.currentUser,
 	}
 }
 

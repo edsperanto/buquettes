@@ -14,6 +14,10 @@ import { App } from './containers/App';
 import SearchContainer from './containers/SearchContainer';
 import RegisterContainer from './containers/RegisterContainer';
 import LoginContainer from './containers/LoginContainer';
+import Header from './containers/Header';
+import Home from './containers/Home';
+import Profile from './containers//Profile';
+import SignUp from './containers/SignUp';
 
 import './index.css';
 
@@ -32,6 +36,9 @@ ReactDOM.render(
           <li><Link to="/register">Register</Link></li>
           <li><Link to="/search">Search</Link></li>
         </ul>
+            <Route exact path="/" component={Home} />
+            <Route path="/profile" component={Profile} />
+            <Route path="/signup" component={SignUp} />
             <Route exact path="/" component={App} />
             <Route path="/search" component={SearchContainer} />
             <Route path="/register" component={RegisterContainer} />

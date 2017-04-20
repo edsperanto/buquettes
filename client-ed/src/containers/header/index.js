@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import './index.css';
 
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import {logoutCurr} from '../../actions';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { logoutCurr } from '../../actions';
 import LoginBtn from '../../components/loginBtn';
 
 class Header extends Component {
@@ -20,14 +20,17 @@ class Header extends Component {
 					<div id="title"><b>Buquettes</b></div>
 				</Link>
 				<div id="menu">
-					<LoginBtn 
-						currentUser={this.props.currentUser} 
+					<LoginBtn
+						currentUser={this.props.currentUser}
 						handleLogout={this.handleLogout}
 					/>
 				</div>
 				<Link to="/signup">
 					<div className="menu-btn">Signup</div>
 				</Link>
+        <Link to="/search">
+          <div className="menu-btn">Search</div>
+        </Link>
 			</div>
 		);
 	}
@@ -35,7 +38,7 @@ class Header extends Component {
 
 function mapStateToProps(state) {
 	return {
-		currentUser: state.currentUser,
+		currentUser: state.users.currentUser,
 		history: state.history,
 	}
 }
