@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-class Home extends Component {
+class HomeContainer extends Component {
 	render() {
 		return (
 			<div id="home">
@@ -28,4 +28,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Home);
+)(HomeContainer);

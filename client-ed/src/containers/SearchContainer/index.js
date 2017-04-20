@@ -55,7 +55,7 @@ class SearchContainer extends Component {
 
   filterResults = ( event ) => {
     this.props.files.files.filter( file => {
-      return file.name == this.state.query;
+      return file.name === this.state.query;
     });
   }
 

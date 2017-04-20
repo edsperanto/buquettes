@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import './index.css';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-class Profile extends Component {
+class ProfileContainer extends Component {
 	render() {
 		let {username, email, first_name, last_name} = this.props.currentUser;
 		let fullName = `${first_name} ${last_name}`;
@@ -34,4 +34,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Profile);
+)(ProfileContainer);

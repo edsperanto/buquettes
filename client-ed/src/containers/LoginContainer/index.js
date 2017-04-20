@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 
-import {connect} from 'react-redux';
-import {updateUsr, updatePswd, updateErr, updateCurr} from '../../actions';
+import { connect } from 'react-redux';
+import { updateUsr, updatePswd, updateErr, updateCurr } from '../../actions';
 
-class Login extends Component {
+class LoginContainer extends Component {
 
 	handleUsr = e => this.props.onUpdateUsr(e.target.value);
 
@@ -73,4 +73,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Login);
+)(LoginContainer);

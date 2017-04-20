@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logoutCurr } from '../../actions';
-import LoginBtn from '../../components/loginBtn';
+import LoginBtn from '../../components/LoginBtn';
 
-class Header extends Component {
+class HeaderContainer extends Component {
 	handleLogout = e => {
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', '/user/logout', true);
@@ -52,4 +52,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Header);
+)(HeaderContainer);

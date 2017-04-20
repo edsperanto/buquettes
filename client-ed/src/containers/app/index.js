@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 
 import './index.css';
 
-import Header from '../header';
-import Home from '../home';
-import Login from '../login';
-import Profile from '../profile';
-import SignUp from '../signup';
+import HeaderContainer from '../HeaderContainer';
+import HomeContainer from '../HomeContainer';
+import LoginContainer from '../LoginContainer';
+import ProfileContainer from '../ProfileContainer';
+import SignUpContainer from '../SignUpContainer';
 import SearchContainer from '../SearchContainer'
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import {
 	BrowserRouter as Router,
@@ -22,11 +22,11 @@ class App extends Component {
       <div className="App">
 				<Router>
 					<div className="route-container">
-						<Header />
-						<Route exact path="/" component={Home} />
-						<Route path="/login" component={Login} />
-						<Route path="/profile" component={Profile} />
-            <Route path="/signup" component={SignUp} />
+						<HeaderContainer/>
+						<Route exact path="/" component={HomeContainer} />
+						<Route path="/login" component={LoginContainer} />
+						<Route path="/profile" component={ProfileContainer} />
+            <Route path="/signup" component={SignUpContainer} />
             <Route path="/search" component={SearchContainer} />
 					</div>
 				</Router>

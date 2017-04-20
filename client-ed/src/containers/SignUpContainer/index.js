@@ -7,7 +7,7 @@ import {
 	newFirstName, newLastName, newErr
 } from '../../actions';
 
-class SignUp extends Component {
+class SignUpContainer extends Component {
 
 	handleUsername = e => this.props.onUpdateUsername(e.target.value);
 	handleEmail = e => this.props.onUpdateEmail(e.target.value);
@@ -87,4 +87,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(SignUp);
+)(SignUpContainer);
