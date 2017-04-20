@@ -41,7 +41,7 @@ module.exports = (dependencies) => {
 				include: {model: User, as: 'user'}
 			})
 				.then(list => list.map(entry => entry.credentials))
-				.then(list => list.map(entry => JSON.parse(entry)))
+				.then(list => list.map(JSON.parse))
 				.then(list => list.filter(entry => entry.refresh_token))
 				.then(list => oauth2Client.setCredentials(list[0]))
 				.then(_ => next());

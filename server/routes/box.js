@@ -13,19 +13,60 @@ module.exports = dependencies => {
 	const {clientID, clientSecret} = credentials;
 	const sdk = new BoxSDK({clientID, clientSecret});
 
+	// check logged in
+	router.use(isAuthenticated);
+
 	// set credentials automatically
-	router.use((req, res, next) => {
+	router.get((req, res, next) => {
 		if(req.user) {
 			BoxOAuth.findAll({
 				username: req.user.username,
 				include: {model: User, as: 'user'}
 			})
+				.then(list => list.map(entry => entry.token))
+				.then(list => list.map(entry => JSON.parse(entry)))
+				.then(list => list.filter(entry => entry.refresh_token))
 				.then(list => {
-					if(list.length > 0) res.json(list);
-					else next();
+					if(list.length > 0) {
+						let entry = list[0];
+						let options = {
+							url: 'https://api.box.com/oauth2/token',
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded'
+							},
+							form: {
+								'grant_type': 'refresh_token',
+								'refresh_token': entry.refresh_token,
+								'client_id': clientID,
+								'client_secret': clientSecret
+							}
+						}
+						request(options, (err, header, body) => {
+							BoxOAuth.update(
+								JSON.parse(body),
+								{where: {token: JSON.stringify(entry)}}
+							).then(_ => next());
+						});
+					}else{
+						next();
+					}
 				});
 		}
-	})
+	});
+
+	// see current one
+	router.get('/', (req, res) => {
+		if(req.user) {
+			BoxOAuth.findAll({
+				username: req.user.username,
+				include: {model: User, as: 'user'}
+			})
+				.then(list => list.map(entry => entry.token))
+				.then(list => list.map(JSON.parse))
+				.then(list => res.json(list));
+		}
+	});
 
 	// get token
 	router.get('/new', (req, res) => res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=http://localhost:9000/oauth2/box/redirect&state=whatevs'));
