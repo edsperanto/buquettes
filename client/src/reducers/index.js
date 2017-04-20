@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import files from './files';
+import users from './users';
 
 const reducers = combineReducers({
-  files
+  files,
+  users
 });
 
 export default reducers;
