@@ -5,6 +5,7 @@ import { addFile } from '../../actions';
 import SearchInput from '../../components/SearchInput';
 import SearchButton from '../../components/SearchButton';
 import SearchResultsContainer from '../SearchResultsContainer';
+import { isLoggedIn } from '../../helpers/isLoggedIn';
 
 let files = [
   {
@@ -64,6 +65,7 @@ class SearchContainer extends Component {
   }
 
   componentWillMount() {
+    isLoggedIn(this.props.currentUser, this.props);
     files.map( file => {
       return this.props.onAddFile(
         file.id,
@@ -95,7 +97,8 @@ class SearchContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    files: state.files
+    files: state.files,
+    currentUser: state.users.currentUser
   }
 };
 
