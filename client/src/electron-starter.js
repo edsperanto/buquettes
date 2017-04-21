@@ -1,8 +1,6 @@
 const { app, BrowserWindow, globalShortcut } = require('electron');
 // Module to control application life.
-// const app = electron.app;
 // Module to create native browser window.
-// const BrowserWindow = electron.BrowserWindow;
 // const electronLocalshortcut = require('electron-localshortcut');
 
 const path = require('path');
@@ -17,20 +15,20 @@ function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({width: 800, height: 600});
     quickSearch = new BrowserWindow({width:400, height: 200});
-
+    quickSearch.hide();
 
     // and load the index.html of the app.
     mainWindow.loadURL('http://localhost:3000');
     quickSearch.loadURL('http://localhost:3000/search');
 
     //shortcut to open and close window with hot keys
-    const shortcut = globalShortcut.register('Control+Space', () => {
+    const shortcut = globalShortcut.register('CommandOrControl+Space', () => {
       mainWindow.show();
     });
 
     if(!shortcut) { console.log('Register failed.'); }
 
-    const quickShortcut = globalShortcut.register('Control+G', () => {
+    const quickShortcut = globalShortcut.register('CommandOrControl+G', () => {
       quickSearch.show();
     });
      if(!quickShortcut) { console.log('Register failed for quickShortcut.'); }
@@ -44,7 +42,6 @@ function createWindow() {
         // when you should delete the corresponding element.
         event.preventDefault();
         mainWindow.hide();
-        // quickSearch.hide();
     });
 
     quickSearch.on('close', function (event) {
@@ -52,14 +49,6 @@ function createWindow() {
       quickSearch.hide()
     })
 }
-    // electronLocalshortcut.register(mainWindow, 'Ctrl+G', () =>{
-    //   console.log('You pressed a Hot key');
-    // });
-    // console.log(
-    //   electronLocalshortcut.isRegistered(mainWindow, 'Ctrl+G')
-    //   );
-    // electronLocalshortcut.unregister(mainWindow, 'Ctrl+G');
-    // electronLocalshortcut.unregisterAll(mainWindow);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
