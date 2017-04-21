@@ -12,11 +12,13 @@ module.exports = dependencies => {
 	const BoxSDK = require('box-node-sdk');
 	const {clientID, clientSecret} = credentials;
 	const sdk = new BoxSDK({clientID, clientSecret});
+	const redirectURL = 'http://localhost:9000/oauth2/box/redirect';
+	var accessToken;
 
 	// check logged in
 	router.use(isAuthenticated);
 
-	// tokenStore implementation
+	// TokenStore implementation
 	router.use((req, res, next) => {
 		class TokenStore {
 			constructor(userID) {
@@ -58,7 +60,6 @@ module.exports = dependencies => {
 	});
 
 	// set credentials automatically
-	var accessToken;
 	router.use((req, res, next) => {
 		let tokenStore = new req.TokenStore();
 		tokenStore.read((err, oldToken) => {
@@ -75,7 +76,7 @@ module.exports = dependencies => {
 		});
 	});
 
-	// see current one
+	// GET newest access/refresh token
 	router.get('/', (req, res) => {
 		if(req.user)
 			BoxOAuth.findAll({
@@ -87,10 +88,10 @@ module.exports = dependencies => {
 				.then(list => res.json(list));
 	});
 
-	// get token
-	router.get('/new', (req, res) => res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=http://localhost:9000/oauth2/box/redirect&state=whatevs'));
+	// GET token for OAuth2
+	router.get('/new', (req, res) => res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL + '&state=whatevs'));
 	
-	// redirect
+	// GET redirect for OAuth2
 	router.get('/redirect', (req, res) => {
 		if(req.query.code) getToken(req.query.code);
 		else res.redirect('/404');
@@ -109,7 +110,7 @@ module.exports = dependencies => {
 		}
 	});
 
-	// client
+	// client helper
 	const BoxUrl = url => {
 		let base = `https://api.box.com/2.0${url}`;
 		let join = (url.indexOf('?') > -1) ? '&' : '?';
@@ -137,54 +138,50 @@ module.exports = dependencies => {
 		}
 	}
 
-	// see user
+	// GET user info
 	router.get('/user', (req, res) => {
 		client.get('/users/me')
 			.then(response => res.json(response));
 	});
 
-	// see folder
+	// GET folder and file structure
 	router.get('/folders', (req, res) => {
-		var root = {};
-		function traverse(id, par) {
-			return new Promise((resolve, reject) => {
-				client.get(`/folders/${id}`)
-					.then(response => {
-						let {name, type, item_collection} = response;
-						let {total_count, entries} = item_collection;
-						par[name] = {id, children: {}};
-						let children = par[name].children;
-						let entriesArr = Promise.all(entries.map(entry => {
-							if(entry.type === 'file') {
-								return {
+		let root = {};
+		const traverse = (id, par) => new Promise((resolve, _) => {
+			client.get(`/folders/${id}`)
+				.then(response => {
+					let {name, type, item_collection} = response;
+					let {total_count, entries} = item_collection;
+					par[name] = {id, children: {}};
+					let children = par[name].children;
+					let entriesArr = Promise.all(entries.map(entry => {
+						if(entry.type === 'file') {
+							return {
+								[entry.name]: {
+									id: entry.id,
+									children: null
+								}
+							}
+						}else if(entry.type === 'folder') {
+							return traverse(entry.id, children)
+								.then(response => ({
 									[entry.name]: {
 										id: entry.id,
-										children: null
+										children: response
 									}
-								}
-							}else if(entry.type === 'folder') {
-								return traverse(entry.id, children)
-									.then(response => ({
-										[entry.name]: {
-											id: entry.id,
-											children: response
-										}
-									}));
-							}
-						}));
-						entriesArr
-							.then(entriesRes => {
-								children = entriesRes.reduce((prev, curr) => {
-									return Object.assign(prev, curr);
-								}, {});
-								resolve(children);
-							})
-							.catch(err => console.log(err));
-					});
-			});
-		}
-		traverse('0', root)
-			.then(response => res.json(response));
+								}));
+						}
+					}));
+					entriesArr
+						.then(entriesRes => {
+							children = entriesRes.reduce((prev, curr) => {
+								return Object.assign(prev, curr);
+							}, {});
+							resolve(children);
+						});
+				});
+		});
+		traverse('0', root).then(response => res.json(response));
 	});
 
 	return router;
