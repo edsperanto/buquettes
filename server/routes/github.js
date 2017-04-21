@@ -62,46 +62,13 @@ module.exports = (dependencies) => {
 		});
   });
 
-  // router.post('/search', (req, res) => {
-  // 	let {query} = req.body;
-  // 	let searchURL = `https://api.github.com/search/repositories?q=angular-instafeed%20+fork:true+user:edsperanto` ;
-  // 	request.get(
-		// 	{url: searchURL},
-		// 	function(err, header, body){
-		// 		body.map() 
-		// 	}
-		// );
-  // });
-  	// let githubUsername = user.username;
-	 	// let searchURL = `https://api.github.com/search/users?q=${githubUsername}` ;
-
-  	// Promise.all(
-  	// 	rp.get(searchURL)
-  	// )
-  	// .then( (repos) => {
-  	// 	user.repos = JSON.parse(repos);
-  	// 	console.log('user repos: ', user.repos);
-
-  	// 	return Promise.all(
-  	// 		user.repos.repos_url.map( (reposURL) => {
-  	// 			console.log('repos URL: ', reposURL);
-  	// 			rp.get(reposURL);
-  	// 		})
-  	// 		.then( url => {
-  	// 			user.repos.repos_url = url;
-  	// 			console.log('user: ', user)
-  	// 			res.send('i hope this works');
-  	// 		})
-  	// 	);
-  	// });
-
   router.get('/search', isAuthenticated, ( req, res ) => {
   	
   	const files = [];
   	const user = {
   		repos: ''
   	};
-  	var accessToken;
+  	var accessT;
   	var access;
   	var repoURL;
   	var githubUsername;
@@ -129,8 +96,6 @@ module.exports = (dependencies) => {
 		.then((body) => {
 			let parsedBody = JSON.parse(body);
 			repoURL = parsedBody.items[0].repos_url;
-			console.log('repoURL: ', repoURL)
-			
 
 			return GitHubOAuth.findOne(
 				{
@@ -141,8 +106,8 @@ module.exports = (dependencies) => {
 			);
 		})
 		.then((chunk) => {
-			accessToken = chunk.token;
-			access = `?access_token=${accessToken}`;
+			accessT = chunk.token;
+			access = `?access_token=${accessT}`;
 			let repoWithAccess = repoURL.concat(access);
 		
 			return rp.get(
@@ -163,7 +128,6 @@ module.exports = (dependencies) => {
 					count++;
 					let slicedURL = repo.commits_url.split('{')[0];
 					let commitURLWithAccess = slicedURL.concat(access);
-					console.log('commiturl: ', commitURLWithAccess);
 
 					return rp.get(
 						{
@@ -177,7 +141,7 @@ module.exports = (dependencies) => {
 						let parsedCommits = JSON.parse(shaArray);
 						let newestCommit = parsedCommits[0];
 						let newestSha = newestCommit.sha;
-						let treeURL = `https://api.github.com/repos/${githubUsername}/${repo.name}/git/trees/${newestSha}?recursive=1&access_token=${accessToken}`;
+						let treeURL = `https://api.github.com/repos/${githubUsername}/${repo.name}/git/trees/${newestSha}?recursive=1&access_token=${accessT}`;
 						
 						return rp.get(
 							{
@@ -192,57 +156,12 @@ module.exports = (dependencies) => {
 			)
 			// then for Promise.all
 			.then( (arrData) => {
-				// console.log('stuff: ', arrData );
-				console.log('what is you: ', typeof arrData);
-				res.send(arrData.map(JSON.parse))
-				// let treeArray = JSON.parse(arrData);
+				// console.log('what is you: ', typeof arrData); //array object of strings
+				res.send(arrData.map(JSON.parse));
 			});
 		});
 	});
 
-
-
-							// 							.then( (array) => {
-							// 								console.log("array: ", files);
-							// 								res.send(files)
-							// 							});
-							// 					})
-												// .then( ())
-											// 	function(err, header, body){
-											// 		//console.log('inner body?: ', body);
-											// 		let repo = JSON.parse(body);
-											// 		//console.log('repoooo: ', repo);
-
-											// 		repo.map((repo) => {
-											// 			if(repo.type == 'dir' ){
-											// 				let dir = repo;
-											// 				// console.log('this is a directory: ', dir.name);
-											// 				// console.log('store this html link: ', dir.html_url);
-											// 				//recursive check if file function goes here
-
-											// 			}
-											// 			if(repo.type === 'file' ){
-											// 				let file = repo;
-											// 				// console.log('this is a file ', file.name);
-											// 				// console.log('store this html link: ', file.html_url);
-
-											// 			}
-														
-											// 		});
-											// 	}
-											// );
-				// 						}
-				// 					})
-				// 				);
-				// 				console.log(count);								
-				// 			});
-		// 					}
-		// 			)}
-		// 			
-		// 		});
-		// // res.send(files);
-		// });
-  // });
 
 	return router;
 
