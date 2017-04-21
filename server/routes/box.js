@@ -64,8 +64,11 @@ module.exports = dependencies => {
 		let tokenStore = new req.TokenStore();
 		tokenStore.read((err, oldToken) => {
 			if(err) {
-				console.log(err);
-				next();
+				let url = req.originalUrl.split('?')[0];
+				let notNew = url !== '/oauth2/box/new';
+				let notRedir = url !== '/oauth2/box/redirect';
+				if(notNew && notRedir) res.json(failJSON(err));
+				else next();
 			}else{
 				let {refreshToken} = oldToken;
 				sdk.getTokensRefreshGrant(refreshToken, (err, newToken) => {
@@ -94,6 +97,7 @@ module.exports = dependencies => {
 	// GET redirect for OAuth2
 	router.get('/redirect', (req, res) => {
 		if(req.query.code) getToken(req.query.code);
+		else if(req.query.error) res.json(failJSON('access denied by user'));
 		else res.redirect('/404');
 		function getToken(code) {
 			sdk.getTokensAuthorizationCodeGrant(code, null, (err, tokenInfo) => {
@@ -141,7 +145,12 @@ module.exports = dependencies => {
 	// GET user info
 	router.get('/user', (req, res) => {
 		client.get('/users/me')
-			.then(response => res.json(response));
+			.then(response => {
+				let {name, login, avatar_url} = response;
+				res.json(Object.assign({}, successJSON, {
+					user: {name, login, avatar_url}
+				}));
+			});
 	});
 
 	// GET folder and file structure
@@ -181,7 +190,11 @@ module.exports = dependencies => {
 						});
 				});
 		});
-		traverse('0', root).then(response => res.json(response));
+		traverse('0', root).then(response => {
+			res.json(Object.assign({}, successJSON, {
+				"directory structure": response
+			}));
+		});
 	});
 
 	return router;
