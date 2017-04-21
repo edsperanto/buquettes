@@ -1,8 +1,8 @@
 module.exports = (dependencies) => {
 
 	// extract dependencies
-	const {express, request, qs, GitHubOAuth} = dependencies;
-	// const { isAuthenticated } = helper;
+	const {express, request, rp, qs, shallowClone, recursive, helper, GitHubOAuth} = dependencies;
+	const { isAuthenticated } = helper;
 	const router = express.Router();
 
 	// Environmental Variables
@@ -13,11 +13,9 @@ module.exports = (dependencies) => {
 
 
 	// Routes
-	router.get('/authorize', ( req , res ) => {
-		res.redirect(userRepoURL);
-	});
+	router.get('/authorize', isAuthenticated, (_, res) => res.redirect(userRepoURL));
 
-	router.get('/callback', ( req , res ) => {     
+	router.get('/callback', isAuthenticated, ( req , res ) => {     
 		let body = {
 			client_id: GH_CLIENT_ID, 
 			client_secret: GH_CLIENT_SECRET, 
@@ -59,7 +57,6 @@ module.exports = (dependencies) => {
 					});				
 			})
 			.then((userBody) => {
-				console.log("userbody.repo ", userBody.repos_url);
 				res.send(userBody);
 			});
 		});
@@ -76,103 +73,166 @@ module.exports = (dependencies) => {
 		// );
   // });
 
-  router.get('/search', ( req, res ) => {
-  	// let repoName = 'angular-instafeed';
-  	// let username = 'edsperanto';
-  	// let searchURL = `https://api.github.com/search/repositories?q=${repoName}%20+fork:true+user:${username}` ;
-  	// res.redirect(searchURL);
-  	let {query} = req.body;
-  	let searchURL = `https://api.github.com/search/users?q=stevencable` ;
-  	request.get(
-			{
-				url: searchURL,
-				headers: {
-					'User-Agent': 'Buquettes'
-				}
-			},
-			function(err, header, body){
-				let parsedBody = JSON.parse(body);
-				let repoURL = parsedBody.items[0].repos_url;
-				console.log('req user: ', req.user.id)
-				GitHubOAuth.findOne(
+  router.get('/search', isAuthenticated, ( req, res ) => {
+  	const files = [];
+  	// let githubUsername = user.username;
+	 	// let searchURL = `https://api.github.com/search/users?q=${githubUsername}` ;
+
+  	// Promise.all(
+  	// 	rp.get(searchURL)
+  	// )
+  	// .then( (repos) => {
+  	// 	user.repos = JSON.parse(repos);
+  	// 	console.log('user repos: ', user.repos);
+
+  	// 	return Promise.all(
+  	// 		user.repos.repos_url.map( (reposURL) => {
+  	// 			console.log('repos URL: ', reposURL);
+  	// 			rp.get(reposURL);
+  	// 		})
+  	// 		.then( url => {
+  	// 			user.repos.repos_url = url;
+  	// 			console.log('user: ', user)
+  	// 			res.send('i hope this works');
+  	// 		})
+  	// 	);
+  	// });
+ 
+  	GitHubOAuth.findOne(
+  		{
+  			where: {
+  				user_id: req.user.id
+  			}
+  		})
+  	.then((user) => {
+  		let githubUsername = user.username;
+	  	let searchURL = `https://api.github.com/search/users?q=${githubUsername}` ;
+
+	  	rp.get(
 				{
-					where: {
-						user_id: req.user.id
+					url: searchURL,
+					headers: {
+						'User-Agent': 'Buquettes'
 					}
 				})
-				.then((chunk) => {
-					let access = `?access_token=${chunk.token}`;
-					console.log('is this my database?: ', access)
-					let repoWithAccess = repoURL.concat(access);
-					console.log('repoURL: ', repoWithAccess)
+				.then((body) => {
+					let parsedBody = JSON.parse(body);
+					let repoURL = parsedBody.items[0].repos_url;
+					// console.log('repoURL: ', repoURL)
 					
-					request.get(
-						{
-							url:	repoWithAccess,
-								headers: {
-									'User-Agent': 'Buquettes'
-								}				
-					 	},
-							function(err, header, body){
-								// console.log('what is this body: ', body)
+					GitHubOAuth.findOne(
+					{
+						where: {
+							user_id: req.user.id
+						}
+					})
+					.then((chunk) => {
+						let accessToken = chunk.token;
+						let access = `?access_token=${chunk.token}`;
+						let repoWithAccess = repoURL.concat(access);
+						
+						rp.get(
+							{
+								url:	repoWithAccess,
+									headers: {
+										'User-Agent': 'Buquettes'
+									}				
+						 	})
+							.then( (body) => {
+								
 								let parsedRepos = JSON.parse(body);
 								let count = 0;
-								parsedRepos.map((repo) => {
-								//console.log('parsedRepos.publicShit: ', repo.fork);
-								let isNotRepo = repo.path;
+								parsedRepos.map((repo) => {						//grab each repo and store in array
+								
+								let isNotRepo = repo.path;			//this means it is a file or a directory
 									if(isNotRepo){
-										// console.log('this is a directory or file', repo.name);
+										res.send('Unfortunately we couldn\'t find your Repo/Directory/File');
 									}
 									if(!isNotRepo){
-										count++
+										count++;
 										//console.log("This must be a repo", repo.name);
-										let slicedURL = repo.contents_url.split('{')[0]
+										let slicedURL = repo.commits_url.split('{')[0];
+										// console.log('slicedURL: ', slicedURL)
+										//let repoURL = repo.html_url;
 										//console.log('sliced:: ', slicedURL);
-										let slicedURLWithAccess = slicedURL.concat(access);
-										request.get(
+										let commitURLWithAccess = slicedURL.concat(access);
+										// console.log('commit url with access: ', commitURLWithAccess);
+										// console.log('are these my repos?: ', repoURLWithAccess);
+										// shallowClone(repoURL, '~/DevLeague/final-project/shallowRepos/', (stuff) => {
+										// 	console.log('SHALLOW CLONE ME! ', repoURL);
+										// });
+										//https://api.github.com/repos/StevenCable/100-Specs/git/trees/af5756379414b42b4f5a1cd0af0483b1346af9fc?recursive=1?access_token=f7f8c104bc937d916466b5fba76af0688a2576e8
+										rp.get(
 											{
-												url: slicedURLWithAccess,
+												url: commitURLWithAccess,
 												headers: {
 													'User-Agent': 'Buquettes'
 												}		
-											},
-											function(err, header, body){
-												//console.log('inner body?: ', body);
-												let repo = JSON.parse(body);
-												//console.log('repoooo: ', repo);
+											})
+											.then( (shaArray) => {
+												let parsedCommits = JSON.parse(shaArray);
+												let newestCommit = parsedCommits[0];
+												// console.log('is this an object with sha?: ', newestCommit)
+												let newestSha = newestCommit.sha;
+												// console.log('is this my sha?: ', newestSha);
+												console.log('access? : ', repo.name)
+												let treeURL = `https://api.github.com/repos/${githubUsername}/${repo.name}/git/trees/${newestSha}?recursive=1&access_token=${accessToken}`;
 
-												repo.map((repo) => {
-													if(repo.type == 'dir' ){
-														let dir = repo;
+												rp.get(
+													{
+														url: treeURL,
+														headers: {
+															'User-Agent': 'Buquettes'
+														}
+													})
+													.then((data)=> {
+														// console.log(data)
+														let parse = JSON.parse(data);
+														console.log(parse);
+														files.push(parse)
+														
 
-														console.log('this is a directory: ', dir.name)
-														console.log('store this html link: ', dir.html_url)
+													})
+													.then( (array) => {
+														console.log("array: ", files);
+														// res.send(files)
+													});
+											})
+											// .then( ())
+										// 	function(err, header, body){
+										// 		//console.log('inner body?: ', body);
+										// 		let repo = JSON.parse(body);
+										// 		//console.log('repoooo: ', repo);
 
-													}
+										// 		repo.map((repo) => {
+										// 			if(repo.type == 'dir' ){
+										// 				let dir = repo;
+										// 				// console.log('this is a directory: ', dir.name);
+										// 				// console.log('store this html link: ', dir.html_url);
+										// 				//recursive check if file function goes here
 
-													if(repo.type === 'file' ){
-														let file = repo;
-														console.log('this is a file ', file.name)
-														console.log('store this html link: ', file.html_url)
+										// 			}
+										// 			if(repo.type === 'file' ){
+										// 				let file = repo;
+										// 				// console.log('this is a file ', file.name);
+										// 				// console.log('store this html link: ', file.html_url);
 
-													}
+										// 			}
 													
-												})
-											}
-										);
+										// 		});
+										// 	}
+										// );
 									}
-								})
-								console.log(count)
-								// parsedRepos.map((repo) => {
-								// });
-								
-							})
+								});
+								console.log(count);								
+							});
 						}
-				);
-			} 
-		);
-		res.send('searchin bruh');
-  })
+					);
+				} 
+			);
+		// res.send(files);
+		});
+  });
 
 	return router;
 
