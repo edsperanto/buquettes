@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const request = require('request');
+const rp = require('request-promise');
 const qs = require('querystring');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -73,7 +74,7 @@ app.use('/user', userRoute(userRouteDep));
 const credentials = require('./.credentials');
 const oauth2Route = require('./routes/oauth2');
 const oauth2RouteDep = {
-	express, request, qs, helper, credentials, 
+	express, request, rp, qs, helper, credentials, 
 	User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth,
 }
 app.use('/oauth2', oauth2Route(oauth2RouteDep));
