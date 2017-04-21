@@ -145,7 +145,45 @@ module.exports = dependencies => {
 
 	// see folder
 	router.get('/folders', (req, res) => {
-		client.get('/folders/0')
+		var root = {};
+		function traverse(id, par) {
+			return new Promise((resolve, reject) => {
+				client.get(`/folders/${id}`)
+					.then(response => {
+						let {name, type, item_collection} = response;
+						let {total_count, entries} = item_collection;
+						par[name] = {id, children: {}};
+						let children = par[name].children;
+						let entriesArr = Promise.all(entries.map(entry => {
+							if(entry.type === 'file') {
+								return {
+									[entry.name]: {
+										id: entry.id,
+										children: null
+									}
+								}
+							}else if(entry.type === 'folder') {
+								return traverse(entry.id, children)
+									.then(response => ({
+										[entry.name]: {
+											id: entry.id,
+											children: response
+										}
+									}));
+							}
+						}));
+						entriesArr
+							.then(entriesRes => {
+								children = entriesRes.reduce((prev, curr) => {
+									return Object.assign(prev, curr);
+								}, {});
+								resolve(children);
+							})
+							.catch(err => console.log(err));
+					});
+			});
+		}
+		traverse('0', root)
 			.then(response => res.json(response));
 	});
 
