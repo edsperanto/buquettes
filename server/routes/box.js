@@ -16,45 +16,46 @@ module.exports = dependencies => {
 	// check logged in
 	router.use(isAuthenticated);
 
+	// tokenStore implementation
+	router.use((req, res, next) => {
+		class TokenStore {
+			constructor(userID) {
+				this.userID = userID;
+			}
+			read(callback) {
+				BoxOAuth.findAll({
+					username: req.user.username,
+					include: {model: User, as: 'user'}
+				})
+					.then(list => list.map(entry => entry.token))
+					.then(list => list.map(entry => JSON.parse(entry)))
+					.then(list => list.filter(entry => entry.refreshToken))
+					.then(list => callback(null, list[0]));
+			}
+			write(token, callback) {
+				if(!token.error) BoxOAuth.create({
+					user_id: req.user.id,
+					token: JSON.stringify(token),
+				}).then(_ => callback());
+			}
+			clear(callback) {
+				BoxOAuth.destroy({where: {id: req.user.id}})
+					.then(_ => callback());
+			}
+		}
+		req.TokenStore = TokenStore;
+		next();
+	});
+
 	// set credentials automatically
 	router.use((req, res, next) => {
-		if(req.user) {
-			BoxOAuth.findAll({
-				username: req.user.username,
-				include: {model: User, as: 'user'}
-			})
-				.then(list => list.map(entry => entry.token))
-				.then(list => list.map(entry => JSON.parse(entry)))
-				.then(list => list.filter(entry => entry.refresh_token))
-				.then(list => {
-					if(list.length > 0) {
-						let entry = list[0];
-						let options = {
-							url: 'https://api.box.com/oauth2/token',
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/x-www-form-urlencoded'
-							},
-							form: {
-								'grant_type': 'refresh_token',
-								'refresh_token': entry.refresh_token,
-								'client_id': clientID,
-								'client_secret': clientSecret
-							}
-						}
-						request(options, (err, header, body) => {
-							let newToken = JSON.parse(body);
-							BoxOAuth.update(
-								{token: body},
-								{where: {token: JSON.stringify(entry)}}
-							).then(_ => {
-								next();
-							});
-						});
-					}else{
-						next();
-					}
-				});
+		if(!req.BoxClient) {
+			let tokenStore = new req.TokenStore();
+			tokenStore.read((err, token) => {
+				req.BoxClient = sdk.getPersistentClient(token, tokenStore);
+				console.log('HERE', token);
+				next();
+			});
 		}else{
 			next();
 		}
@@ -81,16 +82,9 @@ module.exports = dependencies => {
 		if(req.query.code) getToken(req.query.code);
 		else res.redirect('/404');
 		function getToken(code) {
-			request.post({
-				url: 'https://api.box.com/oauth2/token',
-				form: {
-					grant_type: 'authorization_code',
-					code: req.query.code,
-					client_id: clientID,
-					client_secret: clientSecret
-				}
-			}, (err, header, body) => {
-				storeToken(JSON.parse(body));
+			sdk.getTokensAuthorizationCodeGrant(code, null, (err, tokenInfo) => {
+				if(err) res.json(err);
+				else storeToken(tokenInfo);
 			});
 		}
 		function storeToken(token) {
