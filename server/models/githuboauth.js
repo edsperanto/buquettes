@@ -3,8 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var GitHubOAuth = sequelize.define('GitHubOAuth', {
     token: DataTypes.STRING,
     username: DataTypes.STRING,
-    scope: DataTypes.STRING
-    /* user_id: DataTypes.INTEGER */
+    scope: DataTypes.STRING,
+    user_id: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {

@@ -16,14 +16,14 @@ module.exports = {
         type: Sequelize.STRING,
 				allowNull: false
       },
-      /*user_id: {
+      user_id: {
         type: Sequelize.INTEGER,
 				allowNull: false,
 				reference: {
 					model: 'Users',
 					key: 'id'
 				}
-      },*/
+      },
        scope: {
         type: Sequelize.STRING,
         allowNull: false
