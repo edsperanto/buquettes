@@ -11,10 +11,12 @@ const cookieParser = require('cookie-parser');
 const request = require('request');
 const rp = require('request-promise');
 const qs = require('querystring');
+const cors = require('cors');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
+app.use(cors());
 
 // session & passport
 const session = require('express-session');

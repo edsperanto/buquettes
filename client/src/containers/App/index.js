@@ -7,7 +7,8 @@ import HomeContainer from '../HomeContainer';
 import LoginContainer from '../LoginContainer';
 import ProfileContainer from '../ProfileContainer';
 import SignUpContainer from '../SignUpContainer';
-import SearchContainer from '../SearchContainer'
+import SearchContainer from '../SearchContainer';
+import FoldersContainer from '../FoldersContainer';
 
 import { connect } from 'react-redux';
 
@@ -28,6 +29,7 @@ class App extends Component {
 						<Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
             <Route path="/search" component={SearchContainer} />
+						<Route path="/box/folders" component={FoldersContainer} />
 					</div>
 				</Router>
       </div>

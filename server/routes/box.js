@@ -192,7 +192,7 @@ module.exports = dependencies => {
 		});
 		traverse('0', root).then(response => {
 			res.json(Object.assign({}, successJSON, {
-				"directory structure": response
+				"directory_structure": response
 			}));
 		});
 	});
