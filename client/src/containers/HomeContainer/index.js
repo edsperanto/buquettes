@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
-import './index.css';
-
 import { connect } from 'react-redux';
 
+import { isLoggedIn } from '../../helpers/isLoggedIn';
+import './index.css';
+
+
 class HomeContainer extends Component {
-	render() {
+
+  componentWillMount() {
+    isLoggedIn(this.props.currentUser, this.props);
+  }
+
+  render() {
 		return (
-			<div id="home">
-				<h1>Welcome to <i>fabulous <b>Buquettes</b></i></h1>
+			<div className="home-container">
+        You haven't added any files yet
 			</div>
 		);
 	}
@@ -15,7 +22,7 @@ class HomeContainer extends Component {
 
 function mapStateToProps(state) {
 	return {
-
+    currentUser: state.users.currentUser
 	}
 }
 
