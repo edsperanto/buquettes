@@ -35,7 +35,6 @@ class SignUpContainer extends Component {
 				<form action="/user/new" method="post" onSubmit={this.submit}>
 					<div className="error" style={this.props.signupForm.error ?
 						({}) : ({display: "none"})}>
-	border
 						{this.props.signupForm.error}
 					</div>
 					<div>

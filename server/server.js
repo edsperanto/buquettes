@@ -11,12 +11,14 @@ const cookieParser = require('cookie-parser');
 const request = require('request');
 const rp = require('request-promise');
 const qs = require('querystring');
+const cors = require('cors');
 const shallowClone = require('git-shallow-clone');
 const recursive = require('recursive-readdir');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
+app.use(cors());
 
 // session & passport
 const session = require('express-session');
@@ -28,7 +30,7 @@ const saltRounds = 10;
 // database
 const RedisStore = require('connect-redis')(session);
 const db = require('./models');
-const {User, GitHubOAuth, GoogleDriveOAuth} = db;
+const {User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth} = db;
 
 // session settings
 app.use(session({
@@ -76,8 +78,8 @@ app.use('/user', userRoute(userRouteDep));
 const credentials = require('./.credentials');
 const oauth2Route = require('./routes/oauth2');
 const oauth2RouteDep = {
-	express, request, rp, qs, shallowClone, recursive, helper, credentials, 
-	User, GitHubOAuth, GoogleDriveOAuth,
+	express, request, rp, qs, shallowClone, recursive, helper, 
+	credentials, User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth,
 }
 app.use('/oauth2', oauth2Route(oauth2RouteDep));
 

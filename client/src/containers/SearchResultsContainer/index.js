@@ -64,9 +64,10 @@ class SearchResultsContainer extends Component {
                 return file;
               };
             }
+						return 0;
           }).filter( file => {
             if( this.props.query === ""){
-              return;
+              return 0;
             }else{
               return file.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1;
             }

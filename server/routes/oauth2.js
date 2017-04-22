@@ -5,6 +5,7 @@ module.exports = (dependencies) => {
 
 	router.use('/github', require('./github')(dependencies));
 	router.use('/gdrive', require('./gdrive')(dependencies));
+	router.use('/box', require('./box')(dependencies));
 
 	return router;
 

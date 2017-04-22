@@ -11,6 +11,7 @@ export const NEW_PASSWORD = 'NEW_PASSWORD';
 export const NEW_FIRST_NAME = 'NEW_FIRST_NAME';
 export const NEW_LAST_NAME = 'NEW_LAST_NAME';
 export const NEW_ERR = 'NEW_ERR';
+export const UPDATE_BOX_DATA = 'UPDATE_BOX_DATA';
 
 export const updateUsr = usr => ({type: UPDATE_LOGIN_USR, usr});
 export const updatePswd = pswd => ({type: UPDATE_LOGIN_PSWD, pswd});
@@ -44,4 +45,11 @@ export function addFile(id, source, name, createdAt, lastModified) {
     createdAt,
     lastModified
   }
+}
+
+export function updateBoxData(entry) {
+	return {
+		type: UPDATE_BOX_DATA,
+		entry
+	}
 }
