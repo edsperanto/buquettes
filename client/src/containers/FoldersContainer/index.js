@@ -6,32 +6,30 @@ import {updateBoxData} from '../../actions';
 
 class FoldersContainer extends Component {
   componentWillMount() {
-		const xhr = new XMLHttpRequest();
-		const genSearchableArr = (obj, dir) => {
-			Object.keys(obj).forEach(item => {
-				let searchEntry = {name: item, path: dir};
-				let {id, children} = obj[item];
-				searchEntry.id = id;
-				if(!!children) {
-					let newPath = dir + `/${item}`;
-					searchEntry.type = 'folder';
-					genSearchableArr(obj[item].children, newPath);
-				}else{
-					searchEntry.type = 'file';
-				}
-				this.props.onUpdateBoxData(searchEntry);
-				console.log(this.props.data);
-			});
+const xhr = new XMLHttpRequest();
+const genSearchableArr = (obj, dir) => {
+	Object.keys(obj).forEach(item => {
+		let searchEntry = {name: item, path: dir};
+		let {id, children} = obj[item];
+		searchEntry.id = id;
+		if(!!children) {
+			let newPath = dir + `/${item}`;
+			searchEntry.type = 'folder';
+			genSearchableArr(obj[item].children, newPath);
+		}else{
+			searchEntry.type = 'file';
 		}
-		xhr.addEventListener('load', e => {
-			let {success, directory_structure} = JSON.parse(xhr.responseText);
-			if(success) {
-				let parsedArr = genSearchableArr(directory_structure, '/Box');
-				console.log(parsedArr);
-			}
-		});
-		xhr.open('GET', '/oauth2/box/folders', true);
-		xhr.send();
+		this.props.onUpdateBoxData(searchEntry);
+	});
+}
+xhr.addEventListener('load', e => {
+	let {success, directory_structure} = JSON.parse(xhr.responseText);
+	if(success) {
+		let parsedArr = genSearchableArr(directory_structure, '/Box');
+	}
+});
+xhr.open('GET', '/oauth2/box/folders', true);
+xhr.send();
   }
   render(){
     return (

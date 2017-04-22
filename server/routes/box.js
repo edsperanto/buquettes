@@ -168,7 +168,6 @@ module.exports = dependencies => {
 							return {
 								[entry.name]: {
 									id: entry.id,
-									children: null
 								}
 							}
 						}else if(entry.type === 'folder') {
