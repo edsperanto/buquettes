@@ -1,0 +1,17 @@
+.search-container{
+
+}
+.search-input {
+  width: 90%;
+  height: 80px;
+  box-sizing: border-box;
+}
+.search-input{
+  font-size: 1.75rem;
+  font-weight: 300;
+}
+.search-button{
+  width: 10%;
+  height: 80px;
+  box-sizing: border-box;
+}

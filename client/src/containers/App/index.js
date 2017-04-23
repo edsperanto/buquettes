@@ -19,15 +19,18 @@ import {
 
 class App extends Component {
   render() {
+    console.log('window', window.location.pathname);
     return (
       <div className="App">
 				<Router>
 					<div className="route-container">
-            <HeaderContainer/>
-            <Route exact path="/" component={HomeContainer} />
-            <Route path="/login" component={LoginContainer} />
+						<HeaderContainer
+              path={window.location.pathname}
+            />
+						<Route exact path="/" component={HomeContainer} />
+						<Route path="/login" component={LoginContainer} />
+						<Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
-            <Route path="/profile" component={ProfileContainer} />
             <Route path="/search" component={SearchContainer} />
 						<Route path="/box/folders" component={FoldersContainer} />
 					</div>

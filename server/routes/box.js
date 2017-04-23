@@ -45,7 +45,7 @@ module.exports = dependencies => {
 			}
 			update(oldToken, newToken, callback) {
 				BoxOAuth.update(
-					{token: JSON.stringify(newToken)}, 
+					{token: JSON.stringify(newToken)},
 					{where: {token: JSON.stringify(oldToken)}}
 				)
 					.then(_ => callback());
@@ -93,7 +93,7 @@ module.exports = dependencies => {
 
 	// GET token for OAuth2
 	router.get('/new', (req, res) => res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL + '&state=whatevs'));
-	
+
 	// GET redirect for OAuth2
 	router.get('/redirect', (req, res) => {
 		if(req.query.code) getToken(req.query.code);

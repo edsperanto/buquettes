@@ -6,6 +6,7 @@ import SearchInput from '../../components/SearchInput';
 import SearchButton from '../../components/SearchButton';
 import SearchResultsContainer from '../SearchResultsContainer';
 import { isLoggedIn } from '../../helpers/isLoggedIn';
+import './index.css';
 
 let files = [
   {
