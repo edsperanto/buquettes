@@ -1,19 +1,18 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var GitHubOAuth = sequelize.define('GitHubOAuth', {
+  var BoxOAuth = sequelize.define('BoxOAuth', {
     token: DataTypes.STRING,
-    username: DataTypes.STRING,
-    scope: DataTypes.STRING,
     user_id: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
-				GitHubOAuth.belongsTo(models.User, {
+        // associations can be defined here
+				BoxOAuth.belongsTo(models.User, {
 					foreignKey: 'user_id',
 					as: 'user'
 				});
       }
     }
   });
-  return GitHubOAuth;
+  return BoxOAuth;
 };

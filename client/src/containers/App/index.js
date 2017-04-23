@@ -7,7 +7,8 @@ import HomeContainer from '../HomeContainer';
 import LoginContainer from '../LoginContainer';
 import ProfileContainer from '../ProfileContainer';
 import SignUpContainer from '../SignUpContainer';
-import SearchContainer from '../SearchContainer'
+import SearchContainer from '../SearchContainer';
+import FoldersContainer from '../FoldersContainer';
 
 import { connect } from 'react-redux';
 
@@ -22,12 +23,13 @@ class App extends Component {
       <div className="App">
 				<Router>
 					<div className="route-container">
-						<HeaderContainer/>
-						<Route exact path="/" component={HomeContainer} />
-						<Route path="/login" component={LoginContainer} />
-						<Route path="/profile" component={ProfileContainer} />
+            <HeaderContainer/>
+            <Route exact path="/" component={HomeContainer} />
+            <Route path="/login" component={LoginContainer} />
             <Route path="/signup" component={SignUpContainer} />
+            <Route path="/profile" component={ProfileContainer} />
             <Route path="/search" component={SearchContainer} />
+						<Route path="/box/folders" component={FoldersContainer} />
 					</div>
 				</Router>
       </div>
@@ -37,17 +39,10 @@ class App extends Component {
 
 function mapStateToProps(state) {
 	return {
-
-	}
-}
-
-function mapDispatchToProps(dispatch) {
-	return {
-
+    currentUser: state.users.currentUser
 	}
 }
 
 export default connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
 )(App);
