@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import './index.css';
-
 import { connect } from 'react-redux';
+
 import {
-	newUsername, newEmail, newPassword,
-	newFirstName, newLastName, newErr
+  newUsername,
+  newEmail,
+  newPassword,
+  newFirstName,
+  newLastName,
+  newErr,
+  updateView
 } from '../../actions';
+import './index.css';
 
 class SignUpContainer extends Component {
 
@@ -27,6 +32,10 @@ class SignUpContainer extends Component {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify(this.props.signupForm));
 	}
+
+  componentWillMount() {
+    this.props.onUpdateView(this.props.location.pathname);
+  }
 
 	render() {
 		return (
@@ -68,7 +77,8 @@ class SignUpContainer extends Component {
 
 function mapStateToProps(state) {
 	return {
-		signupForm: state.users.signupForm
+		signupForm: state.users.signupForm,
+    currentView: state.views.currentView
 	}
 }
 
@@ -79,7 +89,8 @@ function mapDispatchToProps(dispatch) {
 		onUpdatePassword: password => dispatch(newPassword(password)),
 		onUpdateFirstName: firstName => dispatch(newFirstName(firstName)),
 		onUpdateLastName: lastName => dispatch(newLastName(lastName)),
-		onUpdateError: error => dispatch(newErr(error)),
+    onUpdateError: error => dispatch(newErr(error)),
+		onUpdateView: view => dispatch(updateView(view))
 	}
 }
 

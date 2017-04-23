@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './index.css';
-
 import { connect } from 'react-redux';
-import { updateUsr, updatePswd, updateErr, updateCurr } from '../../actions';
+
+import { updateUsr, updatePswd, updateErr, updateCurr, updateView } from '../../actions';
+import './index.css';
 
 class LoginContainer extends Component {
 
@@ -27,6 +27,10 @@ class LoginContainer extends Component {
 		xhr.send(JSON.stringify((usr.indexOf('@') > -1) ?
 			({email: usr, password: pswd}) : ({username: usr, password: pswd})));
 	}
+
+  componentWillMount() {
+    this.props.onUpdateView(this.props.location.pathname);
+  }
 
 	render() {
 		return (
@@ -58,6 +62,7 @@ class LoginContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		loginForm: state.users.loginForm,
+    currentView: state.views.currentView
 	}
 }
 
@@ -67,6 +72,7 @@ function mapDispatchToProps(dispatch) {
 		onUpdatePswd: pswd => dispatch(updatePswd(pswd)),
 		onUpdateErr: err => dispatch(updateErr(err)),
 		onUpdateCurr: curr => dispatch(updateCurr(curr)),
+    onUpdateView: view => dispatch(updateView(view))
 	}
 }
 

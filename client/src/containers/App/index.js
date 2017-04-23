@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import './index.css';
+import {
+	BrowserRouter as Router,
+	Route
+} from 'react-router-dom';
 
 import HeaderContainer from '../HeaderContainer';
 import HomeContainer from '../HomeContainer';
@@ -10,22 +14,20 @@ import SignUpContainer from '../SignUpContainer';
 import SearchContainer from '../SearchContainer';
 import FoldersContainer from '../FoldersContainer';
 
-import { connect } from 'react-redux';
+import { updateView } from '../../actions';
 
-import {
-	BrowserRouter as Router,
-	Route
-} from 'react-router-dom';
+import './index.css';
+
 
 class App extends Component {
   render() {
-    console.log('window', window.location.pathname);
+    console.log('nav level view', this.props.currentView);
     return (
       <div className="App">
 				<Router>
-					<div className="route-container">
+					<div className='route-container'>
 						<HeaderContainer
-              path={window.location.pathname}
+              hidden={this.props.currentView === '/search' ? true : false}
             />
 						<Route exact path="/" component={HomeContainer} />
 						<Route path="/login" component={LoginContainer} />
@@ -42,10 +44,18 @@ class App extends Component {
 
 function mapStateToProps(state) {
 	return {
-    currentUser: state.users.currentUser
+    currentUser: state.users.currentUser,
+    currentView: state.views.currentView
 	}
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    onUpdateView: view => dispatch(updateView(view))
+  }
+}
+
 export default connect(
-	mapStateToProps
+	mapStateToProps,
+  mapDispatchToProps
 )(App);
