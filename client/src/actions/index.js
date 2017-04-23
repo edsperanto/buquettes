@@ -12,6 +12,7 @@ export const NEW_FIRST_NAME = 'NEW_FIRST_NAME';
 export const NEW_LAST_NAME = 'NEW_LAST_NAME';
 export const NEW_ERR = 'NEW_ERR';
 export const UPDATE_BOX_DATA = 'UPDATE_BOX_DATA';
+export const UPDATE_VIEW = 'UPDATE_VIEW';
 
 export const updateUsr = usr => ({type: UPDATE_LOGIN_USR, usr});
 export const updatePswd = pswd => ({type: UPDATE_LOGIN_PSWD, pswd});
@@ -52,4 +53,11 @@ export function updateBoxData(entry) {
 		type: UPDATE_BOX_DATA,
 		entry
 	}
+}
+
+export function updateView(view) {
+  return {
+    type: UPDATE_VIEW,
+    view
+  }
 }
