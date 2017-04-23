@@ -83,12 +83,14 @@ class SearchContainer extends Component {
   render(){
     return (
       <div className="search-container">
-        <SearchInput
-          handleChange={this.handleChange}
-        />
-        <SearchButton
-          sendData={this.sendData}
-        />
+        <div className="search-form">
+          <SearchInput
+            handleChange={this.handleChange}
+          />
+          <SearchButton
+            sendData={this.sendData}
+          />
+        </div>
         <SearchResultsContainer
           query={this.state.query}
           filterResults={this.filterResults}
