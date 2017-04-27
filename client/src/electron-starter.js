@@ -14,7 +14,12 @@ let quickSearch = null;
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({width: 800, height: 600});
-    quickSearch = new BrowserWindow({width:400, height: 200});
+    quickSearch = new BrowserWindow({
+      width:784,
+      height: 81,
+      resizable:false,
+      frame:false
+    });
     quickSearch.hide();
 
     // and load the index.html of the app.

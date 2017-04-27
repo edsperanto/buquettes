@@ -1,11 +1,11 @@
 import React from 'react';
 
-const SearchInput = ({ handleChange }) => {
+const SearchInput = ({ handleClick, handleChange }) => {
   return (
     <input
       className="search-input"
       type="text"
-      placeholder="Search my files"
+      content="hello"
       onChange={handleChange}
     >
     </input>

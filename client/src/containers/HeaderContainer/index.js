@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './index.css';
-
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import { logoutCurr } from '../../actions';
 import LoginBtn from '../../components/LoginBtn';
+import './index.css';
 
 class HeaderContainer extends Component {
 	handleLogout = e => {
@@ -14,28 +14,28 @@ class HeaderContainer extends Component {
 		this.props.onLogoutCurr({authenticated: false});
 	}
 	render() {
-		return (
-			<div id="header">
-				<Link to="/">
-					<div id="title"><b>Buquettes</b></div>
-				</Link>
-				<div id="menu">
-					<LoginBtn
-						currentUser={this.props.currentUser}
-						handleLogout={this.handleLogout}
-					/>
-				</div>
-				<Link to="/signup">
-					<div className="menu-btn">Signup</div>
-				</Link>
-        <Link to="/search">
-          <div className="menu-btn">Search</div>
-        </Link>
-				<Link to="/box/folders">
-					<div className="menu-btn">Folders</div>
-				</Link>
-			</div>
-		);
+    if(this.props.hidden)
+      return null;
+    if(!this.props.hidden)
+  		return (
+  			<div id="header">
+  				<Link to="/">
+  					<div id="title"><b>Buquettes</b></div>
+  				</Link>
+  				<div id="menu">
+  					<LoginBtn
+  						currentUser={this.props.currentUser}
+  						handleLogout={this.handleLogout}
+  					/>
+  				</div>
+  				<Link to="/signup">
+  					<div className="menu-btn">Signup</div>
+  				</Link>
+          <Link to="/search">
+            <div className="menu-btn">Search</div>
+          </Link>
+  			</div>
+  		);
 	}
 }
 

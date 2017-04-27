@@ -6,7 +6,7 @@ const SearchButton = ({ sendData }) => {
       onClick={sendData}
       className="search-button"
       type="submit"
-      value="Submit">
+    >
     </input>
   )
 }

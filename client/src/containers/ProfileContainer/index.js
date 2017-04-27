@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-
-import './index.css';
-
 import { connect } from 'react-redux';
 
+import { updateView } from '../../actions';
+import './index.css';
+
 class ProfileContainer extends Component {
+  componentWillMount() {
+    this.props.onUpdateView(this.props.location.pathname);
+  }
 	render() {
 		let {username, email, first_name, last_name} = this.props.currentUser;
 		let fullName = `${first_name} ${last_name}`;
@@ -21,13 +24,14 @@ class ProfileContainer extends Component {
 
 function mapStateToProps(state) {
 	return {
-		currentUser: state.users.currentUser
+		currentUser: state.users.currentUser,
+    currentView: state.views.currentView
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-
+    onUpdateView: view => dispatch(updateView(view))
 	}
 }
 
