@@ -60,6 +60,24 @@ module.exports = (dependencies) => {
 		});
   });
 
+  router.delete('/delete', (req, res) => {
+  	console.log('this is the delete route: ');
+  	GitHubOAuth.findAll({
+  		where: {
+  			user_id: req.user.id
+  		}
+  	})
+  	.then((user) => {
+  		console.log('user info: ', user);
+  		GitHubOAuth.destroy({
+  			where: {
+  				user_id:req.user.id
+  			}
+  		});
+  		res.send('You have officially removed authorization for StratosPeer to access your Github on your behalf. I hope you don\'t regret this.');
+  	});
+  });
+
   router.get('/search', isAuthenticated, ( req, res ) => {
   	
   	// const files = [];
