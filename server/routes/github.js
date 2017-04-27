@@ -1,26 +1,24 @@
 module.exports = (dependencies) => {
 
 	// extract dependencies
-	const {express, request, rp, qs, shallowClone, recursive, helper, GitHubOAuth} = dependencies;
+	const {
+		express, request, rp, qs, recursive, helper, GitHubOAuth, credentials: {github: credentials },
+	} = dependencies;
 	const { isAuthenticated } = helper;
 	const router = express.Router();
 
 	// Environmental Variables
 	const env = require('dotenv').config();
-	const { GH_CLIENT_ID, GH_CLIENT_SECRET } = process.env;
+	const { client_id, client_secret } = credentials;
 
-	let userRepoURL = `https://github.com/login/oauth/authorize?scope=repo&client_id=${GH_CLIENT_ID}`;
+	let userRepoURL = `https://github.com/login/oauth/authorize?scope=repo&client_id=${client_id}`;
 
 
 	// Routes
 	router.get('/authorize', isAuthenticated, (_, res) => res.redirect(userRepoURL));
 
 	router.get('/callback', isAuthenticated, ( req , res ) => {     
-		let body = {
-			client_id: GH_CLIENT_ID, 
-			client_secret: GH_CLIENT_SECRET, 
-			code: req.query.code
-		};
+		let body = { client_id , client_secret, code: req.query.code };
 
 		let userPromise = new Promise( ( resolve , reject ) => {
 			request.post({ 
@@ -64,10 +62,7 @@ module.exports = (dependencies) => {
 
   router.get('/search', isAuthenticated, ( req, res ) => {
   	
-  	const files = [];
-  	const user = {
-  		repos: ''
-  	};
+  	// const files = [];
   	var accessT;
   	var access;
   	var repoURL;
@@ -82,7 +77,9 @@ module.exports = (dependencies) => {
   	)
   	.then((user) => {
   		githubUsername = user.username;
-	  	let searchURL = `https://api.github.com/search/users?q=${githubUsername}` ;
+  		accessT = user.token;
+  		access = `?access_token=${accessT}`;
+	  	let searchURL = `https://api.github.com/user/repos?page=1&per_page=100&access_token=${accessT}`;
 
 	  	return rp.get(
 				{
@@ -95,39 +92,18 @@ module.exports = (dependencies) => {
 		})
 		.then((body) => {
 			let parsedBody = JSON.parse(body);
-			repoURL = parsedBody.items[0].repos_url;
-
-			return GitHubOAuth.findOne(
-				{
-					where: {
-						user_id: req.user.id
-					}
-				}
-			);
-		})
-		.then((chunk) => {
-			accessT = chunk.token;
-			access = `?access_token=${accessT}`;
-			let repoWithAccess = repoURL.concat(access);
-		
-			return rp.get(
-				{
-					url:	repoWithAccess,
-						headers: {
-							'User-Agent': 'Buquettes'
-						}				
-			 	}
-			);
-		})
-		.then((body) => {									
-			let parsedRepos = JSON.parse(body);
 			let count = 0;
 
 			return Promise.all(
-				parsedRepos.map((repo) => {						//grab each repo and store in array
+				parsedBody.map((repo) => {						//grab each repo and store in array
 					count++;
+					console.log('count: ', count);
 					let slicedURL = repo.commits_url.split('{')[0];
 					let commitURLWithAccess = slicedURL.concat(access);
+					let usersRepo = repo.owner.login;
+					let repoName = repo.name;
+					let default_branch = repo.default_branch;
+					
 
 					return rp.get(
 						{
@@ -141,25 +117,97 @@ module.exports = (dependencies) => {
 						let parsedCommits = JSON.parse(shaArray);
 						let newestCommit = parsedCommits[0];
 						let newestSha = newestCommit.sha;
-						let treeURL = `https://api.github.com/repos/${githubUsername}/${repo.name}/git/trees/${newestSha}?recursive=1&access_token=${accessT}`;
+						let treeURL = `https://api.github.com/repos/${usersRepo}/${repoName}/git/trees/${newestSha}?recursive=1&access_token=${accessT}`;
 						
-						return rp.get(
-							{
-								url: treeURL,
-								headers: {
-									'User-Agent': 'Buquettes'
-								}
-							}
+						return Promise.all(
+							[ 
+								default_branch,
+								rp.get(
+									{
+										url: treeURL,
+										headers: {
+											'User-Agent': 'Buquettes'
+										}
+									}
+								)
+							]
 						);
-					});
+					})
+					.catch(err =>{
+        		console.log('.then with shaArray: ', err);
+      		});
 				})
 			)
 			// then for Promise.all
-			.then( (arrData) => {
-				// console.log('what is you: ', typeof arrData); //array object of strings
-				res.send(arrData.map(JSON.parse));
-			});
-		});
+			.then( (blob) => {
+				let arrData = blob;
+
+				let getProperties = (string) => {
+					let stringArray = string.split('/');
+					let arrayLength = stringArray.length-1;
+					let name = stringArray[arrayLength];
+					let owner = stringArray[4];
+					let repo = stringArray[5];
+
+					return { name, owner, repo };
+				};
+
+				let searchableArray = arrData.map( shit => {
+
+						let default_branch = shit[0];
+						let parsed = JSON.parse(shit[1]);
+						let owner = getProperties(parsed.url).owner;
+						let repo = getProperties(parsed.url).repo;
+						let repo_html_url = `https://github.com/${owner}/${repo}${access}`;
+					
+					
+					//URL to html of each repo
+					parsed.html_url = repo_html_url;
+
+					return parsed.tree.map(item => {
+
+						let path = item.path;
+						let type = item.type;
+						let file_html_url = `https://github.com/${owner}/${repo}/${type}/${default_branch}/${path}${access}`;
+
+						//add desired keys
+						item.repo = getProperties(item.url).repo;
+						item.name = getProperties(item.path).name;
+						item.owner = getProperties(item.url).owner;
+						item.default_branch = default_branch;
+						item.html_url = file_html_url;
+
+						return item;
+
+					})
+					.map((arr) => {
+						//simplify object
+						delete arr.mode;
+						delete arr.sha;
+						delete arr.size;
+						delete arr.owner;
+						delete arr.url;
+						delete arr.default_branch;
+						return arr;
+					});
+				})
+				.reduce( (prev, curr) => {
+					curr.shift()					
+					curr.forEach( object => {
+						prev.push(object);
+					});
+						return prev;
+				}, []);
+
+				res.send(searchableArray);   
+			})
+			.catch(err => {
+				console.log('.then with blob: ', err);
+			})
+		})
+		.catch(err =>{
+        console.log('.then with body: ', err);
+    });
 	});
 
 
