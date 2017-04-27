@@ -18,13 +18,13 @@ class ServicesContainer extends Component {
         <ServiceCard
           source="github"
           logopath="assets/github.svg"
-          authpath=""
+          authpath="http://localhost:9000/oauth2/github/authorize"
           onClick={this.handleClick}
         />
         <ServiceCard
-          source="google-drive"
-          logopath="assets/google-drive.svg"
-          authpath=""
+          source="box"
+          logopath="assets/box.svg"
+          authpath="http://localhost:9000/oauth2/box/new"
           onClick={this.handleClick}
         />
         <Link to="/" className="skip-step">
