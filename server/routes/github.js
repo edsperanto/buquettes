@@ -60,6 +60,15 @@ module.exports = (dependencies) => {
 		});
   });
 
+  router.delete('/delete', (req, res) => {
+    GitHubOAuth.destroy({
+        where: {
+            user_id:req.user.id
+        }
+    });
+        res.send('You have officially removed authorization for StratosPeer to access your Github on your behalf. I hope you don\'t regret this.');
+  });
+
   router.get('/search', isAuthenticated, ( req, res ) => {
   	
   	// const files = [];
@@ -79,7 +88,7 @@ module.exports = (dependencies) => {
   		githubUsername = user.username;
   		accessT = user.token;
   		access = `?access_token=${accessT}`;
-	  	let searchURL = `https://api.github.com/user/repos?page=1&per_page=100&access_token=${accessT}`;
+	  	let searchURL = `https://api.github.com/user/repos?page=1&per_page=5&access_token=${accessT}`;
 
 	  	return rp.get(
 				{
@@ -103,6 +112,8 @@ module.exports = (dependencies) => {
 					let usersRepo = repo.owner.login;
 					let repoName = repo.name;
 					let default_branch = repo.default_branch;
+					let pushed_at = repo.pushed_at;
+					console.log('ahhh hsss pushit: ', pushed_at);
 					
 
 					return rp.get(
@@ -122,6 +133,7 @@ module.exports = (dependencies) => {
 						return Promise.all(
 							[ 
 								default_branch,
+								pushed_at,
 								rp.get(
 									{
 										url: treeURL,
@@ -152,14 +164,14 @@ module.exports = (dependencies) => {
 					return { name, owner, repo };
 				};
 
-				let searchableArray = arrData.map( shit => {
+				let searchableArray = arrData.map( data => {
 
-						let default_branch = shit[0];
-						let parsed = JSON.parse(shit[1]);
+						let default_branch = data[0];
+						let pushed_at = data[1];
+						let parsed = JSON.parse(data[2]);
 						let owner = getProperties(parsed.url).owner;
 						let repo = getProperties(parsed.url).repo;
 						let repo_html_url = `https://github.com/${owner}/${repo}${access}`;
-					
 					
 					//URL to html of each repo
 					parsed.html_url = repo_html_url;
@@ -175,6 +187,7 @@ module.exports = (dependencies) => {
 						item.name = getProperties(item.path).name;
 						item.owner = getProperties(item.url).owner;
 						item.default_branch = default_branch;
+						item.pushed_at = pushed_at;
 						item.html_url = file_html_url;
 
 						return item;
@@ -198,7 +211,7 @@ module.exports = (dependencies) => {
 					});
 						return prev;
 				}, []);
-
+				console.log('sent to front end: ', searchableArray);
 				res.send(searchableArray);   
 			})
 			.catch(err => {
