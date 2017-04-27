@@ -88,7 +88,7 @@ module.exports = (dependencies) => {
   		githubUsername = user.username;
   		accessT = user.token;
   		access = `?access_token=${accessT}`;
-	  	let searchURL = `https://api.github.com/user/repos?page=1&per_page=5&access_token=${accessT}`;
+	  	let searchURL = `https://api.github.com/user/repos?page=1&per_page=100&access_token=${accessT}`;
 
 	  	return rp.get(
 				{
