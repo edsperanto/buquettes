@@ -12,7 +12,7 @@ module.exports = dependencies => {
 	const BoxSDK = require('box-node-sdk');
 	const {clientID, clientSecret} = credentials;
 	const sdk = new BoxSDK({clientID, clientSecret});
-	const redirectURL = 'http://localhost:9000/oauth2/box/redirect';
+	const redirectURL = 'http://api.stratospeer.com/oauth2/box/redirect';
 	var accessToken;
 
 	// check logged in
