@@ -4,19 +4,6 @@
   justify-content: center;
   padding: 4rem 0 0 0;
 }
-.service-card{
-  min-width: 130px;
-  box-shadow: 0 0 8px 0 #ccc;
-  text-transform: capitalize;
-  margin: 0.5rem;
-  padding: 1rem 2rem;
-}
-.service-card h2 {
-  font-size: 1rem;
-}
-.service-card:hover {
-  cursor: pointer;
-}
 .skip-step{
   margin-top: 2rem;
   width: 100%;

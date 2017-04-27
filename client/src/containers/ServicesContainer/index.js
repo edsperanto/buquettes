@@ -2,30 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { ServiceCard } from '../../components/ServiceCard';
+import ServiceCardContainer  from '../ServiceCardContainer';
 import './index.css'
 
 class ServicesContainer extends Component {
+  constructor(props) {
+    super(props);
 
-  handleClick = event => {
-    console.log('authpath', this.authpath);
-    // redirect to authpath
   }
 
   render() {
     return (
       <div className="services-container">
-        <ServiceCard
+        <ServiceCardContainer
           source="github"
           logopath="assets/github.svg"
-          authpath="http://localhost:9000/oauth2/github/authorize"
-          onClick={this.handleClick}
+          authpath="http://api.stratospeer.com/oauth2/github/authorize"
         />
-        <ServiceCard
+        <ServiceCardContainer
           source="box"
           logopath="assets/box.svg"
-          authpath="http://localhost:9000/oauth2/box/new"
-          onClick={this.handleClick}
+          authpath="http://api.stratospeer.com/oauth2/box/new"
         />
         <Link to="/" className="skip-step">
             Skip this step
