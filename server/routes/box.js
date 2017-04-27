@@ -159,33 +159,37 @@ module.exports = dependencies => {
 		const traverse = (id, par) => new Promise((resolve, _) => {
 			client.get(`/folders/${id}`)
 				.then(response => {
-					let {name, type, item_collection} = response;
+					let {name, type, item_collection, modified_at} = response;
 					let {total_count, entries} = item_collection;
-					par[name] = {id, children: {}};
+					let cutTZ = str => str.substring(0, str.length - 6);
+					par[name] = {id, modified_at, children: {}};
 					let children = par[name].children;
 					let entriesArr = Promise.all(entries.map(entry => {
 						if(entry.type === 'file') {
-							return {
-								[entry.name]: {
-									id: entry.id,
-								}
-							}
+							return client.get(`/files/${entry.id}`)
+								.then(response => ({
+									[entry.name]: {
+										id: response.id,
+										modified_at: cutTZ(response.modified_at)
+									}
+								}));
 						}else if(entry.type === 'folder') {
 							return traverse(entry.id, children)
 								.then(response => ({
 									[entry.name]: {
 										id: entry.id,
-										children: response
+										modified_at: cutTZ(response.modified_at),
+										children: response.children
 									}
 								}));
 						}
 					}));
 					entriesArr
 						.then(entriesRes => {
-							children = entriesRes.reduce((prev, curr) => {
+							par[name].children = entriesRes.reduce((prev, curr) => {
 								return Object.assign(prev, curr);
 							}, {});
-							resolve(children);
+							resolve(par[name]);
 						});
 				});
 		});
@@ -194,6 +198,12 @@ module.exports = dependencies => {
 				"directory_structure": response
 			}));
 		});
+	});
+
+	// DELETE access tokens
+	router.delete('/delete', (req, res) => {
+		BoxOAuth.destroy({where: {user_id: req.user.id}})
+			.then(_ => res.json(successJSON));
 	});
 
 	return router;
