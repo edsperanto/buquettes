@@ -200,6 +200,12 @@ module.exports = dependencies => {
 		});
 	});
 
+	// DELETE access tokens
+	router.delete('/delete', (req, res) => {
+		BoxOAuth.destroy({where: {user_id: req.user.id}})
+			.then(_ => res.json(successJSON));
+	});
+
 	return router;
 
 }
