@@ -112,9 +112,7 @@ module.exports = (dependencies) => {
 					let usersRepo = repo.owner.login;
 					let repoName = repo.name;
 					let default_branch = repo.default_branch;
-					let pushed_at = repo.pushed_at;
-					console.log('ahhh hsss pushit: ', pushed_at);
-					
+					let pushed_at = repo.pushed_at;					
 
 					return rp.get(
 						{
@@ -205,7 +203,7 @@ module.exports = (dependencies) => {
 					});
 				})
 				.reduce( (prev, curr) => {
-					curr.shift()					
+					curr.shift();					
 					curr.forEach( object => {
 						prev.push(object);
 					});
@@ -216,7 +214,7 @@ module.exports = (dependencies) => {
 			})
 			.catch(err => {
 				console.log('.then with blob: ', err);
-			})
+			});
 		})
 		.catch(err =>{
         console.log('.then with body: ', err);
