@@ -60,13 +60,13 @@ module.exports = (dependencies) => {
 		});
   });
 
-  router.delete('/delete', (req, res) => {
+  router.delete('/delete', (req, res
     GitHubOAuth.destroy({
         where: {
             user_id:req.user.id
         }
     });
-        res.send('You have officially removed authorization for StratosPeer to access your Github on your behalf. I hope you don\'t regret this.');
+          res.send('You have officially removed authorization for StratosPeer to access your Github on your behalf. I hope you don\'t regret this.');
   });
 
   router.get('/search', isAuthenticated, ( req, res ) => {
