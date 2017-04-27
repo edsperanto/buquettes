@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { updateView} from '../../actions';
 import { isLoggedIn } from '../../helpers/isLoggedIn';
 import './index.css';
 
@@ -9,6 +10,7 @@ class HomeContainer extends Component {
 
   componentWillMount() {
     isLoggedIn(this.props.currentUser, this.props);
+    this.props.onUpdateView(this.props.location.pathname)
   }
 
   render() {
@@ -22,13 +24,14 @@ class HomeContainer extends Component {
 
 function mapStateToProps(state) {
 	return {
-    currentUser: state.users.currentUser
+    currentUser: state.users.currentUser,
+    currentView: state.views.currentView
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-
+    onUpdateView: view => dispatch(updateView(view))
 	}
 }
 

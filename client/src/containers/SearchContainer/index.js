@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { addFile } from '../../actions';
+import { addFile, updateView } from '../../actions';
 import SearchInput from '../../components/SearchInput';
 import SearchButton from '../../components/SearchButton';
 import SearchResultsContainer from '../SearchResultsContainer';
 import { isLoggedIn } from '../../helpers/isLoggedIn';
+import './index.css';
 
 let files = [
   {
@@ -65,6 +66,8 @@ class SearchContainer extends Component {
   }
 
   componentWillMount() {
+    this.props.onUpdateView(this.props.location.pathname);
+
     isLoggedIn(this.props.currentUser, this.props);
     files.map( file => {
       return this.props.onAddFile(
@@ -80,12 +83,14 @@ class SearchContainer extends Component {
   render(){
     return (
       <div className="search-container">
-        <SearchInput
-          handleChange={this.handleChange}
-        />
-        <SearchButton
-          sendData={this.sendData}
-        />
+        <div className="search-form">
+          <SearchInput
+            handleChange={this.handleChange}
+          />
+          <SearchButton
+            sendData={this.sendData}
+          />
+        </div>
         <SearchResultsContainer
           query={this.state.query}
           filterResults={this.filterResults}
@@ -112,7 +117,8 @@ const mapDispatchToProps = (dispatch) => {
         createdAt,
         lastModified
       ));
-    }
+    },
+    onUpdateView: view => dispatch(updateView(view))
   }
 };
 
