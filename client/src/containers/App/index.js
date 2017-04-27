@@ -11,7 +11,8 @@ import HomeContainer from '../HomeContainer';
 import LoginContainer from '../LoginContainer';
 import ProfileContainer from '../ProfileContainer';
 import SignUpContainer from '../SignUpContainer';
-import SearchContainer from '../SearchContainer';
+import SearchContainer from '../SearchContainer'
+import ServicesContainer from '../ServicesContainer'
 import FoldersContainer from '../FoldersContainer';
 
 import { updateView } from '../../actions';
@@ -34,6 +35,7 @@ class App extends Component {
 						<Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
             <Route path="/search" component={SearchContainer} />
+            <Route path="/services" component={ServicesContainer} />
 						<Route path="/box/folders" component={FoldersContainer} />
 					</div>
 				</Router>
