@@ -22,7 +22,7 @@ class LoginContainer extends Component {
 				this.props.history.push('/', null);
 			}
 		});
-		xhr.open('POST', '/user/login', true);
+		xhr.open('POST', '/api/user/login', true);
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify((usr.indexOf('@') > -1) ?
 			({email: usr, password: pswd}) : ({username: usr, password: pswd})));

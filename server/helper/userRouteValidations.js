@@ -3,6 +3,12 @@ module.exports = function(dependencies) {
 	// extract dependencies
 	const {User, failJSON, bcrypt} = dependencies;
 
+	function lowercaseEmailAndUsername(req, res, next) {
+		let {username, email} = req.body;
+		if(email) req.body.email = email.toLowerCase();
+		if(username) req.body.username = username.toLowerCase();
+	}
+
 	function idFromUsernameOrEmail(username, email, password) {
 		const errMsg = {"message": "incorrect username/email or password"};
 		return new Promise((resolve, reject) => {
@@ -53,6 +59,7 @@ module.exports = function(dependencies) {
 		idFromUsernameOrEmail,
 		checkExistingUsernameOrEmail,
 		usernameFromEmail,
+		lowercaseEmailAndUsername,
 	}
 
 }
