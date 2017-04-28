@@ -20,6 +20,8 @@ import './index.css';
 
 
 class App extends Component {
+
+
   render() {
     console.log('nav level view', this.props.currentView);
     return (
