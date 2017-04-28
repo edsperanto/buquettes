@@ -72,7 +72,7 @@ const helper = require('./helper')(helperDep);
 // user routes
 const userRoute = require('./routes/user');
 const userRouteDep = {express, bcrypt, saltRounds, passport, User, helper};
-app.use('/user', userRoute(userRouteDep));
+// app.use('/user', userRoute(userRouteDep));
 
 // oauth2 route
 const credentials = require('./.credentials');
@@ -81,7 +81,12 @@ const oauth2RouteDep = {
 	express, request, rp, qs, shallowClone, recursive, helper, 
 	credentials, User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth,
 }
-app.use('/oauth2', oauth2Route(oauth2RouteDep));
+// app.use('/oauth2', oauth2Route(oauth2RouteDep));
+
+// api route
+const apiRoute = require('./routes/api');
+const apiDep = Object.assign({}, userRouteDep, oauth2RouteDep);
+app.use('/api', apiRoute(apiDep));
 
 // 404 route
 app.get('/404', (req, res) => {
