@@ -12,7 +12,7 @@ module.exports = dependencies => {
 	const BoxSDK = require('box-node-sdk');
 	const {clientID, clientSecret} = credentials;
 	const sdk = new BoxSDK({clientID, clientSecret});
-	const redirectURL = 'http://api.stratospeer.com/oauth2/box/redirect';
+	const redirectURL = 'http://www.stratospeer.com/api/oauth2/box/redirect';
 	var accessToken;
 
 	// check logged in
@@ -65,8 +65,8 @@ module.exports = dependencies => {
 		tokenStore.read((err, oldToken) => {
 			if(err) {
 				let url = req.originalUrl.split('?')[0];
-				let notNew = url !== '/oauth2/box/new';
-				let notRedir = url !== '/oauth2/box/redirect';
+				let notNew = url !== '/api/oauth2/box/new';
+				let notRedir = url !== '/api/oauth2/box/redirect';
 				if(notNew && notRedir) res.json(failJSON(err));
 				else next();
 			}else{
