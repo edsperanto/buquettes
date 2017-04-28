@@ -60,7 +60,7 @@ module.exports = (dependencies) => {
 		});
   });
 
-  router.delete('/delete', (req, res) => {
+  router.delete('/delete', isAuthenticated, (req, res) => {
     GitHubOAuth.destroy({
         where: {
             user_id:req.user.id
