@@ -9,7 +9,7 @@ import './index.css';
 class HeaderContainer extends Component {
 	handleLogout = e => {
 		const xhr = new XMLHttpRequest();
-		xhr.open('GET', '/user/logout', true);
+		xhr.open('GET', '/api/user/logout', true);
 		xhr.send();
 		this.props.onLogoutCurr({authenticated: false});
 	}

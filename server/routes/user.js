@@ -16,8 +16,10 @@ module.exports = (dependencies) => {
 		idFromUsernameOrEmail,
 		checkExistingUsernameOrEmail,
 		usernameFromEmail,
+		lowercaseEmailAndUsername,
 	} = userRouteValidations;
 
+	router.use(lowercaseEmailAndUsername);
 	router.use(hashIncomingPassword);
 
 	router.get('/current', (req, res) => {
@@ -39,8 +41,8 @@ module.exports = (dependencies) => {
 	router.post('/login', 
 		usernameFromEmail, 
 		passport.authenticate('local', {
-			successRedirect: '/user/login/success',
-			failureRedirect: '/user/login/fail',
+			successRedirect: '/api/user/login/success',
+			failureRedirect: '/api/user/login/fail',
 		}
 	));
 

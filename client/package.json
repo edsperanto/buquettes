@@ -22,5 +22,5 @@
     "eject": "react-scripts eject",
     "electron": "electron ."
   },
-  "proxy": "http://api.stratospeer.com"
+  "proxy": "http://www.stratospeer.com/"
 }
