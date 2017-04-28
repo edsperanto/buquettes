@@ -84,7 +84,7 @@ const oauth2RouteDep = {
 // app.use('/oauth2', oauth2Route(oauth2RouteDep));
 
 // api route
-const apiRoute = require('./route/api');
+const apiRoute = require('./routes/api');
 const apiDep = Object.assign({}, userRouteDep, oauth2RouteDep);
 app.use('/api', apiRoute(apiDep));
 
