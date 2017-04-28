@@ -1,0 +1,10 @@
+.services-container{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  padding: 4rem 0 0 0;
+}
+.skip-step{
+  margin-top: 2rem;
+  width: 100%;
+}
