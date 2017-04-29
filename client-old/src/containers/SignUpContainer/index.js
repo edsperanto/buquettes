@@ -28,7 +28,7 @@ class SignUpContainer extends Component {
 			if(success) this.props.history.push('/login', null);
 			else this.props.onUpdateError(error);
 		});
-		xhr.open('POST', '/user/new', true);
+		xhr.open('POST', '/api/user/new', true);
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify(this.props.signupForm));
 	}

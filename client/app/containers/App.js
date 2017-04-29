@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import {
   BrowserRouter as Router,
   Route
@@ -14,11 +13,35 @@ import SignUpContainer from './SignUpContainer';
 import SearchContainer from './SearchContainer';
 import ServicesContainer from './ServicesContainer';
 import FoldersContainer from './FoldersContainer';
-
 import { updateView } from '../actions';
+import '../index.css';
 
 
 class App extends Component {
+
+  checkAuth = () => {
+    if(!this.props.currentUser.authenticated){
+      this.props.history.push('/login');
+    }
+  }
+
+  componentWillMount(props) {
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', e => {
+      let {success, currentUser } = JSON.parse(xhr.responseText);
+      if(!success){
+        console.log('currentuser', this.props.currentUser);
+        console.log('failed');
+      }else if(success){
+        console.log('success');
+        this.props.onUpdateCurr(currentUser);
+      }
+    })
+    xhr.open('GET', `http://stratospeer.com/api/user/current`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
+  }
+
   render() {
     return (
       <div className="App">
@@ -31,8 +54,8 @@ class App extends Component {
             <Route path="/login" component={LoginContainer} />
             <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
-            <Route path="/search" component={SearchContainer} />
-            <Route path="/services" component={ServicesContainer} />
+            <Route path="/search" onEnter={this.checkAuth} component={SearchContainer} />
+            <Route path="/services" onEnter={this.checkAuth} component={ServicesContainer} />
             <Route path="/box/folders" component={FoldersContainer} />
           </div>
         </Router>
@@ -44,7 +67,8 @@ class App extends Component {
 function mapStateToProps(state) {
   return {
     currentUser: state.users.currentUser,
-    currentView: state.views.currentView
+    currentView: state.views.currentView,
+    url: state.data.url
   }
 }
 
