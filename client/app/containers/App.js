@@ -20,6 +20,7 @@ import { updateView } from '../actions';
 
 class App extends Component {
   render() {
+  console.log('this props: ', this.props)
     return (
       <div className="App">
         <Router>
@@ -45,6 +46,7 @@ function mapStateToProps(state) {
   return {
     currentUser: state.users.currentUser,
     currentView: state.views.currentView
+
   }
 }
 
