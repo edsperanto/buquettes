@@ -13,7 +13,6 @@ class HeaderContainer extends Component {
 		this.props.onLogoutCurr({authenticated: false});
 	}
 	render() {
-    console.log('HIDDEN?', this.props.hidden);
     if(this.props.hidden)
       return null;
     if(!this.props.hidden)

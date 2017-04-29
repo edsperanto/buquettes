@@ -29,11 +29,7 @@ class App extends Component {
     let xhr = new XMLHttpRequest();
     xhr.addEventListener('load', e => {
       let {success, currentUser } = JSON.parse(xhr.responseText);
-      if(!success){
-        console.log('currentuser', this.props.currentUser);
-        console.log('failed');
-      }else if(success){
-        console.log('success');
+      if(success){
         this.props.onUpdateCurr(currentUser);
       }
     })
@@ -50,9 +46,9 @@ class App extends Component {
             <HeaderContainer
               hidden={this.props.currentView === '/search' ? true : false}
             />
-            <Route exact path="/" component={HomeContainer} />
+            <Route exact path="/" onEnter={this.checkAuth} component={HomeContainer} />
             <Route path="/login" component={LoginContainer} />
-            <Route path="/profile" component={ProfileContainer} />
+            <Route path="/profile" onEnter={this.checkAuth} component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
             <Route path="/search" onEnter={this.checkAuth} component={SearchContainer} />
             <Route path="/services" onEnter={this.checkAuth} component={ServicesContainer} />
