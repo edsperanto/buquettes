@@ -13,6 +13,9 @@ class HeaderContainer extends Component {
 		this.props.onLogoutCurr({authenticated: false});
 	}
 	render() {
+    if(this.props.hidden)
+      return null;
+    if(!this.props.hidden)
   		return (
   			<div id="header">
   				<Link to="/">

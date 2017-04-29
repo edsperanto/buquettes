@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import ServiceCardContainer  from '../ServiceCardContainer';
+
+import ServiceCard  from '../../components/ServiceCard';
 import './index.css'
 
 class ServicesContainer extends Component {
@@ -14,16 +15,16 @@ class ServicesContainer extends Component {
   render() {
     return (
       <div className="services-container">
-        <ServiceCardContainer
-          source="github"
-          logopath="assets/github.svg"
-          authpath="http://api.stratospeer.com/oauth2/github/authorize"
-        />
-        <ServiceCardContainer
-          source="box"
-          logopath="assets/box.svg"
-          authpath="http://api.stratospeer.com/oauth2/box/new"
-        />
+          <ServiceCard
+            source="github"
+            logopath="assets/github.svg"
+            authpath="/api/oauth2/github/authorize"
+          />
+          <ServiceCard
+            source="box"
+            logopath="assets/box.svg"
+            authpath="/api/oauth2/box/new"
+          />
         <Link to="/" className="skip-step">
             Skip this step
         </Link>

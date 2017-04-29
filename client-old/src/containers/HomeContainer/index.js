@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { updateView} from '../../actions';
-import { isLoggedIn } from '../../helpers/isLoggedIn';
 import './index.css';
 
 
 class HomeContainer extends Component {
 
   componentWillMount() {
-    isLoggedIn(this.props.currentUser, this.props);
     this.props.onUpdateView(this.props.location.pathname)
   }
 

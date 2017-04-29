@@ -36,7 +36,7 @@ class LoginContainer extends Component {
 		return (
 			<div id="login">
 				<h1>Login</h1>
-				<form action="/user/login" method="post" onSubmit={this.submit}>
+				<form action="/api/user/login" method="post" onSubmit={this.submit}>
 					<div className="error" style={this.props.loginForm.error ?
 						({}) : ({display: "none"})}>
 						{this.props.loginForm.error}

@@ -32,7 +32,6 @@ class LoginContainer extends Component {
   }
 
 	render() {
-		console.log('this is our props: ', this.props);
 		return (
 			<div id="login">
 				<h1>Login</h1>

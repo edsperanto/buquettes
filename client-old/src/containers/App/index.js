@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { browserHistory } from 'react-router';
 import {
 	BrowserRouter as Router,
-	Route
+	Route,
+  Redirect
+
 } from 'react-router-dom';
 
 import HeaderContainer from '../HeaderContainer';
@@ -15,12 +17,31 @@ import SearchContainer from '../SearchContainer'
 import ServicesContainer from '../ServicesContainer'
 import FoldersContainer from '../FoldersContainer';
 
-import { updateView } from '../../actions';
+import { updateView, updateCurr } from '../../actions';
+console.log('redirect', Redirect);
 
 import './index.css';
-
-
+console.log('browserHistory', browserHistory);
 class App extends Component {
+
+  componentWillMount() {
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', e => {
+      let {success, currentUser } = JSON.parse(xhr.responseText);
+      console.log(success, currentUser);
+      if(!success){
+        console.log('fail', browserHistory);
+        this.setState('/login');
+      }else if(success){
+        console.log('success');
+        this.props.onUpdateCurr(currentUser);
+      }
+    })
+    xhr.open('GET', 'api/user/current', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
+  }
+
   render() {
     return (
       <div className="App">
@@ -52,7 +73,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onUpdateView: view => dispatch(updateView(view))
+    onUpdateView: view => dispatch(updateView(view)),
+    onUpdateCurr: curr => dispatch(updateCurr(curr))
   }
 }
 
