@@ -62,5 +62,6 @@
     "private:serve": "babel-node scripts/serve.js",
     "private:compile": "babel app/ --copy-files --out-dir build",
     "private:clean": "rimraf build"
-  }
+  },
+  "proxy": "http://www.stratospeer.com/"
 }

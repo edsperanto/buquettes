@@ -102,7 +102,8 @@ class SearchContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     files: state.files,
-    currentUser: state.users.currentUser
+    currentUser: state.users.currentUser,
+    url: state.data.url
   }
 };
 

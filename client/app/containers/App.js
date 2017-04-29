@@ -17,6 +17,7 @@ import FoldersContainer from './FoldersContainer';
 
 import { updateView } from '../actions';
 
+
 class App extends Component {
   render() {
     return (
@@ -55,5 +56,5 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(App);

@@ -14,7 +14,7 @@ class HomeContainer extends Component {
   render() {
 		return (
 			<div className="home-container">
-        You haven't added any files yet
+        "You haven\'t added any files yet"
 			</div>
 		);
 	}

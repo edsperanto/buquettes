@@ -16,12 +16,12 @@ class ServicesContainer extends Component {
         <ServiceCardContainer
           source="github"
           logopath="assets/github.svg"
-          authpath="http://api.stratospeer.com/oauth2/github/authorize"
+          authpath={`${this.props.url}/oauth2/github/authorize`}
         />
         <ServiceCardContainer
           source="box"
           logopath="assets/box.svg"
-          authpath="http://api.stratospeer.com/oauth2/box/new"
+          authpath={`${this.props.url}/oauth2/box/new`}
         />
         <Link to="/" className="skip-step">
             Skip this step
@@ -33,6 +33,7 @@ class ServicesContainer extends Component {
 
 function mapStateToProps(state) {
   return {
+    url: state.data.url
 
   }
 }
