@@ -8,7 +8,7 @@ import LoginBtn from '../components/LoginBtn';
 class HeaderContainer extends Component {
 	handleLogout = e => {
 		const xhr = new XMLHttpRequest();
-		xhr.open('GET', '/api/user/logout', true);
+		xhr.open('GET', `${this.props.url}/user/logout`, true);
 		xhr.send();
 		this.props.onLogoutCurr({authenticated: false});
 	}

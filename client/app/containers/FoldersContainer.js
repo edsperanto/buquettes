@@ -27,7 +27,7 @@ class FoldersContainer extends Component {
 				let parsedArr = genSearchableArr(directory_structure, '/Box');
 			}
 		});
-		xhr.open('GET', '/oauth2/box/folders', true);
+		xhr.open('GET', `${this.props.url}/oauth2/box/folders`, true);
 		xhr.send();
   }
   render(){
@@ -41,6 +41,7 @@ function mapStateToProps(state) {
 	return {
 		data: state.data.data.Box,
 		loginForm: state.users.loginForm,
+		url: state.data.url
 	}
 }
 
