@@ -9,14 +9,11 @@ import './index.css';
 class HeaderContainer extends Component {
 	handleLogout = e => {
 		const xhr = new XMLHttpRequest();
-		xhr.open('GET', '/user/logout', true);
+		xhr.open('GET', '/api/user/logout', true);
 		xhr.send();
 		this.props.onLogoutCurr({authenticated: false});
 	}
 	render() {
-    if(this.props.hidden)
-      return null;
-    if(!this.props.hidden)
   		return (
   			<div id="header">
   				<Link to="/">
@@ -33,6 +30,9 @@ class HeaderContainer extends Component {
   				</Link>
           <Link to="/search">
             <div className="menu-btn">Search</div>
+          </Link>
+          <Link to="/services">
+            <div className="menu-btn">services</div>
           </Link>
   			</div>
   		);
