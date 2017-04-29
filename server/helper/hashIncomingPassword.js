@@ -10,9 +10,9 @@ module.exports = (dependencies) => {
 			});
 		}
 		let {originalUrl: url, method, body: {newPassword}} = req;
-		if(url === '/user/new' && method === 'POST') 
+		if(url === '/api/user/new' && method === 'POST') 
 			hashThis('password');
-		else if(url === '/user/update' && method === 'PUT' && newPassword) 
+		else if(url === '/api/user/update' && method === 'PUT' && newPassword) 
 			hashThis('newPassword');
 		else next();
 	}
