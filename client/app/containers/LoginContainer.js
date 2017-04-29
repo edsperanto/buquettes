@@ -21,7 +21,7 @@ class LoginContainer extends Component {
 				this.props.history.push('/', null);
 			}
 		});
-		xhr.open('POST', '/api/user/login', true);
+		xhr.open('POST', `${this.props.url}/user/login`, true);
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify((usr.indexOf('@') > -1) ?
 			({email: usr, password: pswd}) : ({username: usr, password: pswd})));
@@ -32,10 +32,11 @@ class LoginContainer extends Component {
   }
 
 	render() {
+		console.log('this is our props: ', this.props);
 		return (
 			<div id="login">
 				<h1>Login</h1>
-				<form action="/user/login" method="post" onSubmit={this.submit}>
+				<form action={`${this.props.url}/user/login`} method="post" onSubmit={this.submit}>
 					<div className="error" style={this.props.loginForm.error ?
 						({}) : ({display: "none"})}>
 						{this.props.loginForm.error}
@@ -61,7 +62,8 @@ class LoginContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		loginForm: state.users.loginForm,
-    currentView: state.views.currentView
+    currentView: state.views.currentView,
+    url: state.data.url
 	}
 }
 

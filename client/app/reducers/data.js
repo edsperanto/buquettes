@@ -3,8 +3,9 @@ import {UPDATE_BOX_DATA} from '../actions';
 const initialState = {
 	data: {
 		Box: []
-	}
-}
+	},
+	url: `http://www.stratospeer.com/api`
+};
 
 function data(state = initialState, action) {
 	switch(action.type) {
