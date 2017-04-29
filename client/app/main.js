@@ -1,6 +1,6 @@
 import path from 'path';
 import url from 'url';
-import {app, crashReporter, BrowserWindow, Menu} from 'electron';
+import { app, crashReporter, BrowserWindow, Menu, globalShortcut } from 'electron';
 
 const isDevelopment = (process.env.NODE_ENV === 'development');
 
@@ -43,12 +43,12 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({ 
-    width: 1000, 
+  mainWindow = new BrowserWindow({
+    width: 1000,
     height: 800,
     minWidth: 640,
     minHeight: 480,
-    show: false 
+    show: false
   });
 
   mainWindow.loadURL(url.format({
@@ -56,6 +56,10 @@ app.on('ready', async () => {
     protocol: 'file:',
     slashes: true
   }));
+
+  const quickShortcut = globalShortcut.register('CommandOrControl+G', () => {
+    mainWindow.show();
+  });
 
   // show window once on first load
   mainWindow.webContents.once('did-finish-load', () => {
@@ -78,7 +82,7 @@ app.on('ready', async () => {
       app.on('activate', () => {
         mainWindow.show();
       });
-      
+
       app.on('before-quit', () => {
         forceQuit = true;
       });

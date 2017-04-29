@@ -5,7 +5,6 @@ import { addFile, updateView } from '../../actions';
 import SearchInput from '../../components/SearchInput';
 import SearchButton from '../../components/SearchButton';
 import SearchResultsContainer from '../SearchResultsContainer';
-import { isLoggedIn } from '../../helpers/isLoggedIn';
 import './index.css';
 
 let files = [
@@ -67,8 +66,6 @@ class SearchContainer extends Component {
 
   componentWillMount() {
     this.props.onUpdateView(this.props.location.pathname);
-
-    isLoggedIn(this.props.currentUser, this.props);
     files.map( file => {
       return this.props.onAddFile(
         file.id,
@@ -81,6 +78,7 @@ class SearchContainer extends Component {
   }
 
   render(){
+    console.log('props', this.props);
     return (
       <div className="search-container">
         <div className="search-form">
