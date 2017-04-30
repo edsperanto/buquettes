@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { updateUsr, updatePswd, updateErr, updateCurr, updateView } from '../../actions';
-import './index.css';
 
 class LoginContainer extends Component {
 
