@@ -14,13 +14,13 @@ module.exports = (dependencies) => {
 	let userRepoURL = `https://github.com/login/oauth/authorize?scope=repo&client_id=${client_id}`;
 
 	//check if logged in
-	router.use(isAuthenticated);
-	let userIDtoUse = null;
-	// Routes
-	router.get('/authorize/', (req, res) => {
-		let userIDtoUse = req.query.id;
-		res.redirect(userRepoURL);
+	// router.use(isAuthenticated);
 
+	// Routes
+	let userIDtoUse = null;
+	router.get('/authorize', (req, res) => {
+		userIDtoUse = req.query.id;
+		res.redirect(userRepoURL);
 	});
 
 	router.get('/callback', ( req , res ) => {     
@@ -54,7 +54,7 @@ module.exports = (dependencies) => {
 								token: token,
 								username: username,
 								scope: 'repo',
-								user_id: req.user.id
+								user_id: userIDtoUse
 							});
 
 						resolve(parsedBody);
@@ -65,6 +65,8 @@ module.exports = (dependencies) => {
 			});
 		});
   });
+
+	router.use(isAuthenticated);
 
   router.delete('/delete', (req, res) => {
     GitHubOAuth.destroy({

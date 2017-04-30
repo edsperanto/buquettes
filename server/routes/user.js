@@ -47,9 +47,9 @@ module.exports = (dependencies) => {
 	));
 
 	router.get('/login/success', (req, res) => {
-		let {username, email, first_name, last_name} = req.user.dataValues;
+		let {id, username, email, first_name, last_name} = req.user.dataValues;
 		res.json(Object.assign({}, successJSON, {
-			"currentUser": {username, email, first_name, last_name}
+			"currentUser": {id, username, email, first_name, last_name}
 		}));
 	});
 
