@@ -44,7 +44,7 @@ class HeaderContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		currentUser: state.users.currentUser,
-		history: state.history,
+		history: state.history
 	}
 }
 
