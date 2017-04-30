@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+
+import { electronApp } from 'electron';
+import electron_data from 'electron-data';
 import {
 	BrowserRouter as Router,
 	Route,
