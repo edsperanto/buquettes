@@ -16,12 +16,12 @@ class ServicesContainer extends Component {
       <div className="services-container">
         <ServiceCardContainer
           source="github"
-          logopath="assets/github.svg"
+          logopath="../assets/github.svg"
           authpath={`${this.props.url}/oauth2/github/authorize`}
         />
         <ServiceCardContainer
           source="box"
-          logopath="assets/box.svg"
+          logopath="../assets/box.svg"
           authpath={`${this.props.url}/oauth2/box/new`}
         />
         <Link to="/" className="skip-step">

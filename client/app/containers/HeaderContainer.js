@@ -43,6 +43,7 @@ class HeaderContainer extends Component {
 
 function mapStateToProps(state) {
 	return {
+		url: state.data.url,
 		currentUser: state.users.currentUser,
 		history: state.history
 	}
