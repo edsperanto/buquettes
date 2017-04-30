@@ -27,7 +27,7 @@ class App extends Component {
         this.props.onUpdateCurr(currentUser);
       }
     })
-    xhr.open('GET', `http://stratospeer.com/api/user/current`, true);
+    xhr.open('GET', `https://stratospeer.com/api/user/current`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
   }

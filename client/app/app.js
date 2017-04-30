@@ -39,15 +39,6 @@ let files = [
     lastModified: "April 27, 2022"
   }
 ];
-  // const xhr = new XMLHttpRequest();
-  //   xhr.addEventListener('load', e => {
-  //     let data = JSON.parse(xhr.responseText);
-
-  //   });
-  //   xhr.open('POST', `${this.props.url}/user/new`, true);
-  //   xhr.setRequestHeader('Content-Type', 'application/json');
-  //   xhr.send(JSON.stringify(this.props.signupForm));
-  // }
 
   let things = function getAPIData(files) {
   return new Promise( (resolve, reject ) => {
