@@ -77,7 +77,7 @@ app.use('/user', userRoute(userRouteDep));
 const credentials = require('./.credentials');
 const oauth2Route = require('./routes/oauth2');
 const oauth2RouteDep = {
-	express, request, rp, qs, recursive, helper, 
+	express, request, rp, qs, recursive, helper, passport,
 	credentials, User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth,
 }
 app.use('/oauth2', oauth2Route(oauth2RouteDep));
