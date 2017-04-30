@@ -4,11 +4,17 @@ import { connect } from 'react-redux';
 import { updateView} from '../actions';
 import { isLoggedIn } from '../helpers/isLoggedIn';
 
+const {webFrame} = require('electron');
+const open = require("open");
+
+
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+
 
   serviceStates = function getServiceState(user) {
   return new Promise( (resolve, reject ) => {
@@ -25,35 +31,36 @@ class HomeContainer extends Component {
   });
 };
 
-  componentWillMount() {
+  componentWillMount() {    
+    webFrame.registerURLSchemeAsBypassingCSP("'unsafe-inline'");
     this.serviceStates(this.props.currentUser)
     isLoggedIn(this.props.currentUser, this.props);
     this.props.onUpdateView(this.props.location.pathname)
   }
 
   render() {
-		return (
-			<div className="home-container">
+    return (
+      <div className="home-container">
         "You haven\'t added any files yet"
-			</div>
-		);
-	}
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-	return {
+  return {
     currentUser: state.users.currentUser,
     currentView: state.views.currentView
-	}
+  }
 }
 
 function mapDispatchToProps(dispatch) {
-	return {
+  return {
     onUpdateView: view => dispatch(updateView(view))
-	}
+  }
 }
 
 export default connect(
-	mapStateToProps,
-	mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(HomeContainer);

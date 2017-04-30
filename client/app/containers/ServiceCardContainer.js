@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+var open = require('open');
 
 class ServiceCardContainer extends Component {
   handleClick = event => {
-    window.location.assign(this.props.authpath);
+    //window.location.assign(this.props.authpath);
+    open(this.props.authpath+'?id=2')
+
   }
 
   render(){
