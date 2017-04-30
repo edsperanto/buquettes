@@ -19,12 +19,6 @@ import '../index.css';
 
 class App extends Component {
 
-  checkAuth = () => {
-    if(!this.props.currentUser.authenticated){
-      this.props.history.push('/login');
-    }
-  }
-
   componentWillMount(props) {
     let xhr = new XMLHttpRequest();
     xhr.addEventListener('load', e => {
@@ -46,12 +40,12 @@ class App extends Component {
             <HeaderContainer
               hidden={this.props.currentView === '/search' ? true : false}
             />
-            <Route exact path="/" onEnter={this.checkAuth} component={HomeContainer} />
+            <Route exact path="/" component={HomeContainer} />
             <Route path="/login" component={LoginContainer} />
-            <Route path="/profile" onEnter={this.checkAuth} component={ProfileContainer} />
+            <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
-            <Route path="/search" onEnter={this.checkAuth} component={SearchContainer} />
-            <Route path="/services" onEnter={this.checkAuth} component={ServicesContainer} />
+            <Route path="/search" component={SearchContainer} />
+            <Route path="/services" component={ServicesContainer} />
             <Route path="/box/folders" component={FoldersContainer} />
           </div>
         </Router>
