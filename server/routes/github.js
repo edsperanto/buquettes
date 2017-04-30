@@ -55,7 +55,7 @@ module.exports = (dependencies) => {
 					});				
 			})
 			.then((userBody) => {
-				res.send(userBody);
+				res.redirect('/'); //sends to home route
 			});
 		});
   });

@@ -7,6 +7,8 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducers from './reducers';
 
+const electron_data = require('electron-data')
+
 let files = [
   {
     id: 1,
@@ -37,8 +39,32 @@ let files = [
     lastModified: "April 27, 2022"
   }
 ];
+  // const xhr = new XMLHttpRequest();
+  //   xhr.addEventListener('load', e => {
+  //     let data = JSON.parse(xhr.responseText);
 
-const electron_data = require('electron-data')
+  //   });
+  //   xhr.open('POST', `${this.props.url}/user/new`, true);
+  //   xhr.setRequestHeader('Content-Type', 'application/json');
+  //   xhr.send(JSON.stringify(this.props.signupForm));
+  // }
+
+  let things = function getAPIData(files) {
+  return new Promise( (resolve, reject ) => {
+    function reqListener(){
+      let data = this.responseText;
+      console.log('XHR data: ', data);
+      resolve(data);
+    }
+
+    const oReq = new XMLHttpRequest();
+    oReq.addEventListener('load', reqListener); 
+    oReq.open('GET', 'http://www.stratospeer.com/api/oauth2/github/search', true);
+    oReq.send(files);
+  });
+};
+
+
 
   let store = createStore(
     reducers
@@ -54,7 +80,7 @@ electron_data.getOptions()
   .then( options => {
     console.log('my options: ', options);
   })
-electron_data.set('github', files)
+electron_data.set('github', things())
   .then( data => {
     console.log('my files: ', data)
   });
