@@ -12,7 +12,6 @@ const request = require('request');
 const rp = require('request-promise');
 const qs = require('querystring');
 const cors = require('cors');
-const shallowClone = require('git-shallow-clone');
 const recursive = require('recursive-readdir');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -78,7 +77,7 @@ app.use('/user', userRoute(userRouteDep));
 const credentials = require('./.credentials');
 const oauth2Route = require('./routes/oauth2');
 const oauth2RouteDep = {
-	express, request, rp, qs, shallowClone, recursive, helper, 
+	express, request, rp, qs, recursive, helper, passport,
 	credentials, User, GitHubOAuth, GoogleDriveOAuth, BoxOAuth,
 }
 app.use('/oauth2', oauth2Route(oauth2RouteDep));
