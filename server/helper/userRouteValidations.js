@@ -7,6 +7,7 @@ module.exports = function(dependencies) {
 		let {username, email} = req.body;
 		if(email) req.body.email = email.toLowerCase();
 		if(username) req.body.username = username.toLowerCase();
+		next();
 	}
 
 	function idFromUsernameOrEmail(username, email, password) {
