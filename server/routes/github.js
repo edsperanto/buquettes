@@ -57,7 +57,7 @@ module.exports = (dependencies) => {
 					});				
 			})
 			.then((userBody) => {
-				res.redirect('/'); //sends to home route
+				res.redirect('http://localhost'); //sends to home route
 			});
 		});
   });

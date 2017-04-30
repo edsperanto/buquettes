@@ -109,7 +109,8 @@ module.exports = dependencies => {
 			let tokenStore = new req.TokenStore();
 			if(token.error) res.json(failJSON(token.error_description));
 			else tokenStore.write(token, ({token}) => {
-				res.json(Object.assign({}, successJSON, {token: JSON.parse(token)}));
+				// res.json(Object.assign({}, successJSON, {token: JSON.parse(token)}));
+				res.redirect('file:///');
 			});
 		}
 	});
