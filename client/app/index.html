@@ -2,12 +2,14 @@
 <html>
   <head>
     <title>My App</title>
-    <link rel="stylesheet" type="text/css" src="css/index.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/reset.css">
   </head>
   <body>
     <div id="root"></div>
 
     <script src="./app.js" data-container="#app"></script>
+
     <script>
       if (process.env.BROWSER_SYNC_CLIENT_URL) {
         const current = document.currentScript;
@@ -17,7 +19,5 @@
         current.parentNode.insertBefore(script, current);
       }
     </script>
-    <!-- for css -->
-
   </body>
 </html>

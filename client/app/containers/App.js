@@ -14,8 +14,6 @@ import SearchContainer from './SearchContainer';
 import ServicesContainer from './ServicesContainer';
 import FoldersContainer from './FoldersContainer';
 import { updateView } from '../actions';
-import '../index.css';
-
 
 class App extends Component {
 
