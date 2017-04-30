@@ -15,9 +15,13 @@ module.exports = (dependencies) => {
 
 	//check if logged in
 	router.use(isAuthenticated);
-
+	let userIDtoUse = null;
 	// Routes
-	router.get('/authorize', (_, res) => res.redirect(userRepoURL));
+	router.get('/authorize/', (req, res) => {
+		let userIDtoUse = req.query.id;
+		res.redirect(userRepoURL);
+
+	});
 
 	router.get('/callback', ( req , res ) => {     
 		let body = { client_id , client_secret, code: req.query.code };
