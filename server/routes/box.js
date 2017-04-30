@@ -12,7 +12,7 @@ module.exports = dependencies => {
 	const BoxSDK = require('box-node-sdk');
 	const {clientID, clientSecret} = credentials;
 	const sdk = new BoxSDK({clientID, clientSecret});
-	const redirectURL = 'http://www.stratospeer.com/api/oauth2/box/redirect';
+	const redirectURL = 'https://www.stratospeer.com/api/oauth2/box/redirect';
 	var accessToken;
 
 	// check logged in
@@ -26,8 +26,7 @@ module.exports = dependencies => {
 			}
 			read(callback) {
 				BoxOAuth.findAll({
-					username: req.user.username,
-					include: {model: User, as: 'user'}
+					where: {user_id: req.user ? req.user.id : userID}
 				})
 					.then(list => list.map(entry => entry.token))
 					.then(list => list.map(entry => JSON.parse(entry)))
@@ -39,8 +38,8 @@ module.exports = dependencies => {
 			}
 			write(token, callback) {
 				if(!token.error) BoxOAuth.create({
-					user_id: req.user.id,
-					token: JSON.stringify(token),
+					user_id: req.user ? req.user.id : userID,
+					token: JSON.stringify(token)
 				}).then(entry => callback(entry));
 			}
 			update(oldToken, newToken, callback) {
@@ -65,8 +64,8 @@ module.exports = dependencies => {
 		tokenStore.read((err, oldToken) => {
 			if(err) {
 				let url = req.originalUrl.split('?')[0];
-				let notNew = url !== '/api/oauth2/box/new';
-				let notRedir = url !== '/api/oauth2/box/redirect';
+				let notNew = url !== '/oauth2/box/new';
+				let notRedir = url !== '/oauth2/box/redirect';
 				if(notNew && notRedir) res.json(failJSON(err));
 				else next();
 			}else{
@@ -92,7 +91,11 @@ module.exports = dependencies => {
 	});
 
 	// GET token for OAuth2
-	router.get('/new', (req, res) => res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL + '&state=whatevs'));
+	let userID = null;
+	router.get('/new', (req, res) => {
+		userID = req.query.id;
+		res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL + '&state=whatevs')
+	});
 
 	// GET redirect for OAuth2
 	router.get('/redirect', (req, res) => {
@@ -106,13 +109,15 @@ module.exports = dependencies => {
 			});
 		}
 		function storeToken(token) {
-			let tokenStore = new req.TokenStore();
+			let tokenStore = new req.TokenStore(userID);
 			if(token.error) res.json(failJSON(token.error_description));
 			else tokenStore.write(token, ({token}) => {
 				res.json(Object.assign({}, successJSON, {token: JSON.parse(token)}));
 			});
 		}
 	});
+	
+	router.use(isAuthenticated);
 
 	// client helper
 	const BoxUrl = url => {
