@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { updateView, updateCurr } from '../actions';
+import { updateView } from '../actions';
 import { isLoggedIn } from '../helpers/isLoggedIn';
 
 // const {webFrame} = require('electron');
@@ -32,23 +32,9 @@ class HomeContainer extends Component {
 	};
 
   componentWillMount() {    
-		console.log('MOUNTING HEADER');
     // webFrame.registerURLSchemeAsBypassingCSP("'unsafe-inline'");
-		let xhr = new XMLHttpRequest();
-		xhr.addEventListener('load', e => {
-			console.log('LOADED');
-			console.log('response: ', xhr.responseText);
-			let {success, currentUser} = JSON.parse(xhr.responseText);
-			if(success) {
-				this.props.onUpdateCurr(currentUser);
-				this.serviceStates(this.props.currentUser)
-			}else{
-				isLoggedIn(this.props.currentUser, this.props);
-			}
-		});
-		xhr.open('GET', 'https://stratospeer.com/api/user/current', true);
-		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send();
+		isLoggedIn(this.props.currentUser, this.props);
+		this.serviceStates(this.props.currentUser)
     this.props.onUpdateView(this.props.location.pathname)
   }
 
@@ -70,8 +56,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onUpdateView: view => dispatch(updateView(view)),
-		onUpdateCurr: curr => dispatch(updateCurr(curr))
+    onUpdateView: view => dispatch(updateView(view))
   }
 }
 
