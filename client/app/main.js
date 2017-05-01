@@ -2,10 +2,15 @@ import path from 'path';
 import url from 'url';
 import { app, crashReporter, BrowserWindow, Menu, globalShortcut } from 'electron';
 
+import shell from 'shell';
+
+
 const isDevelopment = (process.env.NODE_ENV === 'development');
 
 let mainWindow = null;
 let forceQuit = false;
+
+//webFrame.registerURLSchemeAsBypassingCSP("script-src assets-cdn.github.com")
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -43,12 +48,18 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
     minWidth: 640,
     minHeight: 480,
-    show: false
+    show: false,
+    // webPreferences: {
+    //   webSecurity: false,
+    //   allowDisplayingInsecureContent: false,
+    //   allowRunningInsecureContent: false
+    // }
   });
 
   mainWindow.loadURL(url.format({
@@ -57,6 +68,12 @@ app.on('ready', async () => {
     slashes: true
   }));
 
+  // console.log('shell: ', shell)
+
+ 
+ 
+
+  //shell.openExternal("http://www.google.com")
   const quickShortcut = globalShortcut.register('CommandOrControl+G', () => {
     mainWindow.show();
   });
