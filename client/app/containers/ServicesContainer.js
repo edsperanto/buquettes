@@ -22,7 +22,7 @@ class ServicesContainer extends Component {
         <ServiceCardContainer
           source="box"
           logopath="assets/box.svg"
-          authpath={`${this.props.url}/oauth2/box/new`}
+          authpath={`${this.props.url}/oauth2/box/authorize`}
         />
         <Link to="/" className="skip-step">
             Skip this step

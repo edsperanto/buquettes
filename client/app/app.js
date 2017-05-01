@@ -47,7 +47,7 @@ const electron_data = require('electron-data')
 electron_data.config(
   {
     filename: 'service-data',
-    path: '/home/steven/Desktop/TestFolder',
+    path: '/Users/edward/Desktop/TestFolder',
     prettysave: true
   });
 electron_data.getOptions()
