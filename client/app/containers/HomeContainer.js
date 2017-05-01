@@ -7,6 +7,9 @@ import { isLoggedIn } from '../helpers/isLoggedIn';
 //lodash
 const _flattenDeep = require('lodash.flattendeep');
 
+//electron
+const electron_data = require('electron-data');
+
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
@@ -28,12 +31,10 @@ class HomeContainer extends Component {
   });
 };
 
-getServiceData = function getServiceData(service) {
+getSingleServiceData = function getSingleServiceData(service) {
   return new Promise( (resolve, reject ) => {
     function reqListener(){
       let data = this.responseText;
-      console.log('what type? ',  data)
-      console.log('files? ', data);
       resolve(data);
     }
     const oReq = new XMLHttpRequest();
@@ -43,21 +44,19 @@ getServiceData = function getServiceData(service) {
   });
 }
 
-  checkServiceStates = () => {
-    this.serviceStates(this.props.currentUser).then(obj=> {
-      console.log('makin sure this is JSON: ', obj);
+  allServiceFiles = () => {
+    return this.serviceStates(this.props.currentUser).then(obj=> {
       return Promise.all(Object.keys(obj).filter(key => {
-        return obj[key] === true
-      })
-      .map(service => {
-        console.log('service name: ', service)
-        console.log('what service is this? ', this.getServiceData(service))
-        return this.getServiceData(service)
-      })
+          return obj[key] === true
+        })
+        .map(service => {
+          console.log('mapping results')
+          return this.getSingleServiceData(service)
+        })
       )
       .then(allResults => {
-        console.log('allresults: ', allResults)
-        _flattenDeep(allResults);
+        console.log('have results')
+        return _flattenDeep(allResults);
       })
       .catch(err=>{
         console.log('allresults err0r: ', err)
@@ -69,6 +68,34 @@ getServiceData = function getServiceData(service) {
 
   }
 
+  serviceFilesToElectron = () =>{
+    this.allServiceFiles().then(files =>{
+      console.log('about to write to file')
+      electron_data.config(
+        {
+          filename: 'service_data',
+          path: '/home/steven/Desktop/TestFolder',
+          prettysave: true
+        });
+      electron_data.getOptions()
+        .then( options => {
+          console.log('my options: ', options);
+        })
+      electron_data.set('services', files)
+        .then( data => {
+          // console.log('my files: ', data)
+        });
+      electron_data.save()
+        .then( error => {
+          console.log('error: ', error);
+        })
+      electron_data.get('services')
+        .then( value => {
+          console.log('value of files: ', value)
+      })
+    })
+  }
+
   componentWillMount(){    
     this.serviceStates(this.props.currentUser);
     isLoggedIn(this.props.currentUser, this.props);
@@ -76,7 +103,7 @@ getServiceData = function getServiceData(service) {
   }
 
   componentDidMount(){
-    this.checkServiceStates()
+    this.serviceFilesToElectron()
   }
 
   render() {
