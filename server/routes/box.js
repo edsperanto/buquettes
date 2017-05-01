@@ -92,7 +92,7 @@ module.exports = dependencies => {
 
 	// GET token for OAuth2
 	let userID = null;
-	router.get('/new', (req, res) => {
+	router.get('/authorize', (req, res) => {
 		userID = req.query.id;
 		res.redirect('https://account.box.com/api/oauth2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL + '&state=whatevs')
 	});
