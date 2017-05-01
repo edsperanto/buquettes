@@ -13,11 +13,17 @@ module.exports = (dependencies) => {
 
 	let userRepoURL = `https://github.com/login/oauth/authorize?scope=repo&client_id=${client_id}`;
 
+	//check if logged in
+	// router.use(isAuthenticated);
 
 	// Routes
-	router.get('/authorize', isAuthenticated, (_, res) => res.redirect(userRepoURL));
+	let userIDtoUse = null;
+	router.get('/authorize', (req, res) => {
+		userIDtoUse = req.query.id;
+		res.redirect(userRepoURL);
+	});
 
-	router.get('/callback', isAuthenticated, ( req , res ) => {     
+	router.get('/redirect', ( req , res ) => {     
 		let body = { client_id , client_secret, code: req.query.code };
 
 		let userPromise = new Promise( ( resolve , reject ) => {
@@ -48,19 +54,21 @@ module.exports = (dependencies) => {
 								token: token,
 								username: username,
 								scope: 'repo',
-								user_id: req.user.id
+								user_id: userIDtoUse
 							});
 
 						resolve(parsedBody);
 					});				
 			})
 			.then((userBody) => {
-				res.send(userBody);
+				res.redirect('http://localhost'); //sends to home route
 			});
 		});
   });
 
-  router.delete('/delete', isAuthenticated, (req, res) => {
+	router.use(isAuthenticated);
+
+  router.delete('/delete', (req, res) => {
     GitHubOAuth.destroy({
         where: {
             user_id:req.user.id
@@ -69,7 +77,7 @@ module.exports = (dependencies) => {
           res.send('You have officially removed authorization for StratosPeer to access your Github on your behalf. I hope you don\'t regret this.');
   });
 
-  router.get('/search', isAuthenticated, ( req, res ) => {
+  router.get('/search', ( req, res ) => {
   	
   	// const files = [];
   	var accessT;

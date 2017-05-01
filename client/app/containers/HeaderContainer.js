@@ -2,10 +2,26 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { logoutCurr } from '../actions';
+import { logoutCurr, updateCurr } from '../actions';
+import { isLoggedIn } from '../helpers/isLoggedIn';
 import LoginBtn from '../components/LoginBtn';
 
 class HeaderContainer extends Component {
+
+	componentWillMount() {
+		console.log('MOUNTING HEADER');
+		let xhr = new XMLHttpRequest();
+		xhr.addEventListener('load', e => {
+			console.log('LOADED');
+			console.log('response: ', xhr.responseText);
+			let {success, currentUser} = JSON.parse(xhr.responseText);
+			if(success) this.props.onUpdateCurr(currentUser);
+		});
+		xhr.open('GET', 'https://stratospeer.com/api/user/current', true);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.send();
+	}
+
 	handleLogout = e => {
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', `${this.props.url}/user/logout`, true);
@@ -43,6 +59,7 @@ class HeaderContainer extends Component {
 
 function mapStateToProps(state) {
 	return {
+		url: state.data.url,
 		currentUser: state.users.currentUser,
 		history: state.history
 	}
@@ -50,7 +67,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onLogoutCurr: curr => dispatch(logoutCurr(curr))
+		onLogoutCurr: curr => dispatch(logoutCurr(curr)),
+		onUpdateCurr: curr => dispatch(updateCurr(curr))
 	}
 }
 

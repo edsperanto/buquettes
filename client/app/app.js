@@ -6,6 +6,8 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducers from './reducers';
 
+const electron_data = require('electron-data')
+
 let files = [
   {
     id: 1,
@@ -37,7 +39,22 @@ let files = [
   }
 ];
 
-const electron_data = require('electron-data')
+  let things = function getAPIData(files) {
+  return new Promise( (resolve, reject ) => {
+    function reqListener(){
+      let data = this.responseText;
+      console.log('XHR data: ', data);
+      resolve(data);
+    }
+
+    const oReq = new XMLHttpRequest();
+    oReq.addEventListener('load', reqListener); 
+    oReq.open('GET', 'http://www.stratospeer.com/api/oauth2/github/search', true);
+    oReq.send(files);
+  });
+};
+
+
 
   let store = createStore(
     reducers
@@ -46,14 +63,14 @@ const electron_data = require('electron-data')
 electron_data.config(
   {
     filename: 'service-data',
-    path: '/home/steven/Desktop/TestFolder',
+    path: '/Users/edward/Desktop/TestFolder',
     prettysave: true
   });
 electron_data.getOptions()
   .then( options => {
     console.log('my options: ', options);
   })
-electron_data.set('github', files)
+electron_data.set('github', things())
   .then( data => {
     console.log('my files: ', data)
   });

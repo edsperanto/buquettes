@@ -4,7 +4,7 @@ const initialState = {
 	data: {
 		Box: []
 	},
-	url: `http://www.stratospeer.com/api`
+	url: `https://www.stratospeer.com/api`
 };
 
 function data(state = initialState, action) {

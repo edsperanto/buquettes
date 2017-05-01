@@ -17,6 +17,7 @@ import { updateView } from '../actions';
 
 class App extends Component {
 
+	/*
   componentWillMount(props) {
     let xhr = new XMLHttpRequest();
     xhr.addEventListener('load', e => {
@@ -25,10 +26,11 @@ class App extends Component {
         this.props.onUpdateCurr(currentUser);
       }
     })
-    xhr.open('GET', `http://stratospeer.com/api/user/current`, true);
+    xhr.open('GET', 'https://stratospeer.com/api/user/current', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
   }
+	*/
 
   render() {
     return (
@@ -62,7 +64,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onUpdateView: view => dispatch(updateView(view))
+    onUpdateView: view => dispatch(updateView(view)),
+		onUpdateCurr: curr => dispatch(updateCurr(curr))
   }
 }
 
