@@ -5,7 +5,6 @@ import { addFile, updateView } from '../actions';
 import SearchInput from '../components/SearchInput';
 import SearchButton from '../components/SearchButton';
 import SearchResultsContainer from './SearchResultsContainer';
-import { isLoggedIn } from '../helpers/isLoggedIn';
 
 let files = [
   {
@@ -67,7 +66,6 @@ class SearchContainer extends Component {
   componentWillMount() {
     this.props.onUpdateView(this.props.location.pathname);
 
-    isLoggedIn(this.props.currentUser, this.props);
     files.map( file => {
       return this.props.onAddFile(
         file.id,

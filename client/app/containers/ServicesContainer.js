@@ -3,13 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import ServiceCardContainer  from './ServiceCardContainer';
-import { isLoggedIn } from '../helpers/isLoggedIn';
 
 class ServicesContainer extends Component {
-
-  componentWillMount() {
-    isLoggedIn(this.props.currentUser, this.props);
-  }
 
   render() {
     return (

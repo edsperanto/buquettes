@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { logoutCurr, updateCurr } from '../actions';
-import { isLoggedIn } from '../helpers/isLoggedIn';
 import LoginBtn from '../components/LoginBtn';
 
 class HeaderContainer extends Component {

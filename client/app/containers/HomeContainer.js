@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { updateView } from '../actions';
-import { isLoggedIn } from '../helpers/isLoggedIn';
 
 //lodash
 const _flattenDeep = require('lodash.flattendeep');
@@ -64,7 +63,6 @@ getServiceData = function getServiceData(service) {
   componentWillMount() {    
     // webFrame.registerURLSchemeAsBypassingCSP("'unsafe-inline'");
     this.getServiceStates(this.props.currentUser)
-    isLoggedIn(this.props.currentUser, this.props);
     this.props.onUpdateView(this.props.location.pathname)
   }
 
