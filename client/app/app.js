@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import reducers from './reducers';
 
-const electron_data = require('electron-data')
+const electron_data = require('electron-data');
 
 let files = [
   {
@@ -61,26 +61,26 @@ let files = [
     reducers
   );
 
-// electron_data.config(
-//   {
-//     filename: 'service-data',
-//     path: '/home/steven/Desktop/TestFolder',
-//     prettysave: true
-//   });
-// electron_data.getOptions()
-//   .then( options => {
-//     console.log('my options: ', options);
-//   })
-// electron_data.set('github', things())
-//   .then( data => {
-//     console.log('my files: ', data)
-//   });
-// electron_data.save()
-//   .then( error => {
-//     console.log('error: ', error);
-//   })
-// electron_data.get('github')
-//   .then( value => {
+electron_data.config(
+  {
+    filename: 'service-data',
+    path: '/Users/edward/Desktop/TestFolder',
+    prettysave: true
+  });
+electron_data.getOptions()
+  .then( options => {
+    console.log('my options: ', options);
+  })
+electron_data.set('github', things())
+  .then( data => {
+    console.log('my files: ', data)
+  });
+electron_data.save()
+  .then( error => {
+    console.log('error: ', error);
+  })
+electron_data.get('github')
+  .then( value => {
 
     ReactDOM.render(
       <Provider store={store}>

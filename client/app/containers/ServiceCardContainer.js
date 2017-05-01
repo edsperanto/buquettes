@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-var open = require('open');
+import {connect} from 'react-redux';
+
+import open from 'open';
 
 class ServiceCardContainer extends Component {
   handleClick = event => {
     //window.location.assign(this.props.authpath);
-    open(this.props.authpath+'?id=2')
-
+    open(this.props.authpath + '?id=' + this.props.currentUser.id);
   }
-
   render(){
     return(
       <div
         className="service-card"
-        authpath={this.props.authpath}
         onClick={this.handleClick}>
         <div className="logo">
           <img src={this.props.logopath} alt={this.props.source}/>
@@ -23,4 +22,13 @@ class ServiceCardContainer extends Component {
   }
 }
 
-export default ServiceCardContainer;
+function mapStateToProps(state) {
+	return {
+		currentUser: state.users.currentUser
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	null
+)(ServiceCardContainer);

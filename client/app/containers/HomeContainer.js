@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { updateView} from '../actions';
+import { updateView } from '../actions';
 import { isLoggedIn } from '../helpers/isLoggedIn';
 
 //lodash
 const _flattenDeep = require('lodash.flattendeep');
-
-// const {webFrame} = require('electron');
-// const open = require("open");
-
 
 class HomeContainer extends Component {
   constructor(props) {
