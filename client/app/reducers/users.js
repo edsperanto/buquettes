@@ -65,6 +65,7 @@ function users(state = initialState, action) {
     case UPDATE_CURR:
       return Object.assign({}, state, {
         currentUser: {
+					id: action.id,
           username: action.username,
           email: action.email,
           first_name: action.first_name,

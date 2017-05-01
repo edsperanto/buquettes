@@ -23,7 +23,7 @@ module.exports = (dependencies) => {
 		res.redirect(userRepoURL);
 	});
 
-	router.get('/callback', ( req , res ) => {     
+	router.get('/redirect', ( req , res ) => {     
 		let body = { client_id , client_secret, code: req.query.code };
 
 		let userPromise = new Promise( ( resolve , reject ) => {
@@ -61,7 +61,7 @@ module.exports = (dependencies) => {
 					});				
 			})
 			.then((userBody) => {
-				res.send(userBody);
+				res.redirect('http://localhost'); //sends to home route
 			});
 		});
   });

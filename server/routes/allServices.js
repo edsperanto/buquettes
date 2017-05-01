@@ -12,15 +12,6 @@ module.exports = dependencies => {
   //check if signed in
   router.use(isAuthenticated);
 
-  // router.use((req, res, next) => {
-  //   req.user = {
-  //     username: 'stevencable',
-  //     password: '@Steven12',
-  //     id: 3
-  //   };
-  //   next();
-  // });
-
   router.get('/', ( req, res ) => {
     if(req.user){
       Promise.all( 
@@ -49,7 +40,6 @@ module.exports = dependencies => {
         console.log('serviceObj is not working ', err);
       });
     }
-    // res.send('yay');
 
   });
   return router;
