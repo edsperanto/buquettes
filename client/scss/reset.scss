@@ -41,9 +41,3 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
-.group:after {
-  content: "";
-  display: table;
-  clear: both;
-}
