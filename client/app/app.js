@@ -61,26 +61,26 @@ let files = [
     reducers
   );
 
-electron_data.config(
-  {
-    filename: 'service-data',
-    path: '/Users/edward/Desktop/TestFolder',
-    prettysave: true
-  });
-electron_data.getOptions()
-  .then( options => {
-    console.log('my options: ', options);
-  })
-electron_data.set('github', things())
-  .then( data => {
-    console.log('my files: ', data)
-  });
-electron_data.save()
-  .then( error => {
-    console.log('error: ', error);
-  })
-electron_data.get('github')
-  .then( value => {
+// electron_data.config(
+//   {
+//     filename: 'service-data',
+//     path: '/Users/edward/Desktop/TestFolder',
+//     prettysave: true
+//   });
+// electron_data.getOptions()
+//   .then( options => {
+//     console.log('my options: ', options);
+//   })
+// electron_data.set('github', things())
+//   .then( data => {
+//     console.log('my files: ', data)
+//   });
+// electron_data.save()
+//   .then( error => {
+//     console.log('error: ', error);
+//   })
+// electron_data.get('github')
+//   .then( value => {
 
     ReactDOM.render(
       <Provider store={store}>
