@@ -4,26 +4,27 @@ import { connect } from 'react-redux';
 import { updateView} from '../actions';
 import { isLoggedIn } from '../helpers/isLoggedIn';
 
-const {webFrame} = require('electron');
-const open = require("open");
+//lodash
+const _flattenDeep = require('lodash.flattendeep');
+
+// const {webFrame} = require('electron');
+// const open = require("open");
 
 
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.serviceArray = [];
   }
 
-
-
-  serviceStates = function getServiceState(user) {
+  getServiceStates = function getServiceState(user) {
   return new Promise( (resolve, reject ) => {
     function reqListener(){
-      let data = this.responseText;
-      console.log('XHR data: ', data);
+      let data = JSON.parse(this.responseText);
+      console.log('XHR JSON: ', data);
       resolve(data);
     }
-
     const oReq = new XMLHttpRequest();
     oReq.addEventListener('load', reqListener); 
     oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
@@ -31,11 +32,48 @@ class HomeContainer extends Component {
   });
 };
 
+getServiceData = function getServiceData(service) {
+  return new Promise( (resolve, reject ) => {
+    function reqListener(){
+      let data = this.responseText;
+      console.log('what type? ', typeof data)
+      console.log('files? ', data);
+      resolve(data);
+    }
+    const oReq = new XMLHttpRequest();
+    oReq.addEventListener('load', reqListener); 
+    oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/${service}/search', true);
+    oReq.send(this.props.currentUser);
+  });
+
+  checkServiceStates = () => {
+    this.getServiceStates(this.props.currentUser).then(obj=> {
+      console.log('makin sure this is JSON: ', obj);
+      return Promise.all(Object.keys(obj).filter(key => {
+        return obj[key] === true
+      })
+      .map(service => {
+        return getServiceData(service)
+      })
+      .then(allResults => {
+        console.log('allresults: ', allResults)
+        _flattenDeep(allResults);
+      })
+    })
+  }
+
+
+
+
   componentWillMount() {    
-    webFrame.registerURLSchemeAsBypassingCSP("'unsafe-inline'");
-    this.serviceStates(this.props.currentUser)
+    // webFrame.registerURLSchemeAsBypassingCSP("'unsafe-inline'");
+    this.getServiceStates(this.props.currentUser)
     isLoggedIn(this.props.currentUser, this.props);
     this.props.onUpdateView(this.props.location.pathname)
+  }
+
+  componentDidMount() {
+    this.checkServiceStates()
   }
 
   render() {

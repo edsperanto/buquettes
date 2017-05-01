@@ -40,20 +40,20 @@ let files = [
   }
 ];
 
-  let things = function getAPIData(files) {
-  return new Promise( (resolve, reject ) => {
-    function reqListener(){
-      let data = this.responseText;
-      console.log('XHR data: ', data);
-      resolve(data);
-    }
+//   let things = function getAPIData(files) {
+//   return new Promise( (resolve, reject ) => {
+//     function reqListener(){
+//       let data = this.responseText;
+//       console.log('XHR data: ', data);
+//       resolve(data);
+//     }
 
-    const oReq = new XMLHttpRequest();
-    oReq.addEventListener('load', reqListener); 
-    oReq.open('GET', 'http://www.stratospeer.com/api/oauth2/github/search', true);
-    oReq.send(files);
-  });
-};
+//     const oReq = new XMLHttpRequest();
+//     oReq.addEventListener('load', reqListener); 
+//     oReq.open('GET', 'http://www.stratospeer.com/api/oauth2/github/search', true);
+//     oReq.send(files);
+//   });
+// };
 
 
 
@@ -61,34 +61,34 @@ let files = [
     reducers
   );
 
-electron_data.config(
-  {
-    filename: 'service-data',
-    path: '/home/steven/Desktop/TestFolder',
-    prettysave: true
-  });
-electron_data.getOptions()
-  .then( options => {
-    console.log('my options: ', options);
-  })
-electron_data.set('github', things())
-  .then( data => {
-    console.log('my files: ', data)
-  });
-electron_data.save()
-  .then( error => {
-    console.log('error: ', error);
-  })
-electron_data.get('github')
-  .then( value => {
+// electron_data.config(
+//   {
+//     filename: 'service-data',
+//     path: '/home/steven/Desktop/TestFolder',
+//     prettysave: true
+//   });
+// electron_data.getOptions()
+//   .then( options => {
+//     console.log('my options: ', options);
+//   })
+// electron_data.set('github', things())
+//   .then( data => {
+//     console.log('my files: ', data)
+//   });
+// electron_data.save()
+//   .then( error => {
+//     console.log('error: ', error);
+//   })
+// electron_data.get('github')
+//   .then( value => {
 
     ReactDOM.render(
       <Provider store={store}>
-        <App data={value} />
+        <App  />
       </Provider>,
       document.getElementById('root')
     );
-  })
+  // })
 
 
 
