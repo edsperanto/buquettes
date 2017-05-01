@@ -64,7 +64,7 @@ module.exports = dependencies => {
 		tokenStore.read((err, oldToken) => {
 			if(err) {
 				let url = req.originalUrl.split('?')[0];
-				let notNew = url !== '/oauth2/box/new';
+				let notNew = url !== '/oauth2/box/authorize';
 				let notRedir = url !== '/oauth2/box/redirect';
 				if(notNew && notRedir) res.json(failJSON(err));
 				else next();
@@ -159,7 +159,7 @@ module.exports = dependencies => {
 	});
 
 	// GET folder and file structure
-	router.get('/folders', (req, res) => {
+	router.get('/search', (req, res) => {
 		let root = {};
 		const traverse = (id, par) => new Promise((resolve, _) => {
 			client.get(`/folders/${id}`)
