@@ -40,7 +40,6 @@ module.exports = dependencies => {
         console.log('serviceObj is not working ', err);
       });
     }
-    // res.send('yay');
 
   });
   return router;
