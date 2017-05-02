@@ -217,7 +217,7 @@ module.exports = (dependencies) => {
 					});
 						return prev;
 				}, []);
-				console.log('sent to front end: ', searchableArray);
+				// console.log('sent to front end: ', searchableArray);
 				res.send(searchableArray);   
 			})
 			.catch(err => {
