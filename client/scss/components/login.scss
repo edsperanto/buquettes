@@ -1,0 +1,59 @@
+#login {
+
+  background: $white;
+  padding: 8px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin: 12px 31px;
+  text-transform: capitalize;
+  @include border-radius(4px);
+
+  div{
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 8px 25%;
+    color: $purp-blue;
+
+    label{
+      font-size: 0.875rem;
+      margin-bottom: 4px;
+    }
+
+    input{
+      font-size: 1rem;
+      padding: 8px 6px;
+      border: 1px solid $purp-blue;
+      @include border-radius(2px);
+      &:focus {
+        outline: none;
+      }
+    }
+
+    button{
+      -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,0.25);
+      border: none;
+      background: $blue-purp;
+      color: $white;
+      font-size: 1rem;
+      padding: 0.5rem;
+      transition: 0.5s ease;
+      @include border-radius(2px);
+
+      &:hover{
+        background: $blue-purp-hover;
+        cursor: pointer;
+      }
+
+      &:focus{
+        outline: none;
+      }
+    }
+  }
+
+  h1 {
+    padding: 8px 0;
+    text-align: center;
+    font-size: 1.375rem;
+  }
+}

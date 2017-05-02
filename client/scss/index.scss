@@ -2,3 +2,13 @@
 @import './partials/clearfix';
 @import './partials/colors';
 @import './partials/typography';
+@import './partials/mixins';
+
+@import './components/login';
+
+body{
+  font-size: 16px;
+  font-family: $roboto;
+  background: $purple-gradient;
+  height: 100vh;
+}
