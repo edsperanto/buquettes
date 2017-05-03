@@ -92,7 +92,7 @@ getSingleServiceData = function getSingleServiceData(service) {
       electron_data.get('services')
         .then( value => {
           console.log('value of files: ', value)
-      })
+      }) //use to get files and store in redux store
     })
   }
 
@@ -109,7 +109,7 @@ getSingleServiceData = function getSingleServiceData(service) {
   render() {
     return (
       <div className="home-container">
-        "You haven\'t added any files yet"
+        {"You haven't added any files yet"}
       </div>
     );
   }
