@@ -110,7 +110,7 @@ app.on('ready', async () => {
       app: app,
       mainFile: 'main.js',
       bws: [
-        {bw: mainWindow, res: ['app.js', 'app.js']}
+        {bw: mainWindow, res: ['app.js', 'index.css']}
       ]
     })
 

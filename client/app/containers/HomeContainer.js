@@ -75,7 +75,7 @@ getSingleServiceData = function getSingleServiceData(service) {
       electron_data.config(
         {
           filename: 'service_data',
-          path: app.getAppPath(),
+          path: "",
           prettysave: true
         });
       electron_data.getOptions()
