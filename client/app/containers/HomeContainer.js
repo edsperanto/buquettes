@@ -8,6 +8,7 @@ import { isLoggedIn } from '../helpers/isLoggedIn';
 const _flattenDeep = require('lodash.flattendeep');
 
 //electron
+const app = require('electron').app
 const electron_data = require('electron-data');
 
 class HomeContainer extends Component {
@@ -74,7 +75,7 @@ getSingleServiceData = function getSingleServiceData(service) {
       electron_data.config(
         {
           filename: 'service_data',
-          path: '/home/steven/Desktop/TestFolder',
+          path: app.getAppPath(),
           prettysave: true
         });
       electron_data.getOptions()
