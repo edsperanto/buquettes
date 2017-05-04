@@ -3,7 +3,7 @@ import url from 'url';
 import { app, crashReporter, BrowserWindow, Menu, globalShortcut } from 'electron';
 
 import shell from 'shell';
-const elemon = require('elemon')
+const elemon = require('elemon');
 
 
 const isDevelopment = (process.env.NODE_ENV === 'development');
@@ -110,7 +110,7 @@ app.on('ready', async () => {
       app: app,
       mainFile: 'main.js',
       bws: [
-        {bw: mainWindow, res: ['app.js', 'css/index.css']}
+        {bw: mainWindow, res: ['app.js', '/css/index.css']}
       ]
     })
 
