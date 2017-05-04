@@ -4,16 +4,10 @@
 @import './partials/typography';
 @import './partials/mixins';
 
-body{
-  font-size: 16px;
-  font-weight: 300;
-  font-family: $roboto;
-  background: $purple-gradient;
-  height: 100vh;
-}
-
+@import './components/app';
 @import './components/login';
 @import './components/header';
 @import './components/signup';
 @import './components/home';
 @import './components/search';
+@import './components/services';
