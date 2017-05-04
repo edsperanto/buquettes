@@ -6,7 +6,7 @@ import SearchInput from '../components/SearchInput';
 import SearchButton from '../components/SearchButton';
 import SearchResultsContainer from './SearchResultsContainer';
 
-let files = [
+const files = [
   {
     id: 1,
     source: "github",
@@ -53,6 +53,10 @@ class SearchContainer extends Component {
     )
   }
 
+  openPath = (event) => {
+    open('www.facebook.com')
+  }
+
   filterResults = ( event ) => {
     this.props.files.files.filter( file => {
       return file.name === this.state.query;
@@ -77,6 +81,7 @@ class SearchContainer extends Component {
   }
 
   render(){
+    console.log('this.props', this.props)
     return (
       <div className="search-container">
         <div className="search-form">
@@ -87,11 +92,12 @@ class SearchContainer extends Component {
             sendData={this.sendData}
           />
         </div>
-        <SearchResultsContainer
-          query={this.state.query}
-          filterResults={this.filterResults}
-        />
+          <SearchResultsContainer
+            query={this.state.query}
+            filterResults={this.filterResults}
+          />
       </div>
+
     )
   }
 }

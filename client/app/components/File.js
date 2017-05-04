@@ -1,12 +1,14 @@
 import React from 'react';
 
-const File = ( { id, source, name, createdAt, lastModified } ) => (
+const File = ( { name, path, repo, html_url, modified_at, type } ) => (
   <div className="file">
     <ul>
-      <li>{source}</li>
       <li>{name}</li>
-      <li>{createdAt}</li>
-      <li>{lastModified}</li>
+      <li>{path}</li>
+      <li>{repo}</li>
+      <li>{html_url}</li>
+      <li>{modified_at}</li>
+      <li>{type}</li>
     </ul>
   </div>
 );

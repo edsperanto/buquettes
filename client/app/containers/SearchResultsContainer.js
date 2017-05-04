@@ -9,7 +9,7 @@ import SearchFilter from '../components/SearchFilter';
 class SearchResultsContainer extends Component {
   constructor(props) {
     super(props);
-    this.sources = ['github', 'googledrive']
+    this.sources = ['github', 'box']
     this.state = {
       sources : []
     }
