@@ -192,7 +192,7 @@ module.exports = (dependencies) => {
 						item.name = getProperties(item.path).name;
 						item.owner = getProperties(item.url).owner;
 						item.default_branch = default_branch;
-						item.pushed_at = pushed_at;
+						item.modified_at = pushed_at;
 						item.html_url = file_html_url;
 
 						return item;
