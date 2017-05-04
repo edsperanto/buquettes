@@ -54,7 +54,7 @@ body {
   background: linear-gradient(-90deg, #B06AB3 0%, #4568DC 100%) no-repeat;
   height: 100vh; }
 
-#login {
+#login, #signup {
   background: #fff;
   padding: 8px;
   display: flex;
@@ -67,18 +67,18 @@ body {
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   border-radius: 4px; }
-  #login .error {
+  #login .error, #signup .error {
     text-align: center;
     color: red; }
-  #login div {
+  #login div, #signup div {
     display: flex;
     flex-flow: column nowrap;
     padding: 8px 25%;
     color: #7B69C7; }
-    #login div label {
+    #login div label, #signup div label {
       font-size: 0.875rem;
       margin-bottom: 4px; }
-    #login div input {
+    #login div input, #signup div input {
       font-size: 1rem;
       padding: 8px 6px;
       border: 1px solid #7B69C7;
@@ -86,9 +86,9 @@ body {
       -moz-border-radius: 2px;
       -ms-border-radius: 2px;
       border-radius: 2px; }
-      #login div input:focus {
+      #login div input:focus, #signup div input:focus {
         outline: none; }
-    #login div button {
+    #login div button, #signup div button {
       -webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
       border: none;
       background: #4568DC;
@@ -100,12 +100,12 @@ body {
       -moz-border-radius: 2px;
       -ms-border-radius: 2px;
       border-radius: 2px; }
-      #login div button:hover {
+      #login div button:hover, #signup div button:hover {
         background: #274ece;
         cursor: pointer; }
-      #login div button:focus {
+      #login div button:focus, #signup div button:focus {
         outline: none; }
-  #login h1 {
+  #login h1, #signup h1 {
     padding: 8px 0;
     text-align: center;
     font-size: 1.375rem; }
