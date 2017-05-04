@@ -5,7 +5,6 @@ import open from 'open';
 
 class ServiceCardContainer extends Component {
   handleClick = event => {
-    //window.location.assign(this.props.authpath);
     open(this.props.authpath + '?id=' + this.props.currentUser.id);
   }
   render(){

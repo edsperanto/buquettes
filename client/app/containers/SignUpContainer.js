@@ -22,11 +22,12 @@ class SignUpContainer extends Component {
 	submit = e => {
 		e.preventDefault();
 		const xhr = new XMLHttpRequest();
-		xhr.addEventListener('load', e => {
+		const signUpHandler = _ => {
 			let {success, error} = JSON.parse(xhr.responseText);
 			if(success) this.props.history.push(`/login`, null);
 			else this.props.onUpdateError(error);
-		});
+		}
+		xhr.addEventListener('load', signUpHandler);
 		xhr.open('POST', `${this.props.url}/user/new`, true);
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify(this.props.signupForm));
@@ -77,7 +78,6 @@ class SignUpContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		signupForm: state.users.signupForm,
-    currentView: state.views.currentView,
     url: state.data.url
 	}
 }
