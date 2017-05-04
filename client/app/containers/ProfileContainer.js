@@ -24,7 +24,6 @@ class ProfileContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		currentUser: state.users.currentUser,
-    currentView: state.views.currentView
 	}
 }
 

@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import ServiceCardContainer  from './ServiceCardContainer';
-import { isLoggedIn } from '../helpers/isLoggedIn';
+
+import { updateView } from '../actions';
 
 class ServicesContainer extends Component {
-
-  componentWillMount() {
-    isLoggedIn(this.props.currentUser, this.props);
-  }
-
+	componentWillMount() {
+		this.props.onUpdateView(this.props.location.pathname);
+	}
   render() {
     return (
       <div className="services-container">
@@ -41,7 +40,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-
+		onUpdateView: view => dispatch(updateView(view))
   }
 }
 
