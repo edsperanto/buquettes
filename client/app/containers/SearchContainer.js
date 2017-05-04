@@ -5,9 +5,8 @@ import { addFile, updateView } from '../actions';
 import SearchInput from '../components/SearchInput';
 import SearchButton from '../components/SearchButton';
 import SearchResultsContainer from './SearchResultsContainer';
-import { isLoggedIn } from '../helpers/isLoggedIn';
 
-let files = [
+const files = [
   {
     id: 1,
     source: "github",
@@ -54,6 +53,10 @@ class SearchContainer extends Component {
     )
   }
 
+  openPath = (event) => {
+    open('www.facebook.com')
+  }
+
   filterResults = ( event ) => {
     this.props.files.files.filter( file => {
       return file.name === this.state.query;
@@ -67,7 +70,6 @@ class SearchContainer extends Component {
   componentWillMount() {
     this.props.onUpdateView(this.props.location.pathname);
 
-    isLoggedIn(this.props.currentUser, this.props);
     files.map( file => {
       return this.props.onAddFile(
         file.id,
@@ -80,6 +82,7 @@ class SearchContainer extends Component {
   }
 
   render(){
+    console.log('this.props', this.props)
     return (
       <div className="search-container">
         <div className="search-form">
@@ -90,11 +93,12 @@ class SearchContainer extends Component {
             sendData={this.sendData}
           />
         </div>
-        <SearchResultsContainer
-          query={this.state.query}
-          filterResults={this.filterResults}
-        />
+          <SearchResultsContainer
+            query={this.state.query}
+            filterResults={this.filterResults}
+          />
       </div>
+
     )
   }
 }

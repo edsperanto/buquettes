@@ -13,6 +13,7 @@ import SignUpContainer from './SignUpContainer';
 import SearchContainer from './SearchContainer';
 import ServicesContainer from './ServicesContainer';
 import FoldersContainer from './FoldersContainer';
+import FuzzyFilterContainer from './FuzzyFilterContainer';
 import { updateView } from '../actions';
 
 class App extends Component {
@@ -44,7 +45,7 @@ class App extends Component {
             <Route path="/login" component={LoginContainer} />
             <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
-            <Route path="/search" component={SearchContainer} />
+            <Route path="/search" component={FuzzyFilterContainer} />
             <Route path="/services" component={ServicesContainer} />
             <Route path="/box/folders" component={FoldersContainer} />
           </div>
