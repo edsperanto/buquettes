@@ -7,7 +7,14 @@
   justify-content: center;
   margin: 12px 31px;
   text-transform: capitalize;
+  color: $purp-blue;
+
   @include border-radius(4px);
+
+  .error{
+    text-align: center;
+    color: red;
+  }
 
   div{
     display: flex;
