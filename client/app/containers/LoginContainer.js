@@ -12,19 +12,21 @@ class LoginContainer extends Component {
 	submit = e => {
 		e.preventDefault();
 		const {usr, pswd} = this.props.loginForm;
+		const isEmail = usr.indexOf('@') > -1;
+		const payload = {[isEmail ? 'email' : 'username']: usr, password: pswd};
 		const xhr = new XMLHttpRequest();
-		xhr.addEventListener('load', e => {
+		const signUpHandler = () => {
 			let {success, error, currentUser} = JSON.parse(xhr.responseText);
 			this.props.onUpdateErr(error);
 			if(success) {
 				this.props.onUpdateCurr(currentUser);
-				this.props.history.push('/', null);
+				this.props.history.push('/search', null);
 			}
-		});
-		xhr.open('POST', `${this.props.url}/user/login`, true);
+		}
+		xhr.addEventListener('load', signUpHandler);
+		xhr.open('POST', `${this.props.url}/user/login`);
 		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send(JSON.stringify((usr.indexOf('@') > -1) ?
-			({email: usr, password: pswd}) : ({username: usr, password: pswd})));
+		xhr.send(JSON.stringify(payload));
 	}
 
   componentWillMount() {
@@ -61,7 +63,6 @@ class LoginContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		loginForm: state.users.loginForm,
-    currentView: state.views.currentView,
     url: state.data.url
 	}
 }

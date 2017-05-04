@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+const _flattenDeep = require('lodash.flattendeep');
 
 import { updateView } from '../actions';
-import { isLoggedIn } from '../helpers/isLoggedIn';
-
-//lodash
-const _flattenDeep = require('lodash.flattendeep');
 
 //electron
 const app = require('electron').app
@@ -18,45 +15,39 @@ class HomeContainer extends Component {
     this.serviceArray = [];
   }
 
-  serviceStates = function getServiceState(user) {
-  return new Promise( (resolve, reject ) => {
-    function reqListener(){
-      let data = JSON.parse(this.responseText);
-      console.log('XHR JSON: ', data);
-      resolve(data);
-    }
-    const oReq = new XMLHttpRequest();
-    oReq.addEventListener('load', reqListener); 
-    oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
-    oReq.send(user);
-  });
-};
+  serviceStates = _ => {
+		return new Promise((resolve, reject) => {
+			function reqListener() {
+				let data = JSON.parse(this.responseText);
+				console.log('Connected Services: ', data);
+				resolve(data);
+			}
+			const oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', reqListener); 
+			oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
+			oReq.send();
+		});
+	};
 
-getSingleServiceData = function getSingleServiceData(service) {
-  return new Promise( (resolve, reject ) => {
-    function reqListener(){
-      let data = this.responseText;
-      resolve(data);
-    }
-    const oReq = new XMLHttpRequest();
-    oReq.addEventListener('load', reqListener); 
-    oReq.open('GET', `https://www.stratospeer.com/api/oauth2/${service}/search`, true);
-    oReq.send();
-  });
-}
+	getSingleServiceData = (service) => {
+		return new Promise((resolve, reject) => {
+			const oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', _ => resolve(oReq.responseText)); 
+			oReq.open('GET', `https://www.stratospeer.com/api/oauth2/${service}/search`, true);
+			oReq.send();
+		});
+	}
 
   allServiceFiles = () => {
-    return this.serviceStates(this.props.currentUser).then(obj=> {
+    return this.serviceStates().then(obj => {
       return Promise.all(Object.keys(obj).filter(key => {
           return obj[key] === true
         })
         .map(service => {
-          console.log('mapping results')
           return this.getSingleServiceData(service)
         })
       )
       .then(allResults => {
-        console.log('have results')
         return _flattenDeep(allResults);
       })
       .catch(err=>{
@@ -71,7 +62,6 @@ getSingleServiceData = function getSingleServiceData(service) {
 
   serviceFilesToElectron = () =>{
     this.allServiceFiles().then(files =>{
-      console.log('about to write to file')
       electron_data.config(
         {
           filename: 'service_data',
@@ -99,12 +89,11 @@ getSingleServiceData = function getSingleServiceData(service) {
 
   componentWillMount(){    
     this.serviceStates(this.props.currentUser);
-    isLoggedIn(this.props.currentUser, this.props);
-    this.props.onUpdateView(this.props.location.pathname)
+    this.props.onUpdateView(this.props.location.pathname);
   }
 
   componentDidMount(){
-    this.serviceFilesToElectron()
+    this.serviceFilesToElectron();
   }
 
   render() {

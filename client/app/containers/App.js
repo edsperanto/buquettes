@@ -17,31 +17,13 @@ import FuzzyFilterContainer from './FuzzyFilterContainer';
 import { updateView } from '../actions';
 
 class App extends Component {
-
-	/*
-  componentWillMount(props) {
-    let xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', e => {
-      let {success, currentUser } = JSON.parse(xhr.responseText);
-      if(success){
-        this.props.onUpdateCurr(currentUser);
-      }
-    })
-    xhr.open('GET', 'https://stratospeer.com/api/user/current', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send();
-  }
-	*/
-
   render() {
     return (
       <div className="App">
         <Router>
           <div className='route-container'>
-            <HeaderContainer
-              hidden={this.props.currentView === '/search' ? true : false}
-            />
-            <Route exact path="/" component={HomeContainer} />
+            <HeaderContainer />
+            <Route path="/" component={HomeContainer} />
             <Route path="/login" component={LoginContainer} />
             <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />

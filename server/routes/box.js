@@ -37,10 +37,12 @@ module.exports = dependencies => {
 					});
 			}
 			write(token, callback) {
-				if(!token.error) BoxOAuth.create({
-					user_id: req.user ? req.user.id : userID,
-					token: JSON.stringify(token)
-				}).then(entry => callback(entry));
+				this.clear(_ => {
+					if(!token.error) BoxOAuth.create({
+						user_id: req.user ? req.user.id : userID,
+						token: JSON.stringify(token)
+					}).then(entry => callback(entry));
+				});
 			}
 			update(oldToken, newToken, callback) {
 				BoxOAuth.update(
@@ -50,7 +52,9 @@ module.exports = dependencies => {
 					.then(_ => callback());
 			}
 			clear(callback) {
-				BoxOAuth.destroy({where: {id: req.user.id}})
+				BoxOAuth.destroy({
+					where: {user_id: req.user ? req.user.id : userID}
+				})
 					.then(_ => callback());
 			}
 		}
@@ -71,8 +75,12 @@ module.exports = dependencies => {
 			}else{
 				let {refreshToken} = oldToken;
 				sdk.getTokensRefreshGrant(refreshToken, (err, newToken) => {
-					accessToken = newToken.accessToken;
-					tokenStore.update(oldToken, newToken, _ => next());
+					if(err) {
+						tokenStore.clear(_ => next());
+					}else{
+						accessToken = newToken.accessToken;
+						tokenStore.update(oldToken, newToken, _ => next());
+					}
 				});
 			}
 		});
@@ -112,8 +120,7 @@ module.exports = dependencies => {
 			let tokenStore = new req.TokenStore(userID);
 			if(token.error) res.json(failJSON(token.error_description));
 			else tokenStore.write(token, ({token}) => {
-				// res.json(Object.assign({}, successJSON, {token: JSON.parse(token)}));
-				res.redirect('file:///');
+				res.redirect('/api/redirect.html');
 			});
 		}
 	});
