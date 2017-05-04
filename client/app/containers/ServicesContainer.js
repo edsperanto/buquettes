@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom';
 
 import ServiceCardContainer  from './ServiceCardContainer';
 
-class ServicesContainer extends Component {
+import { updateView } from '../actions';
 
+class ServicesContainer extends Component {
+	componentWillMount() {
+		this.props.onUpdateView(this.props.location.pathname);
+	}
   render() {
     return (
       <div className="services-container">
@@ -36,7 +40,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-
+		onUpdateView: view => dispatch(updateView(view))
   }
 }
 

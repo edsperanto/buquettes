@@ -65,7 +65,6 @@ class SearchContainer extends Component {
 
   componentWillMount() {
     this.props.onUpdateView(this.props.location.pathname);
-
     files.map( file => {
       return this.props.onAddFile(
         file.id,

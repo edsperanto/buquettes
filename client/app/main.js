@@ -3,6 +3,7 @@ import url from 'url';
 import { app, crashReporter, BrowserWindow, Menu, globalShortcut } from 'electron';
 
 import shell from 'shell';
+const elemon = require('elemon')
 
 
 const isDevelopment = (process.env.NODE_ENV === 'development');
@@ -49,28 +50,20 @@ app.on('ready', async () => {
   }
 
 
+
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
     minWidth: 640,
     minHeight: 480,
     show: false,
-    // webPreferences: {
-    //   webSecurity: false,
-    //   allowDisplayingInsecureContent: false,
-    //   allowRunningInsecureContent: false
-    // }
   });
 
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  }));
-
-  // console.log('shell: ', shell)
-
- 
+  })); 
  
 
   //shell.openExternal("http://www.google.com")
@@ -113,6 +106,13 @@ app.on('ready', async () => {
   if (isDevelopment) {
     // auto-open dev tools
     mainWindow.webContents.openDevTools();
+    elemon({
+      app: app,
+      mainFile: 'main.js',
+      bws: [
+        {bw: mainWindow, res: ['app.js', 'index.css']}
+      ]
+    })
 
     // add inspect element on right click menu
     mainWindow.webContents.on('context-menu', (e, props) => {

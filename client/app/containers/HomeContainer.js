@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+const _flattenDeep = require('lodash.flattendeep');
 
 import { updateView } from '../actions';
 
-//lodash
-const _flattenDeep = require('lodash.flattendeep');
+//electron
+const app = require('electron').app
+const electron_data = require('electron-data');
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -13,67 +15,91 @@ class HomeContainer extends Component {
     this.serviceArray = [];
   }
 
-  getServiceStates = function getServiceState(user) {
-  return new Promise( (resolve, reject ) => {
-    function reqListener(){
-      let data = JSON.parse(this.responseText);
-      console.log('XHR JSON: ', data);
-      resolve(data);
-    }
-    const oReq = new XMLHttpRequest();
-    oReq.addEventListener('load', reqListener); 
-    oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
-    oReq.send(user);
-  });
-};
+  serviceStates = _ => {
+		return new Promise((resolve, reject) => {
+			function reqListener() {
+				let data = JSON.parse(this.responseText);
+				console.log('Connected Services: ', data);
+				resolve(data);
+			}
+			const oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', reqListener); 
+			oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
+			oReq.send();
+		});
+	};
 
-getServiceData = function getServiceData(service) {
-  return new Promise( (resolve, reject ) => {
-    function reqListener(){
-      let data = this.responseText;
-      console.log('what type? ', typeof data)
-      console.log('files? ', data);
-      resolve(data);
-    }
-    const oReq = new XMLHttpRequest();
-    oReq.addEventListener('load', reqListener); 
-    oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/${service}/search', true);
-    oReq.send(this.props.currentUser);
-  });
+	getSingleServiceData = (service) => {
+		return new Promise((resolve, reject) => {
+			const oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', _ => resolve(oReq.responseText)); 
+			oReq.open('GET', `https://www.stratospeer.com/api/oauth2/${service}/search`, true);
+			oReq.send();
+		});
+	}
 
-  checkServiceStates = () => {
-    this.getServiceStates(this.props.currentUser).then(obj=> {
-      console.log('makin sure this is JSON: ', obj);
+  allServiceFiles = () => {
+    return this.serviceStates().then(obj => {
       return Promise.all(Object.keys(obj).filter(key => {
-        return obj[key] === true
-      })
-      .map(service => {
-        return getServiceData(service)
-      })
+          return obj[key] === true
+        })
+        .map(service => {
+          return this.getSingleServiceData(service)
+        })
+      )
       .then(allResults => {
-        console.log('allresults: ', allResults)
-        _flattenDeep(allResults);
+        return _flattenDeep(allResults);
       })
+      .catch(err=>{
+        console.log('allresults err0r: ', err)
+      })
+    })
+      .catch(err=>{
+        console.log('getservicestates err0r: ', err)
+    })
+
+  }
+
+  serviceFilesToElectron = () =>{
+    this.allServiceFiles().then(files =>{
+      electron_data.config(
+        {
+          filename: 'service_data',
+          path: "",
+          prettysave: true
+        });
+      electron_data.getOptions()
+        .then( options => {
+          console.log('my options: ', options);
+        })
+      electron_data.set('services', files)
+        .then( data => {
+          // console.log('my files: ', data)
+        });
+      electron_data.save()
+        .then( error => {
+          console.log('error: ', error);
+        })
+      electron_data.get('services')
+        .then( value => {
+          console.log('value of files: ', value)
+      }) //use to get files and store in redux store
     })
   }
 
-
-
-
-  componentWillMount() {    
-    // webFrame.registerURLSchemeAsBypassingCSP("'unsafe-inline'");
-    this.getServiceStates(this.props.currentUser)
-    this.props.onUpdateView(this.props.location.pathname)
+  componentWillMount(){    
+    this.serviceStates(this.props.currentUser);
+    this.props.onUpdateView(this.props.location.pathname);
   }
 
-  componentDidMount() {
-    this.checkServiceStates()
+  componentDidMount(){
+    this.serviceFilesToElectron();
   }
 
   render() {
     return (
       <div className="home-container">
-        "You haven\'t added any files yet"
+        {"You haven't added any files yet"}
       </div>
     );
   }

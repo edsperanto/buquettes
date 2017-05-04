@@ -61,10 +61,10 @@ module.exports = (dependencies) => {
 					});				
 			})
 			.then((userBody) => {
-				res.redirect('http://localhost'); //sends to home route
+				res.send('You may now close this window, thank you for authorizing StratosPeer on your behalf! :) '); //sends to home route
 			});
 		});
-  });
+	});
 
 	router.use(isAuthenticated);
 
@@ -114,7 +114,6 @@ module.exports = (dependencies) => {
 			return Promise.all(
 				parsedBody.map((repo) => {						//grab each repo and store in array
 					count++;
-					console.log('count: ', count);
 					let slicedURL = repo.commits_url.split('{')[0];
 					let commitURLWithAccess = slicedURL.concat(access);
 					let usersRepo = repo.owner.login;
@@ -193,7 +192,7 @@ module.exports = (dependencies) => {
 						item.name = getProperties(item.path).name;
 						item.owner = getProperties(item.url).owner;
 						item.default_branch = default_branch;
-						item.pushed_at = pushed_at;
+						item.modified_at = pushed_at;
 						item.html_url = file_html_url;
 
 						return item;
@@ -217,7 +216,7 @@ module.exports = (dependencies) => {
 					});
 						return prev;
 				}, []);
-				console.log('sent to front end: ', searchableArray);
+				// console.log('sent to front end: ', searchableArray);
 				res.send(searchableArray);   
 			})
 			.catch(err => {
@@ -225,7 +224,9 @@ module.exports = (dependencies) => {
 			});
 		})
 		.catch(err =>{
-        console.log('.then with body: ', err);
+			// delete everything
+			GitHubOAuth.destroy({where: {user_id: req.user.id}});
+			res.send('no oauth tokens stored for this user');
     });
 	});
 

@@ -13,6 +13,7 @@
     "babel-runtime": "^6.23.0",
     "electron-data": "^2.1.0",
     "electron-localshortcut": "^1.1.1",
+    "elemon": "^5.0.2",
     "lodash.flattendeep": "^4.4.0",
     "open": "0.0.5",
     "react": "^15.5.4",
