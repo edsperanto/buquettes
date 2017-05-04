@@ -61,7 +61,7 @@ module.exports = (dependencies) => {
 					});				
 			})
 			.then((userBody) => {
-				res.send('You may now close this window, thank you for authorizing StratosPeer on your behalf! :) '); //sends to home route
+				res.redirect('/api/redirect.html');
 			});
 		});
 	});

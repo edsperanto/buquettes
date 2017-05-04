@@ -82,6 +82,9 @@ const oauth2RouteDep = {
 }
 app.use('/oauth2', oauth2Route(oauth2RouteDep));
 
+// public
+app.use(express.static('./public'));
+
 // 404 route
 app.get('/404', (req, res) => {
 	res.send('404 Not Found');

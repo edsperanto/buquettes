@@ -120,7 +120,7 @@ module.exports = dependencies => {
 			let tokenStore = new req.TokenStore(userID);
 			if(token.error) res.json(failJSON(token.error_description));
 			else tokenStore.write(token, ({token}) => {
-				res.send('You may now close this window, thank you for authorizing StratosPeer on your behalf! :) '); //sends to home route
+				res.redirect('/api/redirect.html');
 			});
 		}
 	});
