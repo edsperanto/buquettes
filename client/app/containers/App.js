@@ -29,7 +29,7 @@ class App extends Component {
             <Route path="/login" component={LoginContainer} />
             <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
-            <Route path="/search" component={SearchContainer} />
+            <Route path="/search" component={FuzzyFilterContainer} />
             <Route path="/services" component={ServicesContainer} />
             <Route path="/box/folders" component={FoldersContainer} />
           </div>

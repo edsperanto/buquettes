@@ -4,6 +4,7 @@ import fuzzyFilterFactory from 'react-fuzzy-filter';
 
 import { addFile, updateView } from '../actions';
 import File from '../components/File';
+import SearchResultsContainer from './SearchResultsContainer';
 
 const electron_data = require('electron-data');
 const _flattenDeep = require('lodash.flattendeep');
@@ -143,7 +144,6 @@ class FuzzyFilterContainer extends Component {
       threshold: 0.4,
       location: 0,
       distance: 100,
-      defaultAllItems: false,
       maxPatternLength: 32,
       minMatchCharLength: 1,
       keys: [
@@ -152,32 +152,34 @@ class FuzzyFilterContainer extends Component {
       ]
     };
     return (
-      <div>
-        <InputFilter debounceTime={200} />
-        <div>Youre mother fuckin results</div>
-        <FilterResults
-          className="fuckyouman"
-          items={this.state.files}
-          fuseConfig={fuseConfig}
-          onChange={this.handleChange}>
-          {filteredItems => {
-             return(
-              <div>
-                {filteredItems.map(file =>
-                  <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}>
-                    <File
-                      name={file.name}
-                      path={file.path}
-                      repo={file.repo}
-                      html_url={file.html_url}
-                      modified_at={file.modified_at}
-                      type={file.type}
-                    />
-                  </div>)}
-              </div>
-            )
-          }}
-        </FilterResults>
+      <div className="search-container">
+        <InputFilter className="search-input" debounceTime={200} />
+        <div className="search-results">
+          <FilterResults
+            items={this.state.files}
+            defaultAllItems={false}
+            fuseConfig={fuseConfig}
+            onChange={this.handleChange}>
+            {filteredItems => {
+               return(
+                <div>
+                  {filteredItems.map(file =>
+                    <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}>
+                      <File
+                        name={file.name}
+                        path={file.path}
+                        repo={file.repo}
+                        html_url={file.html_url}
+                        modified_at={file.modified_at}
+                        type={file.type}
+                      />
+                    </div>)}
+                </div>
+              )
+            }}
+          </FilterResults>
+        </div>
+        <SearchResultsContainer/>
       </div>
     );
   }
