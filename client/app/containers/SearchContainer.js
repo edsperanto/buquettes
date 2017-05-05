@@ -76,18 +76,22 @@ class SearchContainer extends Component {
   }
 
   componentWillMount() {
-    this.props.onUpdateView(this.props.location.pathname);
-
-    files.map( file => {
-      console.log('file', file);
-      return this.props.onAddFile(
-        file.name,
-        file.path,
-        file.repo,
-        file.html_url,
-        file.modified_at,
-      );
-    })
+		console.log('WILL MOUNT');
+		console.log('currentUser: ', this.props.currentUser);
+		if(!this.props.currentUser.authenticated) {
+			this.props.history.push('/login');
+		}else{
+			this.props.onUpdateView(this.props.location.pathname);
+			files.map( file => {
+				return this.props.onAddFile(
+					file.id,
+					file.source,
+					file.name,
+					file.createdAt,
+					file.lastModified
+				);
+			});
+		}
   }
 
   render(){

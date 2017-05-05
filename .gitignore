@@ -4,3 +4,5 @@ build
 .DS_Store
 *.log
 server/config/config.json
+server/.env
+server/.credentials

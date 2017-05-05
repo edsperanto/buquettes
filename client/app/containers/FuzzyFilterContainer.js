@@ -14,36 +14,143 @@ const {InputFilter, FilterResults} = fuzzyFilterFactory();
 
 
 class FuzzyFilterContainer extends Component {
+
   constructor(props){
     super(props)
     this.state = { files: [] }
-
   }
+
   handleChange = ( event ) => {
-    this.setState(
-      {
-        files: event.target.value
-      }
-    )
+    this.setState({files: event.target.value});
   }
-  componentWillMount() {
-    electron_data.get('services').then(files=> {
-     console.log("check it KT: ", JSON.parse(files[0]))
-     this.setState ({
-      files: JSON.parse(files[0])
-     })
 
+  serviceStates = _ => {
+		return new Promise((resolve, reject) => {
+			function reqListener() {
+				let data = JSON.parse(this.responseText);
+				resolve(data);
+			}
+			const oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', reqListener);
+			oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
+			oReq.send();
+		});
+	};
+
+	getSingleServiceData = (service) => {
+		return new Promise((resolve, reject) => {
+			const oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', _ => resolve(oReq.responseText));
+			oReq.open('GET', `https://www.stratospeer.com/api/oauth2/${service}/search`, true);
+			oReq.send();
+		});
+	}
+
+  allServiceFiles = () => {
+    return this.serviceStates().then(obj => {
+      return Promise.all(Object.keys(obj).filter(key => {
+          return obj[key] === true
+        })
+        .map(service => {
+					if(service === 'box') {
+						const genSearchableArr = (data, path) => {
+							return new Promise((resolve, reject) => {
+								let count = 0;
+								let finalArr = [];
+								const traverse = (obj, dir) => {
+									count++;
+									Object.keys(obj).forEach(item => {
+										let searchEntry = {name: item, path: dir};
+										let {id, children} = obj[item];
+										searchEntry.id = id;
+										searchEntry.repo = null;
+										searchEntry.source = 'box';
+										if(!!children) {
+											let newPath = dir + `/${item}`;
+											searchEntry.type = 'tree';
+											traverse(obj[item].children, newPath);
+										}else{
+											searchEntry.type = 'blob';
+										}
+										finalArr.push(searchEntry);
+										count--;
+										if(count === 0) resolve(finalArr);
+										this.props.onUpdateBoxData(searchEntry);
+									});
+								}
+								traverse(data, path);
+							});
+						}
+						return this.getSingleServiceData(service)
+							.then(data => {
+								let parsed = JSON.parse(data).directory_structure;
+								return genSearchableArr(parsed, '/Box');
+							});
+					}else{
+						return this.getSingleServiceData(service)
+							.then(JSON.parse)
+							.then(data => data.map(entry => {
+								entry.source = 'github';
+								return entry;
+							}));
+					}
+        })
+      )
+      .then(allResults => {
+        return _flattenDeep(allResults);
+      })
+      .catch(err=>{
+        console.log('allresults err0r: ', err)
+      })
     })
-    console.log('this.files: ', this.files)
-
+      .catch(err=>{
+        console.log('getservicestates err0r: ', err)
+    });
   }
+
+  serviceFilesToElectron = () =>{
+    this.allServiceFiles().then(files =>{
+      electron_data.config({
+				filename: 'service_data',
+				path: "",
+				prettysave: true
+			});
+      electron_data.set('services', files)
+        .then( data => {
+          console.log('my files: ', data);
+        });
+      electron_data.save()
+        .then( error => {
+					if(error) console.log('error: ', error);
+					return electron_data.get('services')
+        })
+				.then(files=> {
+					this.setState ({files});
+				});;
+    });
+  }
+
+	componentWillMount() {
+		this.props.onUpdateView(this.props.location.pathname);
+		this.serviceFilesToElectron();
+	}
 
   render() {
-  console.log('files: ', this.files)
     const fuseConfig = {
-      keys: ['name', 'repo']
+      shouldSort: true,
+      includeScore: true,
+      includeMatches: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 100,
+      defaultAllItems: false,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: [
+        "name",
+        "repo"
+      ]
     };
-    console.log('files: ', this.files)
     return (
       <div>
         <InputFilter debounceTime={200} />
@@ -54,11 +161,10 @@ class FuzzyFilterContainer extends Component {
           fuseConfig={fuseConfig}
           onChange={this.handleChange}>
           {filteredItems => {
-            console.log('filtered Items: ', filteredItems)
              return(
               <div>
                 {filteredItems.map(file =>
-                  <div>
+                  <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}>
                     <File
                       name={file.name}
                       path={file.path}
@@ -77,4 +183,20 @@ class FuzzyFilterContainer extends Component {
   }
 }
 
-export default FuzzyFilterContainer;
+function mapStateToProps(state) {
+	return {
+		currentUser: state.users.currentUser,
+		currentView: state.views.currentView
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		onUpdateView: view => dispatch(updateView(view))
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(FuzzyFilterContainer);

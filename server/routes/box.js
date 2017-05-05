@@ -181,22 +181,28 @@ module.exports = dependencies => {
 						if(entry.type === 'file') {
 							return client.get(`/files/${entry.id}`)
 								.then(response => ({
+									console.log('file: ', response.modified_at);
 									[entry.name]: {
 										id: response.id,
-										modified_at: cutTZ(response.modified_at)
+										modified_at: cutTZ(response.modified_at),
+										type: 'blob'
 									}
 								}));
 						}else if(entry.type === 'folder') {
 							return traverse(entry.id, children)
 								.then(response => ({
+									console.log('folder: ', response.modified_at);
 									[entry.name]: {
 										id: entry.id,
 										modified_at: cutTZ(response.modified_at),
-										children: response.children
+										children: response.children,
+										type: 'tree'
 									}
 								}));
 						}
 					}));
+					resolve(entriesArr)
+					/*
 					entriesArr
 						.then(entriesRes => {
 							par[name].children = entriesRes.reduce((prev, curr) => {
@@ -204,6 +210,7 @@ module.exports = dependencies => {
 							}, {});
 							resolve(par[name]);
 						});
+					*/
 				});
 		});
 		traverse('0', root).then(response => {
