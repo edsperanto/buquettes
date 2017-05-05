@@ -162,7 +162,8 @@ body {
       background: url("../assets/search.svg") 50% no-repeat;
       border: none;
       width: 12vw;
-      height: 44px; }
+      height: 44px;
+      color: transparent; }
       .search-container .search-form .search-button:hover {
         cursor: pointer; }
       .search-container .search-form .search-button:focus {
@@ -182,7 +183,27 @@ body {
       text-transform: capitalize; }
       .search-container .search-results .search-filters li {
         padding: 0 0.5rem;
-        display: inline-block; }
+        display: inline-block;
+        position: relative;
+        margin: 0 1rem; }
+        .search-container .search-results .search-filters li label {
+          padding: 0 0.25rem 0 0; }
+        .search-container .search-results .search-filters li:first-child:before, .search-container .search-results .search-filters li:nth-child(2):before {
+          content: '';
+          position: absolute;
+          height: 26px;
+          width: 26px;
+          background: url("../assets/github.svg") no-repeat;
+          background-size: cover;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          left: -26px;
+          top: auto; }
+        .search-container .search-results .search-filters li:nth-child(2):before {
+          background: url("../assets/box.svg") no-repeat;
+          background-size: cover; }
 
 .file {
   padding: 0.5rem 0 0 0; }

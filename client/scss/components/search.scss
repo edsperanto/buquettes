@@ -23,6 +23,7 @@
       border: none;
       width: 12vw;
       height: 44px;
+      color: $transparent;
 
       &:hover{
         cursor: pointer;
@@ -52,6 +53,29 @@
       li {
         padding: 0 0.5rem;
         display: inline-block;
+        position: relative;
+        margin: 0 1rem;
+
+        label {
+          padding: 0 0.25rem 0 0;
+        }
+
+        &:first-child:before{
+          content: '';
+          position: absolute;
+          height: 26px;
+          width: 26px;
+          background: url('../assets/github.svg') no-repeat;
+          background-size: cover;
+          @include position-all(0);
+          left: -26px;
+          top: auto;
+        }
+        &:nth-child(2):before{
+          @extend li:first-child:before;
+          background: url('../assets/box.svg') no-repeat;
+          background-size: cover;
+        }
       }
 
     }
