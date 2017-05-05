@@ -1,5 +1,6 @@
-.env
 node_modules
-config.json
-server/.credentials
-server/dump.rdb
+dist
+build
+.DS_Store
+*.log
+server/config/config.json

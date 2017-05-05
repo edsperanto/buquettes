@@ -37,14 +37,14 @@ export function login(username, email, first_name, last_name) {
   }
 }
 
-export function addFile(id, source, name, createdAt, lastModified) {
+export function addFile(name, path, repo, html_url, modified_at, type) {
   return {
     type: ADD_FILE,
-    id,
-    source,
     name,
-    createdAt,
-    lastModified
+    path,
+    repo,
+    html_url,
+    modified_at
   }
 }
 

@@ -9,7 +9,7 @@ import SearchFilter from '../components/SearchFilter';
 class SearchResultsContainer extends Component {
   constructor(props) {
     super(props);
-    this.sources = ['github', 'googledrive']
+    this.sources = ['github', 'box']
     this.state = {
       sources : []
     }
@@ -49,6 +49,7 @@ class SearchResultsContainer extends Component {
   }
 
   render(){
+    console.log(this.props.files.files);
     return(
       <div className="search-results">
         <div>
@@ -60,25 +61,26 @@ class SearchResultsContainer extends Component {
         {
           this.props.files.files.filter( file => {
             for( let i = 0; i < this.state.sources.length; i++ ){
-              if(file.source === this.state.sources[i]){
+              if(file.path === this.state.sources[i]){
                 return file;
               };
             }
-						return 0;
+						return;
           }).filter( file => {
             if( this.props.query === ""){
-              return 0;
+              return;
             }else{
               return file.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1;
             }
           }).map( file => {
+            console.log('mapfile', file);
             return (
               <File
-                id={file.id}
-                source={file.source}
                 name={file.name}
-                createdAt={file.createdAt}
-                lastModified={file.lastModified}
+                path={file.path}
+                repo={file.repo}
+                html_url={file.html_url}
+                modified_at={file.modified_at}
               />
             )
           })
@@ -97,13 +99,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addFile: (id, source, name, createdAt, lastModified) => {
+    addFile: (name, path, repo, html_url, modified_at, type) => {
       dispatch(addFile(
-        id,
-        source,
         name,
-        createdAt,
-        lastModified
+        path,
+        repo,
+        html_url,
+        modified_at,
+        type
       ));
     }
   }

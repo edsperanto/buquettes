@@ -80,10 +80,10 @@ class HomeContainer extends Component {
         .then( error => {
           console.log('error: ', error);
         })
-      electron_data.get('services')
-        .then( value => {
-          console.log('value of files: ', value)
-      }) //use to get files and store in redux store
+      // electron_data.get('services')
+      //   .then( value => {
+      //     console.log('value of files: ', _flattenDeep(value))
+      // }) //use to get files and store in redux store
     })
   }
 
