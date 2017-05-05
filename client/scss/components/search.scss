@@ -8,6 +8,8 @@
   .search-form{
     display: flex;
     border-bottom: solid 1px $light-grey;
+    position: absolute;
+    background: $white;
 
     .search-input{
       border: none;
@@ -22,7 +24,6 @@
       background: url('../assets/search.svg') 50% no-repeat;
       border: none;
       width: 12vw;
-      height: 44px;
       color: $transparent;
 
       &:hover{
@@ -39,6 +40,7 @@
     display: flex;
     flex-flow: column nowrap;
     overflow: scroll;
+    margin: 2.5rem 0;
 
     .search-filters{
       width: 100%;
