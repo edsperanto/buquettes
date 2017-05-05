@@ -22,7 +22,7 @@ class App extends Component {
         <Router>
           <div className='route-container'>
             <HeaderContainer />
-            <Route path="/" component={HomeContainer} />
+            <Route exact path="/" component={HomeContainer} />
             <Route path="/login" component={LoginContainer} />
             <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
