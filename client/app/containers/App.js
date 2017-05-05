@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+	Redirect
 } from 'react-router-dom';
 
 import HeaderContainer from './HeaderContainer';
@@ -23,7 +24,8 @@ class App extends Component {
         <Router>
           <div className='route-container'>
             <HeaderContainer />
-            <Route path="/" component={HomeContainer} />
+						<Redirect to="/" />
+            <Route exact path="/" component={HomeContainer} />
             <Route path="/login" component={LoginContainer} />
             <Route path="/profile" component={ProfileContainer} />
             <Route path="/signup" component={SignUpContainer} />
