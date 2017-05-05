@@ -37,13 +37,32 @@
     }
   }
 
-  a{
+  .skip-step{
     text-decoration: none;
     width: 100%;
     color: $space-blue;
     transition: 0.5s ease all;
-    &:hover{
+    max-height: 1rem;
+    position: relative;
+    padding-bottom: 4px;
+    &:after{
+      transition: 0.4s ease all;
+      content: '';
+      position: absolute;
+      margin: auto;
+      width: 0;
+      @include position-all(0);
+      top: auto;
+    }
 
+    &:hover{
+      color: $blue-purp-hover;
+
+      &:after{
+        height: 2px;
+        width: 6rem;
+        background: $blue-purp-hover;
+      }
     }
   }
 }

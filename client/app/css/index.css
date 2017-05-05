@@ -118,7 +118,11 @@ body {
     display: block;
     padding: 0.5rem 1rem;
     text-transform: capitalize;
-    text-decoration: none; }
+    text-decoration: none;
+    transition: 0.3s ease all;
+    position: relative; }
+    #header a:hover {
+      color: rgba(255, 255, 255, 0.75); }
   #header #title {
     width: 106px;
     background: url("../assets/stratospeer-logo.svg") no-repeat;
@@ -226,8 +230,28 @@ body {
       cursor: pointer; }
     .services-container .service-card img {
       display: none; }
-  .services-container a {
+  .services-container .skip-step {
     text-decoration: none;
     width: 100%;
     color: #4568DC;
-    transition: 0.5s ease all; }
+    transition: 0.5s ease all;
+    max-height: 1rem;
+    position: relative;
+    padding-bottom: 4px; }
+    .services-container .skip-step:after {
+      transition: 0.4s ease all;
+      content: '';
+      position: absolute;
+      margin: auto;
+      width: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      top: auto; }
+    .services-container .skip-step:hover {
+      color: #274ece; }
+      .services-container .skip-step:hover:after {
+        height: 2px;
+        width: 6rem;
+        background: #274ece; }
