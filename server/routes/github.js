@@ -49,15 +49,19 @@ module.exports = (dependencies) => {
 					function(err, header, body){
 						let parsedBody = JSON.parse(body);
 						let username = parsedBody.login;
-						GitHubOAuth.create(
-							{
-								token: token,
-								username: username,
-								scope: 'repo',
-								user_id: userIDtoUse
-							});
-
-						resolve(parsedBody);
+						GitHubOAuth.destroy({
+							where: {user_id: userIDtoUse}
+						})
+							.then(_ => {
+								GitHubOAuth.create(
+									{
+										token: token,
+										username: username,
+										scope: 'repo',
+										user_id: userIDtoUse
+									});
+								resolve(parsedBody);
+							})
 					});				
 			})
 			.then((userBody) => {
