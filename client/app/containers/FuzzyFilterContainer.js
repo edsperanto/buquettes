@@ -137,7 +137,18 @@ class FuzzyFilterContainer extends Component {
 
   render() {
     const fuseConfig = {
-      keys: ['name', 'repo']
+      shouldSort: true,
+      includeScore: true,
+      includeMatches: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: [
+        "name",
+        "repo"
+      ]
     };
     return (
       <div>
