@@ -1,0 +1,12 @@
+#profile{
+  @extend .home-container;
+
+  h1{
+    font-size: 1.27rem;
+    padding: 8px 0;
+  }
+
+  h3{
+    padding: 5px 0;
+  }
+}
