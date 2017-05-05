@@ -56,7 +56,7 @@ class HeaderContainer extends Component {
 		}
 
 		return <div id="header">
-			<Link key="title" to="/">
+			<Link key="title" to="/search">
 				<div id="title"><b>Stratospeer</b></div>
 			</Link>
 			{menu}
