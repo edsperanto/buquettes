@@ -53,45 +53,39 @@ class FuzzyFilterContainer extends Component {
         })
         .map(service => {
 					if(service === 'box') {
-						/*
-						const genSearchableArr = new Promise((resolve, reject) => {
-							let count = 0;
-							let finalArr = [];
-							const traverse = (obj, dir) => {
-								count++;
-								Object.keys(obj).forEach(item => {
-									let searchEntry = {name: item, path: dir};
-									let {id, children} = obj[item];
-									searchEntry.id = id;
-									searchEntry.repo = null;
-									searchEntry.source = 'box';
-									if(!!children) {
-										let newPath = dir + `/${item}`;
-										searchEntry.type = 'tree';
-										traverse(obj[item].children, newPath);
-									}else{
-										searchEntry.type = 'blob';
-									}
-									finalArr.push(searchEntry);
-									count--;
-									if(count === 0) resolve(finalArr);
-									this.props.onUpdateBoxData(searchEntry);
-								});
-							}
-						});
+						const genSearchableArr = (data, path) => {
+							return new Promise((resolve, reject) => {
+								let count = 0;
+								let finalArr = [];
+								const traverse = (obj, dir) => {
+									count++;
+									Object.keys(obj).forEach(item => {
+										let searchEntry = {name: item, path: dir};
+										let {id, children} = obj[item];
+										searchEntry.id = id;
+										searchEntry.repo = null;
+										searchEntry.source = 'box';
+										if(!!children) {
+											let newPath = dir + `/${item}`;
+											searchEntry.type = 'tree';
+											traverse(obj[item].children, newPath);
+										}else{
+											searchEntry.type = 'blob';
+										}
+										finalArr.push(searchEntry);
+										count--;
+										if(count === 0) resolve(finalArr);
+										this.props.onUpdateBoxData(searchEntry);
+									});
+								}
+								traverse(data, path);
+							});
+						}
 						return this.getSingleServiceData(service)
 							.then(data => {
 								let parsed = JSON.parse(data).directory_structure;
 								return genSearchableArr(parsed, '/Box');
 							});
-						return this.getSingleServiceData(service)
-							.then(JSON.parse)
-							.then(data => data.map(entry => {
-								entry.source = 'box';
-								return entry
-							}));
-						*/
-						return [];
 					}else{
 						return this.getSingleServiceData(service)
 							.then(JSON.parse)
@@ -158,7 +152,7 @@ class FuzzyFilterContainer extends Component {
              return(
               <div>
                 {filteredItems.map(file => 
-                  <div key={file.html_url}> 
+                  <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}> 
                     <File
                       name={file.name}
                       path={file.path}
