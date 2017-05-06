@@ -190,7 +190,6 @@ class FuzzyFilterContainer extends Component {
             }}
           </FilterResults>
         </div>
-        <SearchResultsContainer/>
       </div>
     );
   }
