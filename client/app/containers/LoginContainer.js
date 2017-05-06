@@ -20,7 +20,7 @@ class LoginContainer extends Component {
 			this.props.onUpdateErr(error);
 			if(success) {
 				this.props.onUpdateCurr(currentUser);
-				this.props.history.push('/search', null);
+				this.props.history.push('/services', null);
 			}
 		}
 		xhr.addEventListener('load', signUpHandler);

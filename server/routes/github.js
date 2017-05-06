@@ -49,23 +49,19 @@ module.exports = (dependencies) => {
 					function(err, header, body){
 						let parsedBody = JSON.parse(body);
 						let username = parsedBody.login;
-						GitHubOAuth.destroy({
-							where: {user_id: userIDtoUse}
-						})
-							.then(_ => {
-								GitHubOAuth.create(
-									{
-										token: token,
-										username: username,
-										scope: 'repo',
-										user_id: userIDtoUse
-									});
-								resolve(parsedBody);
-							})
+						GitHubOAuth.create(
+							{
+								token: token,
+								username: username,
+								scope: 'repo',
+								user_id: userIDtoUse
+							});
+
+						resolve(parsedBody);
 					});				
 			})
 			.then((userBody) => {
-				res.redirect('/api/redirect.html');
+				res.send('You may now close this window, thank you for authorizing StratosPeer on your behalf! :) '); //sends to home route
 			});
 		});
 	});

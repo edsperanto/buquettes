@@ -11,11 +11,12 @@ function files(state = initialState, action) {
       files: [
         ...state.files,
         {
-          id: action.id,
-          source: action.source,
           name: action.name,
-          createdAt: action.createdAt,
-          lastModified: action.lastModified
+          path: action.path,
+          repo: action.repo,
+          html_url: action.html_url,
+          modified_at: action.modified_at,
+          type: action.type
         }
       ]
     })

@@ -63,8 +63,8 @@ app.on('ready', async () => {
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  })); 
- 
+  }));
+
 
   //shell.openExternal("http://www.google.com")
   const quickShortcut = globalShortcut.register('CommandOrControl+G', () => {

@@ -4,3 +4,10 @@
   -ms-border-radius: $radius;
   border-radius: $radius;
 }
+
+@mixin position-all($value) {
+  top: $value;
+  bottom: $value;
+  right: $value;
+  left: $value;
+}

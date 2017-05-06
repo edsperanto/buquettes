@@ -38,25 +38,24 @@ class HeaderContainer extends Component {
 		let signup = <Link key="signup" to="/signup">
 			<div className="menu-btn">Signup</div>
 		</Link>
-		let search = <Link key="search" to="/search">
-			<div className="menu-btn">Search</div>
-		</Link>
 		let services = <Link key="services" to="/services">
 			<div className="menu-btn">services</div>
 		</Link>
+		let search = <Link key="search" to="/search">
+			<div className="menu-btn">search</div>
+		</Link>
 
 		switch(this.props.currentView) {
-			case '/': menu = [login, signup]; break;
-			case '/login': menu = [login, signup, search]; break;
+			case '/login': menu = [signup]; break;
+			case '/profile': menu = [login, search]; break;
 			case '/signup': menu = [login]; break;
-			case '/profile': menu = [login, search, services]; break;
 			case '/search': menu = [login, services]; break;
 			case '/services': menu = [login, search]; break;
-			default: menu = [login, signup]; break;
+			default: menu = [login]; break;
 		}
 
 		return <div id="header">
-			<Link key="title" to="/search">
+			<Link key="title" to={this.props.currentUser.authenticated ? "/search" : "/login"}>
 				<div id="title"><b>Stratospeer</b></div>
 			</Link>
 			{menu}

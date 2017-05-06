@@ -87,7 +87,6 @@ class HomeContainer extends Component {
 
   componentWillMount(){    
     this.props.onUpdateView(this.props.location.pathname);
-		console.log('currentUser: ', this.props.currentUser);
 		if(!this.props.currentUser.authenticated) {
 			this.props.history.push('/login');
 		}else{

@@ -52,9 +52,10 @@ body {
   font-weight: 300;
   font-family: "Roboto", sans-serif;
   background: linear-gradient(-90deg, #B06AB3 0%, #4568DC 100%) no-repeat;
-  height: 100vh; }
+  height: 100vh;
+  overflow: hidden; }
 
-#login {
+#login, #signup {
   background: #fff;
   padding: 8px;
   display: flex;
@@ -67,18 +68,18 @@ body {
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   border-radius: 4px; }
-  #login .error {
+  #login .error, #signup .error {
     text-align: center;
     color: red; }
-  #login div {
+  #login div, #signup div {
     display: flex;
     flex-flow: column nowrap;
     padding: 8px 25%;
     color: #7B69C7; }
-    #login div label {
+    #login div label, #signup div label {
       font-size: 0.875rem;
       margin-bottom: 4px; }
-    #login div input {
+    #login div input, #signup div input {
       font-size: 1rem;
       padding: 8px 6px;
       border: 1px solid #7B69C7;
@@ -86,9 +87,9 @@ body {
       -moz-border-radius: 2px;
       -ms-border-radius: 2px;
       border-radius: 2px; }
-      #login div input:focus {
+      #login div input:focus, #signup div input:focus {
         outline: none; }
-    #login div button {
+    #login div button, #signup div button {
       -webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
       border: none;
       background: #4568DC;
@@ -100,12 +101,12 @@ body {
       -moz-border-radius: 2px;
       -ms-border-radius: 2px;
       border-radius: 2px; }
-      #login div button:hover {
+      #login div button:hover, #signup div button:hover {
         background: #274ece;
         cursor: pointer; }
-      #login div button:focus {
+      #login div button:focus, #signup div button:focus {
         outline: none; }
-  #login h1 {
+  #login h1, #signup h1 {
     padding: 8px 0;
     text-align: center;
     font-size: 1.375rem; }
@@ -118,4 +119,162 @@ body {
     display: block;
     padding: 0.5rem 1rem;
     text-transform: capitalize;
-    text-decoration: none; }
+    text-decoration: none;
+    transition: 0.3s ease all;
+    position: relative; }
+    #header a:hover {
+      color: rgba(255, 255, 255, 0.75); }
+  #header #title {
+    width: 106px;
+    background: url("../assets/stratospeer-logo.svg") no-repeat;
+    white-space: nowrap;
+    color: transparent; }
+  #header .menu-btn div a:nth-child(2) {
+    position: absolute;
+    right: 0;
+    top: 0; }
+
+.home-container, #profile, .search-container, .services-container {
+  background: #fff;
+  height: 90vh;
+  text-align: center;
+  padding: 16px;
+  box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.25); }
+
+#profile h1 {
+  font-size: 1.27rem;
+  padding: 8px 0; }
+
+#profile h3 {
+  padding: 5px 0; }
+
+.search-container {
+  padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative; }
+  .search-container input.react-fuzzy-filter__input {
+    border: none;
+    outline: none;
+    background: none;
+    width: 100vw;
+    font-size: 1rem;
+    padding: 12px 8px;
+    border-bottom: solid 1px #d8d8d8;
+    display: flex;
+    position: absolute;
+    background: #fff url("../assets/search.svg") 95% no-repeat; }
+  .search-container .search-results {
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: scroll;
+    margin: 2.5rem 0; }
+    .search-container .search-results .search-filters {
+      width: 100%;
+      background: #fff;
+      bottom: 0;
+      position: absolute;
+      border-top: 1px solid #d8d8d8;
+      text-align: right;
+      padding: 1rem 0;
+      text-transform: capitalize; }
+      .search-container .search-results .search-filters li {
+        padding: 0 0.5rem;
+        display: inline-block;
+        position: relative;
+        margin: 0 1rem; }
+        .search-container .search-results .search-filters li label {
+          padding: 0 0.25rem 0 0; }
+        .search-container .search-results .search-filters li input {
+          width: relative; }
+        .search-container .search-results .search-filters li:first-child:before, .search-container .search-results .search-filters li:nth-child(2):before {
+          content: '';
+          position: absolute;
+          height: 26px;
+          width: 26px;
+          background: url("../assets/github.svg") no-repeat;
+          background-size: cover;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          left: -26px;
+          top: auto; }
+        .search-container .search-results .search-filters li:nth-child(2):before {
+          background: url("../assets/box.svg") no-repeat;
+          background-size: cover; }
+
+.file {
+  padding: 0.5rem 0 0 0; }
+  .file:hover {
+    background: #f7f7f7;
+    cursor: pointer; }
+  .file ul {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly; }
+    .file ul li {
+      border-bottom: 0.5px solid #d8d8d8;
+      width: 20%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+      padding: 0.75rem 1rem; }
+
+.services-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center; }
+  .services-container .green {
+    border: 0.5px solid limegreen !important; }
+  .services-container .service-card {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-content: flex-end;
+    text-transform: capitalize;
+    border: 0.5px solid #d8d8d8;
+    padding: 1rem;
+    height: 8rem;
+    width: 8rem;
+    margin: 0 1rem;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); }
+    .services-container .service-card:first-child {
+      background: url("../assets/github.svg") 50% no-repeat;
+      background-size: 50%; }
+    .services-container .service-card:nth-child(2) {
+      background: url("../assets/box.svg") 50% no-repeat;
+      background-size: 50%; }
+    .services-container .service-card:hover {
+      cursor: pointer; }
+    .services-container .service-card img {
+      display: none; }
+  .services-container .skip-step {
+    text-decoration: none;
+    width: 100%;
+    color: #4568DC;
+    transition: 0.5s ease all;
+    max-height: 1rem;
+    position: relative;
+    padding-bottom: 4px; }
+    .services-container .skip-step:after {
+      transition: 0.4s ease all;
+      content: '';
+      position: absolute;
+      margin: auto;
+      width: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      top: auto; }
+    .services-container .skip-step:hover {
+      color: #274ece; }
+      .services-container .skip-step:hover:after {
+        height: 2px;
+        width: 6rem;
+        background: #274ece; }

@@ -1,11 +1,34 @@
 #header {
   display: flex;
   flex-flow: row nowrap;
+
   a {
     color: $white;
     display: block;
     padding: 0.5rem 1rem;
     text-transform: capitalize;
     text-decoration: none;
+    transition: 0.3s ease all;
+    position: relative;
+
+
+    &:hover{
+      color: $transparent-white;
+    }
+  }
+
+  #title{
+    width: 106px;
+    background: url('../assets/stratospeer-logo.svg') no-repeat;    white-space: nowrap;
+    color: $transparent;
+  }
+  .menu-btn{
+    div {
+      a:nth-child(2){
+        position: absolute;
+        right: 0;
+        top:0;
+      }
+    }
   }
 }

@@ -1,0 +1,93 @@
+.search-container{
+  @extend .home-container;
+  padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative;
+
+  input.react-fuzzy-filter__input{
+    border: none;
+    outline: none;
+    background: none;
+    width: 100vw;
+    font-size: 1rem;
+    padding: 12px 8px;
+    border-bottom: solid 1px $light-grey;
+    display: flex;
+    position: absolute;
+    background: $white url('../assets/search.svg') 95% no-repeat;
+
+  }
+  .search-results{
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: scroll;
+    margin: 2.5rem 0;
+
+    .search-filters{
+      width: 100%;
+      background: $white;
+      bottom: 0;
+      position: absolute;
+      border-top: 1px solid $light-grey;
+      text-align: right;
+      padding: 1rem 0;
+      text-transform: capitalize;
+
+      li {
+        padding: 0 0.5rem;
+        display: inline-block;
+        position: relative;
+        margin: 0 1rem;
+
+        label {
+          padding: 0 0.25rem 0 0;
+        }
+        input{
+          width: relative;
+        }
+        &:first-child:before{
+          content: '';
+          position: absolute;
+          height: 26px;
+          width: 26px;
+          background: url('../assets/github.svg') no-repeat;
+          background-size: cover;
+          @include position-all(0);
+          left: -26px;
+          top: auto;
+        }
+        &:nth-child(2):before{
+          @extend li:first-child:before;
+          background: url('../assets/box.svg') no-repeat;
+          background-size: cover;
+        }
+      }
+
+    }
+  }
+}
+.file {
+  padding: 0.5rem 0 0 0;
+
+  &:hover{
+    background: $lighter-grey;
+    cursor: pointer;
+  }
+
+  ul {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+
+    li {
+      border-bottom: 0.5px solid $light-grey;
+      width: 20%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+      padding: 0.75rem 1rem;
+
+    }
+  }
+}

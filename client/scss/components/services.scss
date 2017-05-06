@@ -1,0 +1,71 @@
+.services-container{
+  @extend .home-container;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+	.green {
+		border: 0.5px solid limegreen !important;
+	}
+
+  .service-card{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-content: flex-end;
+    text-transform: capitalize;
+    border: 0.5px solid $light-grey;
+    padding: 1rem;
+    height: 8rem;
+    width: 8rem;
+    margin: 0 1rem;
+    @include border-radius(4px);
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+
+    &:first-child {
+      background: url('../assets/github.svg') 50% no-repeat;
+      background-size: 50%;
+    }
+    &:nth-child(2) {
+      background: url('../assets/box.svg') 50% no-repeat;
+      background-size: 50%;
+    }
+
+    &:hover{
+      cursor: pointer;
+    }
+
+    img{
+      display: none;
+    }
+  }
+
+  .skip-step{
+    text-decoration: none;
+    width: 100%;
+    color: $space-blue;
+    transition: 0.5s ease all;
+    max-height: 1rem;
+    position: relative;
+    padding-bottom: 4px;
+    &:after{
+      transition: 0.4s ease all;
+      content: '';
+      position: absolute;
+      margin: auto;
+      width: 0;
+      @include position-all(0);
+      top: auto;
+    }
+
+    &:hover{
+      color: $blue-purp-hover;
+
+      &:after{
+        height: 2px;
+        width: 6rem;
+        background: $blue-purp-hover;
+      }
+    }
+  }
+}
