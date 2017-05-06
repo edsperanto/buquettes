@@ -58,31 +58,27 @@ class SearchResultsContainer extends Component {
           />
         </div>
         {
-          this.props.files.files.filter( file => {
-            for( let i = 0; i < this.state.sources.length; i++ ){
-              if(file.path === this.state.sources[i]){
-                return file;
-              };
-            }
-						return;
-          }).filter( file => {
-            if( this.props.query === ""){
-              return;
-            }else{
-              return file.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1;
-            }
-          }).map( file => {
-            return (
-              <File
+					this.props.files.files
+						.filter(file => {
+							for(let i = 0; i < this.state.sources.length; i++)
+								if(file.path === this.state.sources[i]) return file;
+						})
+						.filter(file => {
+							let name = file.name.toLowerCase();
+							let query = this.props.query.toLowerCase();
+							// return (query === "") ? true : (name.indexOf(query) > -1);
+							return true;
+						})
+						.map(file => {
+							return <File
 								key={file.html_url ? file.html_url : JSON.stringify(file.id)}
-                name={file.name}
-                path={file.path}
-                repo={file.repo}
-                html_url={file.html_url}
-                modified_at={file.modified_at}
-              />
-            )
-          })
+								name={file.name}
+								path={file.path}
+								repo={file.repo}
+								html_url={file.html_url}
+								modified_at={file.modified_at}
+							/>
+						})
         }
       </div>
       )

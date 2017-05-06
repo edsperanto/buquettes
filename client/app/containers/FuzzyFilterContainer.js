@@ -60,6 +60,20 @@ class FuzzyFilterContainer extends Component {
           return obj[key] === true
         })
         .map(service => {
+					const modConverter = time => {
+						let year = parseInt(time.substr(0, 4));
+						let month = parseInt(time.substr(5, 2));
+						let date = parseInt(time.substr(8, 2));
+						let hour = parseInt(time.substr(11, 2));
+						let min = parseInt(time.substr(14, 2));
+						let sec = parseInt(time.substr(17, 2));
+						year = (year - 1960) * 3600 * 24 * 30 * 12;
+						month = month * 3600 * 24 * 30;
+						date = date * 3600 * 24;
+						hour = hour * 3600;
+						min = min * 60;
+						return year + month + date + hour + min + sec;
+					}
 					if(service === 'box') {
 						const genSearchableArr = (data, path) => {
 							return new Promise((resolve, reject) => {
@@ -92,7 +106,11 @@ class FuzzyFilterContainer extends Component {
 							.then(data => {
 								let parsed = JSON.parse(data).directory_structure.children;
 								return genSearchableArr(parsed, '/Box');
-							});
+							})
+							.then(data => data.map(entry => {
+								entry.modified_at = modConverter(entry.modified_at);
+								return entry;
+							}));
 					}else{
 						return this.getSingleServiceData(service)
 							.then(JSON.parse)
@@ -100,6 +118,7 @@ class FuzzyFilterContainer extends Component {
 								entry.source = 'github';
 								entry.repo = 'GitHub/' + entry.repo;
 								entry.type = (entry.type === 'tree' ? 'Folder' : 'File');
+								entry.modified_at = modConverter(entry.modified_at);
 								return entry;
 							}));
 					}
@@ -110,20 +129,21 @@ class FuzzyFilterContainer extends Component {
   }
 
   serviceFilesToElectron = () =>{
-    this.allServiceFiles().then(files =>{
-      electron_data.config({
-				filename: 'service_data',
-				path: "",
-				prettysave: true
+    this.allServiceFiles()
+			.then(files =>{
+				electron_data.config({
+					filename: 'service_data',
+					path: "",
+					prettysave: true
+				});
+				electron_data.set('services', files);
+				electron_data.save()
+					.then( error => {
+						if(error) console.log('error: ', error);
+						return electron_data.get('services')
+					})
+					.then(files => this.setState({files}));
 			});
-      electron_data.set('services', files);
-      electron_data.save()
-        .then( error => {
-					if(error) console.log('error: ', error);
-					return electron_data.get('services')
-        })
-				.then(files => this.setState({files}));
-    });
   }
 
   render() {
@@ -153,17 +173,24 @@ class FuzzyFilterContainer extends Component {
             {filteredItems => {
                return(
                 <div>
-                  {filteredItems.map(file =>
-                    <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}>
-                      <File
-                        name={file.name}
-                        path={file.path}
-                        repo={file.repo}
-                        html_url={file.html_url}
-                        modified_at={file.modified_at}
-                        type={file.type}
-                      />
-                    </div>)}
+                  {
+									filteredItems
+										.sort((a, b) => {
+											return b.modified_at - a.modified_at;
+										})
+										.map(file => {
+											return <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}>
+												<File
+													name={file.name}
+													path={file.path}
+													repo={file.repo}
+													html_url={file.html_url}
+													modified_at={file.modified_at}
+													type={file.type}
+												/>
+											</div>
+										})
+									}
                 </div>
               )
             }}
