@@ -225,6 +225,8 @@ body {
   display: flex;
   flex-flow: row wrap;
   justify-content: center; }
+  .services-container .green {
+    border: 0.5px solid limegreen !important; }
   .services-container .service-card {
     display: flex;
     flex-flow: column nowrap;

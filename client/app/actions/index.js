@@ -13,12 +13,15 @@ export const NEW_LAST_NAME = 'NEW_LAST_NAME';
 export const NEW_ERR = 'NEW_ERR';
 export const UPDATE_BOX_DATA = 'UPDATE_BOX_DATA';
 export const UPDATE_VIEW = 'UPDATE_VIEW';
+export const UPDATE_CONNECTED = 'UPDATE_CONNECTED';
 
 export const updateUsr = usr => ({type: UPDATE_LOGIN_USR, usr});
 export const updatePswd = pswd => ({type: UPDATE_LOGIN_PSWD, pswd});
 export const updateErr = err => ({type: UPDATE_LOGIN_ERR, err});
 export const updateCurr = curr => Object.assign({}, curr, {type: UPDATE_CURR});
 export const logoutCurr = _ => ({type: LOGOUT_CURR});
+
+export const updateConnected = obj => Object.assign({}, obj, {type: UPDATE_CONNECTED});
 
 export const newUsername = username => ({type: NEW_USERNAME, username});
 export const newEmail = email => ({type: NEW_EMAIL, email});

@@ -4,6 +4,10 @@
   flex-flow: row wrap;
   justify-content: center;
 
+	.green {
+		border: 0.5px solid limegreen !important;
+	}
+
   .service-card{
     display: flex;
     flex-flow: column nowrap;

@@ -26,6 +26,7 @@ class FuzzyFilterContainer extends Component {
 			this.props.history.push('/login', null);
 		this.props.onUpdateView(this.props.location.pathname);
 		this.serviceFilesToElectron();
+		clearInterval(window.myInterval);
 	}
 
   handleChange = ( event ) => {
@@ -34,14 +35,7 @@ class FuzzyFilterContainer extends Component {
 
   serviceStates = _ => {
 		return new Promise((resolve, reject) => {
-			function reqListener() {
-				let data = JSON.parse(this.responseText);
-				resolve(data);
-			}
-			const oReq = new XMLHttpRequest();
-			oReq.addEventListener('load', reqListener);
-			oReq.open('GET', 'https://www.stratospeer.com/api/oauth2/all', true);
-			oReq.send();
+			resolve(this.props.connected);
 		});
 	};
 
@@ -205,7 +199,8 @@ class FuzzyFilterContainer extends Component {
 function mapStateToProps(state) {
 	return {
 		currentUser: state.users.currentUser,
-		currentView: state.views.currentView
+		currentView: state.views.currentView,
+		connected: state.data.connected
 	}
 }
 
