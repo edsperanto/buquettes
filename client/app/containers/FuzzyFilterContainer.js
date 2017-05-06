@@ -206,7 +206,7 @@ class FuzzyFilterContainer extends Component {
 										.map(file => {
 											let unix = file.modified_at;
 											let diff = now - unix;
-											file.modified_at = calcTimeDiffOf(diff);
+											file.modified_at_ago = calcTimeDiffOf(diff);
 											return file;
 										})
 										.map(file => {
@@ -216,7 +216,7 @@ class FuzzyFilterContainer extends Component {
 													path={file.path}
 													repo={file.repo}
 													html_url={file.html_url}
-													modified_at={file.modified_at}
+													modified_at={file.modified_at_ago}
 													type={file.type}
 												/>
 											</div>
