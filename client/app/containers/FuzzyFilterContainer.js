@@ -13,6 +13,49 @@ const _flattenDeep = require('lodash.flattendeep');
 // these components share state and can even live in different components
 const {InputFilter, FilterResults} = fuzzyFilterFactory();
 
+// dateConverters
+const modConverter = time => {
+	let year = parseInt(time.substr(0, 4));
+	let month = parseInt(time.substr(5, 2));
+	let date = parseInt(time.substr(8, 2));
+	let hour = parseInt(time.substr(11, 2));
+	let min = parseInt(time.substr(14, 2));
+	let sec = parseInt(time.substr(17, 2));
+	year = (year - 1960) * 3600 * 24 * 30 * 12;
+	month = month * 3600 * 24 * 30;
+	date = date * 3600 * 24;
+	hour = hour * 3600;
+	min = min * 60;
+	return year + month + date + hour + min + sec;
+}
+const calcTimeDiffOf = (diffTime) => {
+	let str = "";
+	if(diffTime < 60) { 
+		str = `${Math.floor(diffTime)} second`;
+		str += (diffTime >= 2) ? ('s') : ('');
+	}else if(diffTime >= 60 && diffTime < 3600) {
+		str = `${Math.floor(diffTime / 60)} minute`;
+		str += (diffTime / 60 >= 2) ? ('s') : ('');
+	}else if(diffTime >= 3600 && diffTime < 86400) {
+		str = `${Math.floor(diffTime / 3600)} hour`;
+		str += (diffTime / 3600 >= 2) ? ('s') : ('');
+	}else if(diffTime >= 86400 && diffTime < 604800) {
+		str = `${Math.floor(diffTime / 86400)} day`;
+		str += (diffTime / 86400 >= 2) ? ('s') : ('');
+	}else if(diffTime >= 604800 && diffTime < 2629743) {
+		str = `${Math.floor(diffTime / 604800)} week`;
+		str += (diffTime / 604800 >= 2) ? ('s') : ('');
+	}else if(diffTime >= 2629743 && diffTime < 31556926) {
+		// average 30.44 days per month
+		str = `${Math.floor(diffTime / 2629743)} month`;
+		str += (diffTime / 2629743 >= 2) ? ('s') : ('');
+	}else if(diffTime >= 31556926) {
+		// average 365.24 days per year
+		str = `${Math.floor(diffTime / 31556926)} year`;
+		str += (diffTime / 31556926 >= 2) ? ('s') : ('');
+	}
+	return str + ' ago';
+}
 
 class FuzzyFilterContainer extends Component {
 
@@ -54,20 +97,6 @@ class FuzzyFilterContainer extends Component {
           return obj[key] === true
         })
         .map(service => {
-					const modConverter = time => {
-						let year = parseInt(time.substr(0, 4));
-						let month = parseInt(time.substr(5, 2));
-						let date = parseInt(time.substr(8, 2));
-						let hour = parseInt(time.substr(11, 2));
-						let min = parseInt(time.substr(14, 2));
-						let sec = parseInt(time.substr(17, 2));
-						year = (year - 1960) * 3600 * 24 * 30 * 12;
-						month = month * 3600 * 24 * 30;
-						date = date * 3600 * 24;
-						hour = hour * 3600;
-						min = min * 60;
-						return year + month + date + hour + min + sec;
-					}
 					if(service === 'box') {
 						const genSearchableArr = (data, path) => {
 							return new Promise((resolve, reject) => {
@@ -165,12 +194,20 @@ class FuzzyFilterContainer extends Component {
             fuseConfig={fuseConfig}
             onChange={this.handleChange}>
             {filteredItems => {
+							let curr = new Date().toISOString();
+							let now = modConverter(curr);
                return(
                 <div>
                   {
 									filteredItems
 										.sort((a, b) => {
 											return b.modified_at - a.modified_at;
+										})
+										.map(file => {
+											let unix = file.modified_at;
+											let diff = now - unix;
+											file.modified_at = calcTimeDiffOf(diff);
+											return file;
 										})
 										.map(file => {
 											return <div key={file.html_url ? file.html_url : JSON.stringify(file.id)}>
