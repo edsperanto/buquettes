@@ -27,7 +27,6 @@ dmg:
 mac:
   target: dmg
   category: public.app-category.tools
-  icon: "build/stratospeer.png"
 
 win:
   target: nsis

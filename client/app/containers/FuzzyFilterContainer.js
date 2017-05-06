@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import fuzzyFilterFactory from 'react-fuzzy-filter';
 
-import { addFile, updateView } from '../actions';
+import { addFile, updateView, updateFiles } from '../actions';
 import File from '../components/File';
-import SearchResultsContainer from './SearchResultsContainer';
 
 const electron_data = require('electron-data');
 const _flattenDeep = require('lodash.flattendeep');
@@ -154,6 +153,9 @@ class FuzzyFilterContainer extends Component {
   serviceFilesToElectron = () =>{
     this.allServiceFiles()
 			.then(files =>{
+				this.props.onUpdateFiles(files);
+				this.setState({files});
+				/*
 				electron_data.config({
 					filename: 'service_data',
 					path: "",
@@ -166,6 +168,7 @@ class FuzzyFilterContainer extends Component {
 						return electron_data.get('services')
 					})
 					.then(files => this.setState({files}));
+				*/
 			});
   }
 
@@ -189,7 +192,7 @@ class FuzzyFilterContainer extends Component {
         <InputFilter className="search-input" debounceTime={200} />
         <div className="search-results">
           <FilterResults
-            items={this.state.files}
+            items={this.props.files}
             defaultAllItems={false}
             fuseConfig={fuseConfig}
             onChange={this.handleChange}>
@@ -236,13 +239,15 @@ function mapStateToProps(state) {
 	return {
 		currentUser: state.users.currentUser,
 		currentView: state.views.currentView,
-		connected: state.data.connected
+		connected: state.data.connected,
+		files: state.files.files
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onUpdateView: view => dispatch(updateView(view))
+		onUpdateView: view => dispatch(updateView(view)),
+		onUpdateFiles: files => dispatch(updateFiles(files))
 	}
 }
 
