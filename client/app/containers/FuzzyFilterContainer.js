@@ -8,6 +8,7 @@ import File from '../components/File';
 const electron_data = require('electron-data');
 const _flattenDeep = require('lodash.flattendeep');
 
+import SearchResultsContainer from './SearchResultsContainer.js';
 
 // these components share state and can even live in different components
 const {InputFilter, FilterResults} = fuzzyFilterFactory();
@@ -184,7 +185,8 @@ class FuzzyFilterContainer extends Component {
       minMatchCharLength: 1,
       keys: [
         "name",
-        "repo"
+        "repo",
+				"path"
       ]
     };
     return (
@@ -230,6 +232,7 @@ class FuzzyFilterContainer extends Component {
             }}
           </FilterResults>
         </div>
+				<SearchResultsContainer />
       </div>
     );
   }
