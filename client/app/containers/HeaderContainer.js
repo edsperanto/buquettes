@@ -47,11 +47,11 @@ class HeaderContainer extends Component {
 
 		switch(this.props.currentView) {
 			case '/login': menu = [signup]; break;
-			case '/profile': menu = [login, services]; break;
+			case '/profile': menu = [login, search]; break;
 			case '/signup': menu = [login]; break;
-			case '/search': menu = [services]; break;
-			case '/services': menu = [search]; break;
-			default: menu = []; break;
+			case '/search': menu = [login, services]; break;
+			case '/services': menu = [login, search]; break;
+			default: menu = [login]; break;
 		}
 
 		return <div id="header">
