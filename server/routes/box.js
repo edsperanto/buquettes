@@ -166,7 +166,6 @@ module.exports = dependencies => {
 			});
 	});
 
-	// GET folder and file structure
 	router.get('/search', (req, res) => {
 		let root = {};
 		const traverse = (id, par) => new Promise((resolve, _) => {
@@ -181,28 +180,22 @@ module.exports = dependencies => {
 						if(entry.type === 'file') {
 							return client.get(`/files/${entry.id}`)
 								.then(response => ({
-									console.log('file: ', response.modified_at);
 									[entry.name]: {
 										id: response.id,
-										modified_at: cutTZ(response.modified_at),
-										type: 'blob'
+										modified_at: cutTZ(response.modified_at)
 									}
 								}));
 						}else if(entry.type === 'folder') {
 							return traverse(entry.id, children)
 								.then(response => ({
-									console.log('folder: ', response.modified_at);
 									[entry.name]: {
 										id: entry.id,
 										modified_at: cutTZ(response.modified_at),
-										children: response.children,
-										type: 'tree'
+										children: response.children
 									}
 								}));
 						}
 					}));
-					resolve(entriesArr)
-					/*
 					entriesArr
 						.then(entriesRes => {
 							par[name].children = entriesRes.reduce((prev, curr) => {
@@ -210,7 +203,6 @@ module.exports = dependencies => {
 							}, {});
 							resolve(par[name]);
 						});
-					*/
 				});
 		});
 		traverse('0', root).then(response => {
