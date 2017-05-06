@@ -49,7 +49,6 @@ class SearchResultsContainer extends Component {
   }
 
   render(){
-    console.log(this.props.files.files);
     return(
       <div className="search-results">
         <div>
@@ -73,9 +72,9 @@ class SearchResultsContainer extends Component {
               return file.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1;
             }
           }).map( file => {
-            console.log('mapfile', file);
             return (
               <File
+								key={file.html_url ? file.html_url : JSON.stringify(file.id)}
                 name={file.name}
                 path={file.path}
                 repo={file.repo}

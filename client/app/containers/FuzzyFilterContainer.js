@@ -66,24 +66,23 @@ class FuzzyFilterContainer extends Component {
 								let count = 0;
 								let finalArr = [];
 								const traverse = (obj, dir) => {
-									count++;
 									Object.keys(obj).forEach(item => {
+										count++;
 										let searchEntry = {name: item, path: dir};
-										let {id, children} = obj[item];
-										searchEntry.id = id;
-										searchEntry.repo = null;
+										let {id, children, modified_at} = obj[item];
+										Object.assign(searchEntry, {id, modified_at});
+										searchEntry.repo = 'Box';
 										searchEntry.source = 'box';
 										if(!!children) {
 											let newPath = dir + `/${item}`;
-											searchEntry.type = 'tree';
+											searchEntry.type = 'Folder';
 											traverse(obj[item].children, newPath);
 										}else{
-											searchEntry.type = 'blob';
+											searchEntry.type = 'File';
 										}
-										finalArr.push(searchEntry);
 										count--;
+										finalArr.push(searchEntry);
 										if(count === 0) resolve(finalArr);
-										this.props.onUpdateBoxData(searchEntry);
 									});
 								}
 								traverse(data, path);
@@ -91,7 +90,7 @@ class FuzzyFilterContainer extends Component {
 						}
 						return this.getSingleServiceData(service)
 							.then(data => {
-								let parsed = JSON.parse(data).directory_structure;
+								let parsed = JSON.parse(data).directory_structure.children;
 								return genSearchableArr(parsed, '/Box');
 							});
 					}else{
@@ -99,20 +98,14 @@ class FuzzyFilterContainer extends Component {
 							.then(JSON.parse)
 							.then(data => data.map(entry => {
 								entry.source = 'github';
+								entry.repo = 'GitHub/' + entry.repo;
+								entry.type = (entry.type === 'tree' ? 'Folder' : 'File');
 								return entry;
 							}));
 					}
         })
       )
-      .then(allResults => {
-        return _flattenDeep(allResults);
-      })
-      .catch(err=>{
-        console.log('allresults err0r: ', err)
-      })
-    })
-      .catch(err=>{
-        console.log('getservicestates err0r: ', err)
+      .then(_flattenDeep)
     });
   }
 
@@ -123,18 +116,13 @@ class FuzzyFilterContainer extends Component {
 				path: "",
 				prettysave: true
 			});
-      electron_data.set('services', files)
-        .then( data => {
-          console.log('my files: ', data);
-        });
+      electron_data.set('services', files);
       electron_data.save()
         .then( error => {
 					if(error) console.log('error: ', error);
 					return electron_data.get('services')
         })
-				.then(files=> {
-					this.setState ({files});
-				});;
+				.then(files => this.setState({files}));
     });
   }
 

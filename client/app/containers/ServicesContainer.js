@@ -15,12 +15,12 @@ class ServicesContainer extends Component {
       <div className="services-container">
         <ServiceCardContainer
           source="github"
-          logopath="../assets/github.svg"
+          logopath="https://s3-us-west-2.amazonaws.com/svgporn.com/logos/github-icon.svg"
           authpath={`${this.props.url}/oauth2/github/authorize`}
         />
         <ServiceCardContainer
           source="box"
-          logopath="assets/box.svg"
+          logopath="https://s3-us-west-2.amazonaws.com/svgporn.com/logos/box.svg"
           authpath={`${this.props.url}/oauth2/box/authorize`}
         />
         <Link to="/search" className="skip-step">

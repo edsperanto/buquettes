@@ -6,7 +6,7 @@ const SearchFilter = ({ sources, handleCheckbox }) => {
       {
         sources.map( source => {
           return (
-            <li className="search-filter">
+            <li key={source} className="search-filter">
               <label>{source}</label>
               <input
                 type="checkbox"
