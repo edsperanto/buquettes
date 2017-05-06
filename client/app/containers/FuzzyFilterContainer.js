@@ -21,6 +21,13 @@ class FuzzyFilterContainer extends Component {
     this.state = { files: [] }
   }
 
+	componentWillMount() {
+		if(!this.props.currentUser.authenticated)
+			this.props.history.push('/login', null);
+		this.props.onUpdateView(this.props.location.pathname);
+		this.serviceFilesToElectron();
+	}
+
   handleChange = ( event ) => {
     this.setState({files: event.target.value});
   }
@@ -130,11 +137,6 @@ class FuzzyFilterContainer extends Component {
 				});;
     });
   }
-
-	componentWillMount() {
-		this.props.onUpdateView(this.props.location.pathname);
-		this.serviceFilesToElectron();
-	}
 
   render() {
     const fuseConfig = {
