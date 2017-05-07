@@ -21,6 +21,8 @@
   }
 
   .search-results-header {
+    position: absolute;
+    top: 73px;
     ul{
       color: $grey;
       font-size: 0.75rem;
