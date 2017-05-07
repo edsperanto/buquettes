@@ -52,10 +52,10 @@ app.on('ready', async () => {
 
 
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
-    minWidth: 640,
-    minHeight: 480,
+    width: 600,
+    height: 520,
+    minWidth: 600,
+    minHeight: 520,
     show: false,
   });
 
@@ -110,7 +110,7 @@ app.on('ready', async () => {
       app: app,
       mainFile: 'main.js',
       bws: [
-        {bw: mainWindow, res: ['app.js', '/css/index.css']}
+        {bw: mainWindow, res: ['app.js', './css/index.css']}
       ]
     })
 

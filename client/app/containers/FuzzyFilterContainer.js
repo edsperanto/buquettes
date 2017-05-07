@@ -4,6 +4,7 @@ import fuzzyFilterFactory from 'react-fuzzy-filter';
 
 import { addFile, updateView, updateFiles } from '../actions';
 import File from '../components/File';
+import SearchResultsHeader from '../components/SearchResultsHeader';
 
 const electron_data = require('electron-data');
 const _flattenDeep = require('lodash.flattendeep');
@@ -30,7 +31,7 @@ const modConverter = time => {
 }
 const calcTimeDiffOf = (diffTime) => {
 	let str = "";
-	if(diffTime < 60) { 
+	if(diffTime < 60) {
 		str = `${Math.floor(diffTime)} second`;
 		str += (diffTime >= 2) ? ('s') : ('');
 	}else if(diffTime >= 60 && diffTime < 3600) {
@@ -193,6 +194,7 @@ class FuzzyFilterContainer extends Component {
       <div className="search-container">
         <InputFilter className="search-input" debounceTime={200} />
         <div className="search-results">
+          <SearchResultsHeader />
           <FilterResults
             items={this.props.files}
             defaultAllItems={false}

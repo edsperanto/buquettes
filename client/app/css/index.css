@@ -115,6 +115,7 @@ body {
   display: flex;
   flex-flow: row nowrap; }
   #header a {
+    font-size: 0.875rem;
     color: #fff;
     display: block;
     padding: 0.5rem 1rem;
@@ -152,7 +153,8 @@ body {
   padding: 0;
   display: flex;
   flex-flow: column nowrap;
-  position: relative; }
+  position: relative;
+  height: 95vh; }
   .search-container input.react-fuzzy-filter__input {
     border: none;
     outline: none;
@@ -163,12 +165,24 @@ body {
     border-bottom: solid 1px #d8d8d8;
     display: flex;
     position: absolute;
-    background: #fff url("../assets/search.svg") 95% no-repeat; }
+    background: #fff url("../assets/search.svg") 95% no-repeat;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1); }
+  .search-container .search-results-header ul {
+    color: #ccc;
+    font-size: 0.75rem;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    border-bottom: 1px solid #d8d8d8;
+    text-align: left; }
+    .search-container .search-results-header ul li {
+      padding: 0.5rem 0.5rem;
+      border-right: 1px solid #d8d8d8;
+      width: 20%; }
   .search-container .search-results {
     display: flex;
     flex-flow: column nowrap;
-    overflow: scroll;
-    margin: 2.5rem 0; }
+    overflow: scroll; }
     .search-container .search-results .search-filters {
       width: 100%;
       background: #fff;
@@ -224,9 +238,8 @@ body {
 .services-container {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center; }
-  .services-container .green {
-    border: 0.5px solid limegreen !important; }
+  justify-content: center;
+  padding-top: 2rem; }
   .services-container .service-card {
     display: flex;
     flex-flow: column nowrap;
@@ -251,9 +264,24 @@ body {
       background-size: 50%; }
     .services-container .service-card:hover {
       cursor: pointer; }
+    .services-container .service-card.green {
+      position: relative; }
+      .services-container .service-card.green:after {
+        content: '';
+        position: absolute;
+        background: rgba(255, 255, 255, 0.75);
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: 300px; }
+      .services-container .service-card.green:hover {
+        cursor: default; }
     .services-container .service-card img {
       display: none; }
   .services-container .skip-step {
+    margin-top: -5rem;
     text-decoration: none;
     width: 100%;
     color: #4568DC;

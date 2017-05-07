@@ -4,6 +4,7 @@
   display: flex;
   flex-flow: column nowrap;
   position: relative;
+  height: 95vh;
 
   input.react-fuzzy-filter__input{
     border: none;
@@ -16,13 +17,31 @@
     display: flex;
     position: absolute;
     background: $white url('../assets/search.svg') 95% no-repeat;
-
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.1);
   }
+
+  .search-results-header {
+    ul{
+      color: $grey;
+      font-size: 0.75rem;
+      width: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      border-bottom: 1px solid $light-grey;
+      text-align: left;
+
+      li {
+        padding: 0.5rem 0.5rem;
+        border-right: 1px solid $light-grey;
+        width: 20%;
+      }
+    }
+  }
+
   .search-results{
     display: flex;
     flex-flow: column nowrap;
     overflow: scroll;
-    margin: 2.5rem 0;
 
     .search-filters{
       width: 100%;
