@@ -60,10 +60,11 @@ class HomeContainer extends Component {
 
   serviceFilesToElectron = () =>{
     this.allServiceFiles().then(files =>{
+      let tmpPath = os.tmpdir()
       electron_data.config(
         {
           filename: 'service_data',
-          path: "",
+          path: tmpPath,
           prettysave: true
         });
       electron_data.getOptions()
