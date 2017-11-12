@@ -14,6 +14,7 @@ export const NEW_ERR = 'NEW_ERR';
 export const UPDATE_BOX_DATA = 'UPDATE_BOX_DATA';
 export const UPDATE_VIEW = 'UPDATE_VIEW';
 export const UPDATE_CONNECTED = 'UPDATE_CONNECTED';
+export const UPDATE_FILES = 'UPDATE_FILES';
 
 export const updateUsr = usr => ({type: UPDATE_LOGIN_USR, usr});
 export const updatePswd = pswd => ({type: UPDATE_LOGIN_PSWD, pswd});
@@ -22,6 +23,8 @@ export const updateCurr = curr => Object.assign({}, curr, {type: UPDATE_CURR});
 export const logoutCurr = _ => ({type: LOGOUT_CURR});
 
 export const updateConnected = obj => Object.assign({}, obj, {type: UPDATE_CONNECTED});
+
+export const updateFiles = files => ({type: UPDATE_FILES, files});
 
 export const newUsername = username => ({type: NEW_USERNAME, username});
 export const newEmail = email => ({type: NEW_EMAIL, email});
