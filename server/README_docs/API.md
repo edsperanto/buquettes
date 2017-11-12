@@ -1,8 +1,8 @@
-# Buquettes API Reference
+# Stratospeer API Reference
 
 ### Overview
 
-The Buquettes API is used to help serve and manage Solvnt.io. The API server will be built using Postgres for the database, and Node.js + Express for hosting. The `sequelize` Node module will be used connect to Postgres via Node.js. 
+The Stratospeer API is used to help serve and manage Solvnt.io. The API server will be built using Postgres for the database, and Node.js + Express for hosting. The `sequelize` Node module will be used connect to Postgres via Node.js. 
 
 ### Request format
 
